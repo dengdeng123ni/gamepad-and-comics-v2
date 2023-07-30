@@ -6,13 +6,15 @@ import { IndexComponent } from './pages/index/index.component';
 import { MaterialModule } from 'src/app/library/material.module';
 import { ComicsListComponent } from './components/comics-list/comics-list.component';
 import { ToolBarComponent } from './complex-components/tool-bar/tool-bar.component';
+import { MenuComponent } from './complex-components/menu/menu.component';
 
 
 @NgModule({
   declarations: [
     IndexComponent,
     ComicsListComponent,
-    ToolBarComponent
+    ToolBarComponent,
+    MenuComponent
   ],
   imports: [
     CommonModule,

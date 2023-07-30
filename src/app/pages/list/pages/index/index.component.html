@@ -1,3 +1,10 @@
 <mat-drawer-container autosize>
-  <comics-list [list]="list" (on_list)="on_list($event)" (on_item)="on_item($event)"></comics-list>
+  <div class="container">
+    <app-menu></app-menu>
+    <div class="content">
+      <comics-list class="comics_list" [list]="list" (on_list)="on_list($event)"
+        (on_item)="on_item($event)"></comics-list>
+      <app-tool-bar class="tool_bar"></app-tool-bar>
+    </div>
+  </div>
 </mat-drawer-container>

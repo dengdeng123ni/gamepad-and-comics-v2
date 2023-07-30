@@ -6,6 +6,57 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { ListModule } from './pages/list/list.module';
+import { NgxIndexedDBModule } from 'ngx-indexed-db';
+import { DBConfig } from "ngx-indexed-db";
+
+export const dbConfig: DBConfig = {
+  name: 'db',
+  version: 7,
+  objectStoresMeta: [
+    {
+      store: 'comics',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
+    {
+      store: 'chapter',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
+    {
+      store: 'images',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
+    {
+      store: 'comics_config',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
+    {
+      store: 'last_read_comics',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
+    {
+      store: 'last_read_chapter',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
+  ]
+};
 
 @NgModule({
   declarations: [
@@ -15,6 +66,7 @@ import { ListModule } from './pages/list/list.module';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    NgxIndexedDBModule.forRoot(dbConfig),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
