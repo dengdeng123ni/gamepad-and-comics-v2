@@ -1,3 +1,3 @@
-<mat-drawer-container class="w-full h-full" autosize>
-
+<mat-drawer-container autosize>
+  <comics-list [list]="list" (on_list)="on_list($event)" (on_item)="on_item($event)"></comics-list>
 </mat-drawer-container>
