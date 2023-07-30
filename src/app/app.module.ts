@@ -8,8 +8,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { ListModule } from './pages/list/list.module';
 import { NgxIndexedDBModule } from 'ngx-indexed-db';
 import { DBConfig } from "ngx-indexed-db";
+import { HttpClientModule } from '@angular/common/http';
 
-export const dbConfig: DBConfig = {
+const dbConfig: DBConfig = {
   name: 'db',
   version: 7,
   objectStoresMeta: [
@@ -67,6 +68,7 @@ export const dbConfig: DBConfig = {
     AppRoutingModule,
     BrowserAnimationsModule,
     NgxIndexedDBModule.forRoot(dbConfig),
+    HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable

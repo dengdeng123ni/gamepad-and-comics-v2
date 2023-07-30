@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { CurrentService } from '../../services/current.service';
+import { DataService } from '../../services/data.service';
+import { AppDataService } from 'src/app/library/public-api';
 
 @Component({
   selector: 'app-index',
@@ -6,6 +9,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./index.component.scss']
 })
 export class IndexComponent {
+
+  constructor(private current: CurrentService,
+    public Data: DataService,
+    public AppData:AppDataService
+    ) {
+    this.current.init();
+  }
+
   list = [
     {
       "id": 1688657990457,
@@ -128,13 +139,13 @@ export class IndexComponent {
       "subTitle": "第01卷"
     },
   ]
+
   on_list($event: HTMLElement) {
 
   }
+
   on_item(e: { $event: HTMLElement, data: any }) {
-   const $event= e.$event;
-   const data= e.data;
-
-
+    const $event = e.$event;
+    const data = e.data;
   }
 }

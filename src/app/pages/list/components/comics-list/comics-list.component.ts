@@ -16,7 +16,7 @@ interface Item {
 
 export class ComicsListComponent {
 
-  @Input() is_edit?: boolean = true;
+  @Input() is_edit?: boolean = false;
   @Input() list: Array<Item> = [];
   @Input() size?: string = "middle"; // large middle small
   @Input() last_read_id?: string | number = "";
