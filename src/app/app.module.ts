@@ -9,6 +9,7 @@ import { ListModule } from './pages/list/list.module';
 import { NgxIndexedDBModule } from 'ngx-indexed-db';
 import { DBConfig } from "ngx-indexed-db";
 import { HttpClientModule } from '@angular/common/http';
+import { DetailModule } from './pages/detail/detail.module';
 
 const dbConfig: DBConfig = {
   name: 'db',
@@ -75,7 +76,8 @@ const dbConfig: DBConfig = {
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    ListModule
+    ListModule,
+    DetailModule
   ],
   providers: [],
   bootstrap: [AppComponent]

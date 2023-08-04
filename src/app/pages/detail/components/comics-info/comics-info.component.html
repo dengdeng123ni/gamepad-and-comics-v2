@@ -1,0 +1,17 @@
+<div class="warp">
+  <div class="toolabr">
+    <button mat-icon-button matTooltipPosition="below"  class="icon" [attr.region]="'back'"> <mat-icon>chevron_left</mat-icon></button>
+    <button mat-button [attr.region]="'continue'" id="continue" [attr.select]="true" [attr.default]="true" >继续</button>
+    <!-- matTooltipPosition="below" [matTooltipShowDelay]="i18n.tooltipShowDelay" [matTooltip]="comics.chapter.title"  -->
+  </div>
+  <div class="img">
+    <img loading="lazy" [src]="comics.cover" alt="">
+  </div>
+  <div class="info">
+    <div class="title">{{comics.title}}</div>
+    <div class="author">{{comics.author}}</div>
+    <div class="intro">
+      {{comics.intro}}
+    </div>
+  </div>
+</div>
