@@ -48,17 +48,7 @@ export class DbEventService {
           title: x.title,
           author:x.author_name.toString(),
           intro:x.classic_lines,
-          chapters:x.ep_list.map(c=>(
-            {
-              title:c.title,
-              cover:httpUrlToHttps(c.cover),
-              id:c.id,
-              image_count:c.image_count,
-              pub_time:c.pub_time,
-              read:c.read,
-              is_locked:c.is_locked
-            }
-          ))
+          chapters:x.ep_list
         }
       }
     })
