@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { CurrentService } from '../../services/current.service';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-index',
@@ -107,4 +109,11 @@ export class IndexComponent {
     "selected": false
   },
   ]
+  constructor(public Current:CurrentService,
+    public Data:DataService,
+    ){
+      setTimeout(()=>{
+        this.Current.init();
+      },300)
+  }
 }

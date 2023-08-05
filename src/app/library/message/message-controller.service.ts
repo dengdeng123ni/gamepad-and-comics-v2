@@ -8,11 +8,11 @@ export class MessageControllerService {
 
   constructor(public MessageEvent: MessageEventService) {
 
-    MessageEvent.service_worker_register('proxy_request', event => {
+    MessageEvent.service_worker_register('proxy_request', (event:any) => {
       const data = event.data;
       window.postMessage(data, '*');
     })
-    MessageEvent.service_worker_register('website_proxy_request', event => {
+    MessageEvent.service_worker_register('website_proxy_request', (event:any) => {
       const data = event.data;
       window.postMessage(data, '*');
     })
@@ -21,15 +21,16 @@ export class MessageControllerService {
       const type = event.data.type;
       if (this.MessageEvent.ServiceWorkerEvents[type]) {
         const data = await this.MessageEvent.ServiceWorkerEvents[type](event);
-        if(data) navigator.serviceWorker.controller.postMessage(data);
+        if (data && navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage(data);
       }
     });
 
     window.addEventListener("message", function (event) {
       if (event.data.type == "proxy_response") {
-        navigator.serviceWorker.controller.postMessage(event.data)
+        if (navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage(event.data)
       }
     }, false);
+console.log(123);
 
   }
 }

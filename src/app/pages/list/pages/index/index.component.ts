@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CurrentService } from '../../services/current.service';
 import { DataService } from '../../services/data.service';
 import { AppDataService } from 'src/app/library/public-api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-index',
@@ -10,11 +11,12 @@ import { AppDataService } from 'src/app/library/public-api';
 })
 export class IndexComponent {
 
-  constructor(private current: CurrentService,
+  constructor(private Current: CurrentService,
     public Data: DataService,
-    public AppData:AppDataService
+    public AppData:AppDataService,
+    public router:Router
     ) {
-    this.current.init();
+      console.log(123);
   }
 
   list = [
@@ -147,5 +149,14 @@ export class IndexComponent {
   on_item(e: { $event: HTMLElement, data: any }) {
     const $event = e.$event;
     const data = e.data;
+    this.router.navigate(['/detail', data.id])
   }
+
+  ngAfterViewInit() {
+    console.log(123123);
+     setTimeout(()=>{
+      this.Current.init();
+     })
+  }
+
 }

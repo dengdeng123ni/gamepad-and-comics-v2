@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { DataService } from './data.service';
 import { DbControllerService } from 'src/app/library/public-api';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +13,9 @@ export class CurrentService {
   ) { }
 
   async init() {
-    this.Data.list = await this.DbController.getList();
+    const res = await this.DbController.getDetail();
+    this.Data.list = res.chapters;
+    delete res.chapters;
+    this.Data.info = res
   }
-
-
-
 }

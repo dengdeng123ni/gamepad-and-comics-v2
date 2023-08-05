@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-interface Comics {
+interface Info {
   cover: string,
   title: string,
   author?: string,
@@ -11,6 +11,6 @@ interface Comics {
   styleUrls: ['./comics-info.component.scss']
 })
 export class ComicsInfoComponent {
-  @Input() comics!: Comics;
+  @Input() info!: Info;
 
 }
