@@ -8,13 +8,15 @@ export class MessageEventService {
   public ServiceWorkerEvents: { [key: string]: Function } = {};
   public PlugEvents: { [key: string]: Function } = {};
 
-  constructor() { }
+  constructor() {
 
-  service_worker_register(key, callback: Function) {
+   }
+
+  service_worker_register(key:string, callback: Function) {
     this.ServiceWorkerEvents[key] = callback;
   }
 
-  plug_register(key, callback: Function) {
+  plug_register(key:string, callback: Function) {
     this.PlugEvents[key] = callback;
   }
 
