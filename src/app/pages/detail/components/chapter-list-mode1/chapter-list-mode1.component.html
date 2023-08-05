@@ -15,35 +15,15 @@
             <div class="name" [attr.read]="!!n.read" [attr.current]="n.id == last_read_id">
               {{n.short_title}} {{ n.title }}
             </div>
-            <div class="buttom" style="
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-        ">
-              <div class="sub_title">
+            <div class="buttom">
+              <div class="sub_title" *ngIf="n.pub_time">
                 {{n.pub_time | date:'YYYY-MM-dd'}}
               </div>
-              <div class="like" style="    display: flex;
-              font-size: 14px;
-              justify-content: center;
-              align-items: center;
-              color: rgba(255, 255, 255, 0.34);">
-                <mat-icon class="icon" style="    width: 14px;
-                height: 14px;
-                padding: 0;
-                border-radius: 4px;
-                font-size: 14px;    margin-right: 2px;">thumb_up</mat-icon> {{n.like_count}}
+              <div class="like" *ngIf="n.pub_time">
+                <mat-icon class="item_icon">thumb_up</mat-icon> {{n.like_count}}
               </div>
-              <div class="comments"style="    display: flex;
-              font-size: 14px;
-              justify-content: center;
-              align-items: center;
-              color: rgba(255, 255, 255, 0.34);">
-                <mat-icon class="icon" style="    width: 14px;
-                height: 14px;
-                padding: 0;
-                border-radius: 4px;
-                font-size: 14px;    margin-right: 2px;">comment</mat-icon> {{n.comments}}
+              <div class="comments" *ngIf="n.pub_time">
+                <mat-icon class="item_icon">comment</mat-icon> {{n.comments}}
               </div>
             </div>
           </div>
