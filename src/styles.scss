@@ -1,13 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
-
 html,
 body {
   height: 100%;
+  width: 100%;
+  overflow: hidden !important;
 }
 
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #3c3c3c;
+  font-feature-settings: "tnum", "tnum";
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 14px;
 }
-
-// "@angular/material/prebuilt-themes/deeppurple-amber.css",
+.mat-mdc-button-touch-target {
+  height: 100% !important;
+}

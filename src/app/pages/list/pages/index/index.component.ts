@@ -16,7 +16,7 @@ export class IndexComponent {
     public AppData:AppDataService,
     public router:Router
     ) {
-      console.log(123);
+      this.Current.init();
   }
 
   list = [
@@ -153,10 +153,6 @@ export class IndexComponent {
   }
 
   ngAfterViewInit() {
-    console.log(123123);
-     setTimeout(()=>{
-      this.Current.init();
-     })
   }
 
 }

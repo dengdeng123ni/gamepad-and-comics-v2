@@ -3,8 +3,13 @@ interface Item {
   id: string | number,
   cover: string,
   title: string,
+  short_title?: string,
+  pub_time?: string | Date | number,
   read?: number,
-  selected?: boolean
+  ord?: number,
+  selected?: boolean,
+  like_count?: number | string,
+  comments?: number | string,
 }
 @Component({
   selector: 'app-chapter-list-mode1',

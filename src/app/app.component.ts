@@ -7,9 +7,22 @@ import { MessageControllerService } from './library/public-api';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'gamepad-and-comics-v2';
-  constructor(public MessageController:MessageControllerService){
+  is_loading_page = false;
+  constructor(public MessageController: MessageControllerService) {
+    this.init();
+  }
+  init() {
+    this.getPulgLoadingFree();
+  }
 
+  getPulgLoadingFree() {
+    setTimeout(() => {
+      if (document.body.getAttribute("pulg")) {
+        this.is_loading_page = true;
+      } else {
+        this.getPulgLoadingFree();
+      }
+    })
   }
 
 }
