@@ -24,13 +24,15 @@ interface ChaptersItem {
 export class DataService {
 
   images: Array<Item> = [];
-  chapters:Array<ChaptersItem> = [];
+  chapters: Array<ChaptersItem> = [];
   info: Info = {
     cover: '',
     title: ''
   };
-  comic_id="";
-  chapter_id="";
+  comic_id = "";
+  chapter_id = "";
+  page_index = ""
+  page_id = "";
 
 
   constructor() { }

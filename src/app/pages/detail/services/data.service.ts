@@ -2,19 +2,33 @@ import { Injectable } from '@angular/core';
 interface Info {
   cover: string,
   title: string,
+  index:number,
   author?: string,
   intro?: string
+}
+interface Item {
+  id: string | number,
+  cover: string,
+  title: string,
+  short_title?: string,
+  pub_time?: string | Date | number,
+  read?: number,
+  ord?: number,
+  selected?: boolean,
+  like_count?: number | string,
+  comments?: number | string,
 }
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  chapters = [];
+  chapters:Array<Item> = [];
 
   comics_id="";
   info:Info = {
     cover: '',
-    title: ''
+    title: '',
+    index:0,
   };
   is_init_finish= false;
 

@@ -13,11 +13,19 @@ export class CurrentService {
   constructor(
     public DbController: DbControllerService,
     public Data: DataService
-  ) { }
+  ) {
+
+    this.on$.subscribe(event$ => {
+      const { x, y } = event$;
+      const { innerWidth, innerHeight } = window;
+       if (x < (innerWidth / 2)) this.previousPage$.next(event$)
+        else this.nextPage$.next(event$)
+    })
+  }
 
   public mode$ = new Subject<number>();
 
-  public on$ = new Subject<PointerEvent>();
+  public on$ = new Subject<MouseEvent>();
 
   public delete$ = new Subject();
 
@@ -124,9 +132,6 @@ export class CurrentService {
     this.Data.chapters = res.chapters;
     delete res.chapters;
     this.Data.info = res;
-   const a= await this._getNextChapter()
-   console.log(a);
-
   }
 
 
@@ -154,6 +159,7 @@ export class CurrentService {
 
   async _getChapter(id: string) {
     this.chapterBefore$.next(this.Data.chapters);
+    this.Data.chapter_id=id;
     let list = [];
     if (this._chapters[id]) {
       list = this._chapters[id]
@@ -163,6 +169,36 @@ export class CurrentService {
     }
     this.chapter$.next(this.Data.chapters);
     this.chapterAfter$.next(this.Data.chapters);
+    this.Data.images=list;
+    return list
+  }
+
+  async _getNextChapter_2() {
+    const index = this.Data.chapters.findIndex(x => x.id == this.Data.chapter_id);
+    const obj = this.Data.chapters[index + 1];
+    if (obj) {
+      const id = obj.id;
+      return await this._getChapter_2(id);
+    }
+  }
+
+  async _getPreviousChapter_2() {
+    const index = this.Data.chapters.findIndex(x => x.id == this.Data.chapter_id);
+    const obj = this.Data.chapters[index - 1];
+    if (obj) {
+      const id = obj.id;
+      return await this._getChapter_2(id);
+    }
+  }
+
+  async _getChapter_2(id: string) {
+    let list = [];
+    if (this._chapters[id]) {
+      list = this._chapters[id]
+    } else {
+      list = await this.DbController.getImages(id);
+      this._chapters[id] = list;
+    }
     return list
   }
 

@@ -12,6 +12,7 @@ import SwiperCore, {
 } from "swiper";
 import { SwiperComponent } from 'swiper/angular';
 import { CurrentService } from '../../services/current.service';
+import { DataService } from '../../services/data.service';
 SwiperCore.use([Manipulation, Navigation, Pagination, Mousewheel, Keyboard, Autoplay]);
 interface Item { id?: string | number, src: string, width?: string, height?: string }
 @Component({
@@ -26,6 +27,7 @@ export class Mode1Component {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key == "c") this.toggle();
   }
   @HostListener('window:keyup', ['$event'])
   handleKeyUp = (event: KeyboardEvent) => {
@@ -33,39 +35,59 @@ export class Mode1Component {
   list: Array<Item> = [];
 
   index = 0;
-  total = 0;
   id = "";
-  chapters = [];
 
   steps = 1;
-  pageOrder = false;
+
   isSwitch = false;
-  isOne = false;
   isPageFirst = true;
-  isFirstPageCover =true;
+  isOne = false;
+  isPageOrder = false;
+  isFirstPageCover = true;
   isPageTurnDirection = true;
 
 
   type = ['initPage', 'closePage', 'changePage', 'nextPage', 'previousPage', 'nextChapter', 'previousChapter', 'changeChapter'];
   constructor(
     public current: CurrentService,
+    public data: DataService
   ) {
     this.current.init$.subscribe(x => {
       this.list = x;
-      this.total=this.list.length;
-
       this.change(0)
-
     })
     this.current.page().subscribe(async (index: number) => {
       // this.zoom(1)
       this.change(index);
     })
-  }
+    this.current.nextPage().subscribe(() => {
+      this.next()
+    })
+    this.current.previousPage().subscribe(() => {
+      this.previous()
+    })
 
+  }
+  on($event: MouseEvent) {
+    this.current.on$.next($event)
+  }
   //
   ngOnDestroy() {
 
+  }
+
+  toggle() {
+    if (this.index == 0) {
+      this.current._pageChange(this.index);
+    } else {
+      if (this.index == this.list.length - 1) {
+        this.current._pageChange(this.isSwitch ? this.index - 1 : this.index - 1);
+        // this.isSwitch = !this.isSwitch;
+      } else {
+        this.current._pageChange(this.isSwitch ? this.index - 1 : this.index + 1);
+      }
+    }
+    this.isSwitch = !this.isSwitch;
   }
 
 
@@ -103,6 +125,7 @@ export class Mode1Component {
     mousewheel: {
       thresholdDelta: 50,
       forceToAxis: false,
+      thresholdTime: 1000,
     },
     direction: "vertical",
     scrollbar: { draggable: true },
@@ -116,8 +139,9 @@ export class Mode1Component {
     const index = this.index + nodes.length;
 
     if (index >= this.list.length) {
-      this.list=await this.current._getNextChapter();
-      this.total=this.list.length;
+      this.list = await this.current._getNextChapter();
+      this.isPageFirst = true;
+      this.isSwitch = false;
       this.current._pageChange(0)
       return
     }
@@ -140,9 +164,10 @@ export class Mode1Component {
       this.steps = 1;
     }
     if ((index - 1) < 0) {
-      this.list=await this.current._getNextChapter();
-      this.total=this.list.length;
-      this.current._pageChange(this.list.length-1)
+      this.list = await this.current._getPreviousChapter();
+      this.isPageFirst = true;
+      this.isSwitch = false;
+      this.current._pageChange(this.list.length - 1)
       return
     }
 
@@ -151,11 +176,10 @@ export class Mode1Component {
     this.current._pageChange(index);
   }
   async change(index: number) {
-
     if (Number.isNaN(index)) index = 0;
     this.index = index;
     if (this.index < 0) this.index = 0;
-    const res = await this.getCurrentImages(this.list, this.index, this.isFirstPageCover);
+    const res = await this.getCurrentImages(this.list, this.index);
     if (!res.previous.primary.image.src && !res.previous.secondary.image.src) res.previous = await this.getPreviousLast();
     if (!res.next.primary.image.src && !res.next.secondary.image.src) res.next = await this.getNextFirst();
 
@@ -164,7 +188,7 @@ export class Mode1Component {
     let next = "";
     let current = "";
 
-    if (this.pageOrder) {
+    if (this.isPageOrder) {
       // 普通模式
       if (res.previous.primary.start) previous = previous + `<img style="opacity: 0;"  src="${res.previous.primary.image.src}" />`;
       if (res.previous.secondary.image.src) previous = previous + `<img previousimage id="${res.previous.secondary.image.id}" src="${res.previous.secondary.image.src}" />`;
@@ -199,17 +223,16 @@ export class Mode1Component {
     }
 
     this.swiper.swiperRef.removeAllSlides();
-
     if (this.isPageTurnDirection) {
-      if (previous) this.appendSlide(previous)
-      if (current) this.appendSlide(current)
-      if (next) this.appendSlide(next)
-      if (previous) this.swiper.swiperRef.slideTo(1, 0, false);
+      if (!!previous) this.appendSlide(previous)
+      if (!!current) this.appendSlide(current)
+      if (!!next) this.appendSlide(next)
+      if (!!previous) this.swiper.swiperRef.slideTo(1, 0, false);
     } else {
-      if (next) this.appendSlide(next)
-      if (current) this.appendSlide(current)
-      if (previous) this.appendSlide(previous)
-      if (previous) this.swiper.swiperRef.slideTo(1, 0, false);
+      if (!!next) this.appendSlide(next)
+      if (!!current) this.appendSlide(current)
+      if (!!previous) this.appendSlide(previous)
+      if (!!previous) this.swiper.swiperRef.slideTo(1, 0, false);
     }
   }
   appendSlide(src: string) {
@@ -222,6 +245,7 @@ export class Mode1Component {
      </div>
     `)
   }
+
   async getNextFirst() {
     const res = {
       next: {
@@ -229,9 +253,12 @@ export class Mode1Component {
         secondary: { image: { src: "", id: null }, end: false, start: false }
       },
     }
-    const list = await this.current._getNextChapter();
-    const index = 0;
+
+    const list = await this.current._getNextChapter_2();
+
+
     if (list) {
+      const index = 0;
       const images = list;
       const obj = await this.isWideImage(images[index], images[index + 1]);
       const total = images.length;
@@ -260,7 +287,7 @@ export class Mode1Component {
         secondary: { image: { src: "", id: null }, end: false, start: false }
       },
     }
-    const list = await this.current._getPreviousChapter();
+    const list = await this.current._getPreviousChapter_2();
 
     if (list) {
       const images = list;
@@ -314,7 +341,7 @@ export class Mode1Component {
     }
   }
 
-  async getCurrentImages(list: Array<Item>, index: number, isFirstPageCover: boolean) {
+  async getCurrentImages(list: Array<Item>, index: number) {
     const total = list.length;
 
     const res = {
@@ -349,16 +376,16 @@ export class Mode1Component {
 
     if (this.isPageFirst) {
       this.isPageFirst = false;
-      if (isFirstPageCover == true && index == 0) {
+      if (this.isFirstPageCover == true && index == 0) {
         obj.secondary.image = "";
         steps = 1;
       }
     } else {
-      if (index == 0 && !this.isSwitch && isFirstPageCover == true) {
+      if (index == 0 && !this.isSwitch && this.isFirstPageCover == true) {
         obj.secondary.image = "";
         steps = 1;
       }
-      if (index == 0 && this.isSwitch && isFirstPageCover == false) {
+      if (index == 0 && this.isSwitch && this.isFirstPageCover == false) {
         obj.secondary.image = "";
         steps = 1;
       }
@@ -368,6 +395,10 @@ export class Mode1Component {
       this.isWideImage(list[index - 1], list[index - 2]),
       this.isWideImage(list[index + steps], list[index + steps + 1])
     ]);
+    setTimeout(() => {
+      this.loadImage(list[index + steps + 2]?.src)
+      this.loadImage(list[index + steps + 3]?.src)
+    }, 100)
     if (index >= (total - 1) && !obj.secondary.image) {
       if (obj.primary.width < obj.primary.height) res.current.primary.end = true;
     }
