@@ -39,14 +39,14 @@ export class DbEventService {
         });
         return list
       },
-      Detail: async () => {
+      Detail: async (id:string) => {
         const res = await fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/ComicDetail?device=pc&platform=web", {
           "headers": {
             "accept": "application/json, text/plain, */*",
             "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
             "content-type": "application/json;charset=UTF-8"
           },
-          "body": "{\"comic_id\":25969}",
+          "body": `{\"comic_id\":${id}}`,
           "method": "POST"
         });
         const json = await res.json();
@@ -67,15 +67,10 @@ export class DbEventService {
           intro: x.classic_lines,
           chapters: x.ep_list.map((c:any) => (
             {
-              title: c.title,
-              cover: httpUrlToHttps(c.cover),
-              id: c.id,
-              image_count: c.image_count,
-              pub_time: c.pub_time,
-              read: c.read,
-              is_locked: c.is_locked
+              ...c,
+              cover: httpUrlToHttps(c.cover)
             }
-          ))
+          )).reverse()
         }
       }
     })

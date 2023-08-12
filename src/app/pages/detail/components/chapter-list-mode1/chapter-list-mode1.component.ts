@@ -26,4 +26,21 @@ export class ChapterListMode1Component {
 
   @Output() on_list = new EventEmitter<HTMLElement>();
 
+  on($event: MouseEvent) {
+    const node = $event.target as HTMLElement;
+    if (node.getAttribute("id") == 'list') {
+      this.on_list.emit(node);
+    } else {
+      const getTargetNode = (node: HTMLElement): HTMLElement => {
+        if (node.getAttribute("region") == "chapter_item") {
+          return node
+        } else {
+          return getTargetNode(node.parentNode as HTMLElement)
+        }
+      }
+      const target_node = getTargetNode(node);
+      const index = parseInt(target_node.getAttribute("index") as string);
+      this.on_item.emit({ $event: target_node, data: { ...this.list[index], index } });
+    }
+  }
 }

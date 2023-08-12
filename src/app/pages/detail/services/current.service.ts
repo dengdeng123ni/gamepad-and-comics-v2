@@ -12,9 +12,10 @@ export class CurrentService {
     public Data: DataService
   ) { }
 
-  async init() {
-    const res = await this.DbController.getDetail();
-    this.Data.list = res.chapters;
+  async init(id: string) {
+    this.Data.comics_id=id;
+    const res = await this.DbController.getDetail(id);
+    this.Data.chapters = res.chapters;
     delete res.chapters;
     this.Data.info = res
   }

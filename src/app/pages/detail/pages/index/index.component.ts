@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CurrentService } from '../../services/current.service';
 import { DataService } from '../../services/data.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-index',
@@ -10,16 +11,28 @@ import { Router } from '@angular/router';
 })
 export class IndexComponent {
   constructor(
-    public Current:CurrentService,
-    public Data:DataService,
-    public router:Router
-    ){
-      this.Current.init();
+    public current: CurrentService,
+    public data: DataService,
+    public router: Router,
+    public route: ActivatedRoute
+  ) {
+    let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params.get('id')));
+    id$.subscribe(x => this.current.init(x as string))
   }
-  back(){
+  back() {
     this.router.navigate(['/'])
   }
-  continue(){
+  continue() {
 
+  }
+
+  on_list($event: HTMLElement) {
+
+  }
+
+  on_item(e: { $event: HTMLElement, data: any }) {
+    const $event = e.$event;
+    const data = e.data;
+    this.router.navigate(['/', this.data.comics_id,data.id,])
   }
 }

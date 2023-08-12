@@ -9,8 +9,9 @@ interface Info {
   providedIn: 'root'
 })
 export class DataService {
+  chapters = [];
 
-  list = [];
+  comics_id="";
   info:Info = {
     cover: '',
     title: ''

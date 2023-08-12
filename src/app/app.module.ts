@@ -10,6 +10,7 @@ import { NgxIndexedDBModule } from 'ngx-indexed-db';
 import { DBConfig } from "ngx-indexed-db";
 import { HttpClientModule } from '@angular/common/http';
 import { DetailModule } from './pages/detail/detail.module';
+import { ReaderModule } from './pages/reader/reader.module';
 
 const dbConfig: DBConfig = {
   name: 'db',
@@ -24,6 +25,13 @@ const dbConfig: DBConfig = {
     },
     {
       store: 'chapter',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
+    {
+      store: 'chapter_ce',
       storeConfig: { keyPath: 'id', autoIncrement: false },
       storeSchema: [
         { name: 'id', keypath: 'id', options: { unique: false } },
@@ -77,7 +85,8 @@ const dbConfig: DBConfig = {
       registrationStrategy: 'registerWhenStable:30000'
     }),
     ListModule,
-    DetailModule
+    DetailModule,
+    ReaderModule
   ],
   providers: [],
   bootstrap: [AppComponent]

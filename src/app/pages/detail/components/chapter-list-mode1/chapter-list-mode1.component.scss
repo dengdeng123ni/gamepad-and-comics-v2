@@ -99,6 +99,7 @@
       justify-content: space-between;
       align-items: start;
       padding-top: 0.2rem;
+      width: 100%;
     }
 
     .name {
@@ -127,13 +128,23 @@
         font-size: 14px;
         color: rgba(255, 255, 255, .34);
       }
+      .tool{
+        display: flex;
+      }
       .like,.comments{
         display: flex;
-              font-size: 14px;
+        font-size: 14px;
+
               justify-content: center;
               align-items: center;
               color: rgba(255, 255, 255, 0.34);
 
+      }
+      .like{
+        margin-right: 4px;
+      }
+      .comments{
+        margin-right: 12px;
       }
     }
 

@@ -23,9 +23,17 @@ export class DbControllerService {
     }
   }
 
-  async getDetail() {
+  async getDetail(id:string) {
     if (this.DbEvent.Event[this.AppData.origin] && this.DbEvent.Event[this.AppData.origin]["Detail"]) {
-      const res = await this.DbEvent.Event[this.AppData.origin]["Detail"]()
+      const res = await this.DbEvent.Event[this.AppData.origin]["Detail"](id)
+      return res
+    } else {
+      return []
+    }
+  }
+  async getImages(id:string) {
+    if (this.DbEvent.Event[this.AppData.origin] && this.DbEvent.Event[this.AppData.origin]["Images"]) {
+      const res = await this.DbEvent.Event[this.AppData.origin]["Images"](id)
       return res
     } else {
       return []
