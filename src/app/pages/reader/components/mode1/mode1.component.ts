@@ -27,7 +27,7 @@ export class Mode1Component {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key == "c") this.toggle();
+    if (event.key == "c") this.pageToggle();
   }
   @HostListener('window:keyup', ['$event'])
   handleKeyUp = (event: KeyboardEvent) => {
@@ -76,7 +76,11 @@ export class Mode1Component {
 
   }
 
-  toggle() {
+  firstPageToggle(){
+
+  }
+
+  pageToggle() {
     if (this.index == 0) {
       this.current._pageChange(this.index);
     } else {

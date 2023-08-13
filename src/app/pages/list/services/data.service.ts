@@ -7,6 +7,8 @@ export class DataService {
 
   list: Array<Item> = [];
 
+  is_edit = false;
+
   is_init_finish = false;
 
   constructor() { }

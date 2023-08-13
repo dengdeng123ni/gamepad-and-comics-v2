@@ -34,6 +34,8 @@ export class DataService {
   page_index = ""
   page_id = "";
 
+  is_edit = false;
+
 
   constructor() { }
 }
