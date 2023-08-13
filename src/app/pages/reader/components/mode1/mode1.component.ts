@@ -35,36 +35,45 @@ export class Mode1Component {
   list: Array<Item> = [];
 
   index = 0;
-  id = "";
 
   steps = 1;
 
   isSwitch = false;
+
   isPageFirst = true;
-  isOne = false;
+  isFirst = false;
+
   isPageOrder = false;
-  isFirstPageCover = true;
   isPageTurnDirection = true;
 
+  isFirstPageCover = true;
 
-  type = ['initPage', 'closePage', 'changePage', 'nextPage', 'previousPage', 'nextChapter', 'previousChapter', 'changeChapter'];
+
+  init$;
+  change$;
+
   constructor(
     public current: CurrentService,
     public data: DataService
   ) {
-    this.current.init$.subscribe(x => {
+    this.init$ = this.current.init().subscribe(x => {
       this.list = x;
       this.change(0)
     })
-    this.current.page().subscribe(async (index: number) => {
-      // this.zoom(1)
-      this.change(index);
-    })
-    this.current.nextPage().subscribe(() => {
-      this.next()
-    })
-    this.current.previousPage().subscribe(() => {
-      this.previous()
+
+    this.change$ = this.current.change().subscribe(x => {
+      if (x.type == "changePage") {
+        this.change(x.page_index);
+      } else if (x.type == "changeChapter") {
+        this.list = x.pages;
+        this.change(x.page_index);
+        this.isPageFirst = true;
+        this.isSwitch = false;
+      } else if (x.type == "nextPage") {
+        this.next()
+      } else if (x.type == "previousPage") {
+        this.previous()
+      }
     })
 
   }
@@ -73,7 +82,7 @@ export class Mode1Component {
   }
   //
   ngOnDestroy() {
-
+    this.init$.unsubscribe();
   }
 
   firstPageToggle() {
@@ -125,6 +134,7 @@ export class Mode1Component {
   isWaitPrevious = false;
   isWaitNext = false;
   isMobile = false;
+
   swiperConfig: SwiperOptions = {
     mousewheel: {
       thresholdDelta: 50,
@@ -143,7 +153,7 @@ export class Mode1Component {
     const index = this.index + nodes.length;
 
     if (index >= this.list.length) {
-      this.list = await this.current._getNextChapter();
+      this.list = await this.current._setNextChapter();
       this.isPageFirst = true;
       this.isSwitch = false;
       this.current._pageChange(0)
@@ -162,13 +172,13 @@ export class Mode1Component {
         this.steps = 2;
       } else {
         this.steps = 1;
-        this.isOne = true;
+        this.isFirst = true;
       }
     } else {
       this.steps = 1;
     }
     if ((index - 1) < 0) {
-      this.list = await this.current._getPreviousChapter();
+      this.list = await this.current._setPreviousChapter();
       this.isPageFirst = true;
       this.isSwitch = false;
       this.current._pageChange(this.list.length - 1)
@@ -258,7 +268,7 @@ export class Mode1Component {
       },
     }
 
-    const list = await this.current._getNextChapter_2();
+    const list = await this.current._getNextChapter();
 
 
     if (list) {
@@ -284,6 +294,14 @@ export class Mode1Component {
     }
     return res.next
   }
+  async loadingNextFirstPage() {
+    const list = await this.current._getNextChapter();
+    if (list) {
+      const index = 0;
+      const images = list;
+      const obj = await this.isWideImage(images[index], images[index + 1]);
+    }
+  }
   async getPreviousLast() {
     const res = {
       previous: {
@@ -291,7 +309,7 @@ export class Mode1Component {
         secondary: { image: { src: "", id: null }, end: false, start: false }
       },
     }
-    const list = await this.current._getPreviousChapter_2();
+    const list = await this.current._getPreviousChapter();
 
     if (list) {
       const images = list;
@@ -372,8 +390,8 @@ export class Mode1Component {
       steps = 2;
     }
 
-    if (this.isOne) {
-      this.isOne = false;
+    if (this.isFirst) {
+      this.isFirst = false;
       obj.secondary.image = "";
       steps = 1;
     }
@@ -402,6 +420,7 @@ export class Mode1Component {
     setTimeout(() => {
       if (list[index + steps + 2]) this.loadImage(list[index + steps + 2]?.src)
       if (list[index + steps + 3]) this.loadImage(list[index + steps + 3]?.src)
+      if (index >= list.length - 3) this.loadingNextFirstPage();
     }, 100)
     if (index >= (total - 1) && !obj.secondary.image) {
       if (obj.primary.width < obj.primary.height) res.current.primary.end = true;

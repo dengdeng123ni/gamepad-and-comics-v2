@@ -12,18 +12,83 @@ export class ReaderToolbarComponent {
   isfullscreen = !!document.fullscreenElement;
   isMobile = (navigator as any).userAgentData.mobile;
 
+  isFirstPageCover = true;
+
   @ViewChild(MatMenuTrigger) menu: MatMenuTrigger | any;
   constructor(
     public current: CurrentService,
     public data: DataService
   ) {
-
+    this.data.chapters
   }
-  menuObj = {
-    list: [],
-    type: "delete"
-  }
+  menuObj: {
+    list: any,
+    type: string
+  } = {
+      list: [],
+      type: "delete"
+    }
   back() {
     window.history.back()
+  }
+  firstPageCoverChange() {
+
+  }
+
+  imageRotation() {
+
+  }
+  separatePage() {
+
+  }
+  mergePage() {
+
+  }
+  insertPage() {
+
+  }
+  openDeleteMenu($event: MouseEvent) {
+
+  }
+  closeMenu() {
+    if (this.menuObj.type == "list") {
+      const node_reader_toolbar: any = document.querySelector("#reader_toolbar_section")
+      setTimeout(() => {
+        node_reader_toolbar.style.opacity = 0;
+      }, 0)
+    } else if (this.menuObj.type == "delete") {
+      const node_reader_toolbar: any = document.querySelector("#reader_toolbar_page")
+      setTimeout(() => {
+        node_reader_toolbar.style.opacity = 0;
+      }, 0)
+    }
+
+  }
+  openList($event: MouseEvent) {
+    this.menuObj.type = "list"
+    const node_reader_toolbar: any = document.querySelector("#reader_toolbar_section")
+    node_reader_toolbar.style.opacity = 1;
+    this.menuObj.list = [];
+    this.menuObj.list = this.data.chapters;
+    const p = ($event.target as any).getBoundingClientRect();
+    let node = (document.getElementById(`reader_toolbar_menu`) as any);
+    node.style.top = `${this.menuObj.list.length < 3 ? p.top : p.bottom}px`;
+    node.style.left = `${p.x + p.width + 4}px`;
+    console.log(this.menuObj.list);
+
+    setTimeout(() => this.menu.openMenu(), 0)
+
+  }
+  onItem(id: string) {
+      this.current._chapterChange(id);
+  }
+  togglePage() {
+
+  }
+  previous() {
+
+  }
+  next() {
+
   }
 }

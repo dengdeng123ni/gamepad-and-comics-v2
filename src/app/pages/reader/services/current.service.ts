@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 import { DbControllerService } from 'src/app/library/public-api';
-import { Subject } from 'rxjs';
+import { Subject, firstValueFrom } from 'rxjs';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 
 @Injectable({
   providedIn: 'root'
@@ -12,22 +13,29 @@ export class CurrentService {
 
   constructor(
     public DbController: DbControllerService,
-    public Data: DataService
+    public data: DataService,
+    public webDb: NgxIndexedDBService
   ) {
 
     this.on$.subscribe(event$ => {
       const { x, y } = event$;
       const { innerWidth, innerHeight } = window;
-       if (x < (innerWidth / 2)) this.previousPage$.next(event$)
-        else this.nextPage$.next(event$)
+      if (x < (innerWidth / 2)) this.previousPage$.next(event$)
+      else this.nextPage$.next(event$)
+    })
+    this.page$.subscribe(index => {
+      this._setChapterIndex(this.data.chapter_id, index)
     })
   }
+
 
   public mode$ = new Subject<number>();
 
   public on$ = new Subject<MouseEvent>();
 
   public delete$ = new Subject();
+
+  public change$ = new Subject<any>();
 
   public initBefore$ = new Subject<any>();
   public init$ = new Subject<any>();
@@ -122,100 +130,139 @@ export class CurrentService {
     return this.pageAfter$
   }
 
+  public change() {
+    return this.change$
+  }
+
   async _init(comic_id: string, chapter_id: string) {
-    this.Data.chapter_id = chapter_id;
-    this.Data.comic_id = comic_id;
-    const list = await this.DbController.getImages(chapter_id);
+    this.data.chapter_id = chapter_id;
+    this.data.comic_id = comic_id;
+    const list = await this.DbController.getPages(chapter_id);
     this.init$.next(list)
-    this.Data.images = list;
+    this.data.pages = list;
     const res = await this.DbController.getDetail(comic_id);
-    this.Data.chapters = res.chapters;
+    this.data.chapters = res.chapters;
     delete res.chapters;
-    this.Data.info = res;
+    this.data.info = res;
   }
 
 
-  async _getNextChapter() {
-    const index = this.Data.chapters.findIndex(x => x.id == this.Data.chapter_id);
-    const obj = this.Data.chapters[index + 1];
+  async _setNextChapter() {
+    const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id);
+    const obj = this.data.chapters[index + 1];
     if (obj) {
       const id = obj.id;
-      return await this._getChapter(id);
+      return await this._setChapter(id);
     } else {
       this.pageLastAfter$.next();
     }
   }
 
-  async _getPreviousChapter() {
-    const index = this.Data.chapters.findIndex(x => x.id == this.Data.chapter_id);
-    const obj = this.Data.chapters[index - 1];
+  async _setPreviousChapter() {
+    const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id);
+    const obj = this.data.chapters[index - 1];
     if (obj) {
       const id = obj.id;
-      return await this._getChapter(id);
+      return await this._setChapter(id);
     } else {
       this.pageFirstBefore$.next();
     }
   }
 
+  async _setChapter(id: string) {
+    this.chapterBefore$.next(this.data.chapters);
+    this.data.chapter_id = id;
+    let list = await this._getChapter(id);
+    this.chapter$.next(this.data.chapters);
+    this.chapterAfter$.next(this.data.chapters);
+    this.data.pages = list;
+    return list
+  }
+
+  async _getNextChapter() {
+    const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id);
+    const obj = this.data.chapters[index + 1];
+    if (obj) {
+      const id = obj.id;
+      return await this._getChapter(id);
+    }
+  }
+
+  async _getPreviousChapter() {
+    const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id);
+    const obj = this.data.chapters[index - 1];
+    if (obj) {
+      const id = obj.id;
+      return await this._getChapter(id);
+    }
+  }
+
   async _getChapter(id: string) {
-    this.chapterBefore$.next(this.Data.chapters);
-    this.Data.chapter_id=id;
     let list = [];
     if (this._chapters[id]) {
       list = this._chapters[id]
     } else {
-      list = await this.DbController.getImages(id);
-      this._chapters[id] = list;
-    }
-    this.chapter$.next(this.Data.chapters);
-    this.chapterAfter$.next(this.Data.chapters);
-    this.Data.images=list;
-    return list
-  }
-
-  async _getNextChapter_2() {
-    const index = this.Data.chapters.findIndex(x => x.id == this.Data.chapter_id);
-    const obj = this.Data.chapters[index + 1];
-    if (obj) {
-      const id = obj.id;
-      return await this._getChapter_2(id);
-    }
-  }
-
-  async _getPreviousChapter_2() {
-    const index = this.Data.chapters.findIndex(x => x.id == this.Data.chapter_id);
-    const obj = this.Data.chapters[index - 1];
-    if (obj) {
-      const id = obj.id;
-      return await this._getChapter_2(id);
-    }
-  }
-
-  async _getChapter_2(id: string) {
-    let list = [];
-    if (this._chapters[id]) {
-      list = this._chapters[id]
-    } else {
-      list = await this.DbController.getImages(id);
+      list = await this.DbController.getPages(id);
       this._chapters[id] = list;
     }
     return list
   }
 
-  async _pageChange(index: number) {
-    this.pageBefore$.next(index);
-    this.page$.next(index);
-    this.pageAfter$.next(index);
+
+  async _chapterNext() {
+    const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id);
+    const obj = this.data.chapters[index + 1];
+    if (obj) {
+      const id = obj.id;
+      return await this._getChapter(id);
+    }
   }
 
-  async _chapterChange(index: number) {
-
+  async _chapterPrevious() {
+    const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id);
+    const obj = this.data.chapters[index - 1];
+    if (obj) {
+      const id = obj.id;
+      return await this._getChapter(id);
+    }
   }
 
-  async _getChapterIndex(id: string | number) {
-
+  async _chapterPageChange(chapter_id: string, page_index: number) {
+    const pages = await this._setChapter(chapter_id);
+    this._change('changeChapter', { chapter_id, pages, page_index })
+  }
+  async _chapterChange(chapter_id: string) {
+    const pages = await this._setChapter(chapter_id);
+    const page_index = await this._getChapterIndex(chapter_id);
+    this._change('changeChapter', { chapter_id, pages, page_index })
+  }
+  async _pageChange(page_index: number) {
+    this._change('changePage', { chapter_id: this.data.chapter_id, pages: this.data.pages, page_index })
   }
 
+  async _getChapterIndex(id: string): Promise<number> {
+    const res: any = await firstValueFrom(this.webDb.getByID("last_read_chapter_page", id))
+    if (res) {
+      return res.page_index
+    } else {
+      return 0
+    }
+  }
+
+  async _setChapterIndex(id: string, index: number) {
+    await firstValueFrom(this.webDb.update("last_read_chapter_page", { 'chapter_id': id, "page_index": index }))
+  }
+
+  async _change(type: string, option: {
+    pages: Array<any>,
+    page_index?: number,
+    page_id?: string,
+    chapter_id?: string,
+    trigger?: string
+  }) {
+    const types = ['initPage', 'closePage', 'changePage', 'nextPage', 'previousPage', 'nextChapter', 'previousChapter', 'changeChapter'];
+    this.change$.next({ ...option,type, comic_id: this.data.comic_id })
+  }
 
 
 

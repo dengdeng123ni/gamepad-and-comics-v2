@@ -23,7 +23,7 @@ interface ChaptersItem {
 })
 export class DataService {
 
-  images: Array<Item> = [];
+  pages: Array<Item> = [];
   chapters: Array<ChaptersItem> = [];
   info: Info = {
     cover: '',

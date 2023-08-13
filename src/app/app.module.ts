@@ -60,10 +60,10 @@ const dbConfig: DBConfig = {
       ]
     },
     {
-      store: 'last_read_chapter',
-      storeConfig: { keyPath: 'id', autoIncrement: false },
+      store: 'last_read_chapter_page',
+      storeConfig: { keyPath: 'chapter_id', autoIncrement: false },
       storeSchema: [
-        { name: 'id', keypath: 'id', options: { unique: false } },
+        { name: 'chapter_id', keypath: 'chapter_id', options: { unique: false } },
       ]
     },
   ]

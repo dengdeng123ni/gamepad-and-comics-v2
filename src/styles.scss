@@ -16,3 +16,29 @@ body {
 .mat-mdc-button-touch-target {
   height: 100% !important;
 }
+.mat-mdc-menu-item {
+  height: 30px !important;
+  line-height: 30px !important;
+  min-height: 30px !important;
+
+  .mdc-list-item__primary-text {
+    /* font-family: Roboto, "Helvetica Neue", sans-serif; */
+    font-size: 14px;
+    font-weight: 400 !important;
+  }
+}
+
+.menu_item {
+  height: 30px !important;
+  line-height: 30px !important;
+  min-height: 30px !important;
+
+  .mat-mdc-menu-item-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    /* font-family: Roboto, "Helvetica Neue", sans-serif; */
+    font-size: 14px;
+    font-weight: 400 !important;
+  }
+}

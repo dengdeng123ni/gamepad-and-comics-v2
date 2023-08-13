@@ -1,10 +1,71 @@
 <div class="reader_toolbar_left">
-  <div class="flex flex-col top">
-    <div class="flex flex-col item h-full">
+  <div class="list top">
+    <div class="item">
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="back()">
         <mat-icon>keyboard_return</mat-icon>
       </button>
-      <!-- <mat-divider></mat-divider> -->
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="firstPageCoverChange()">
+        <mat-icon *ngIf="!isFirstPageCover">radio_button_unchecked</mat-icon>
+        <mat-icon *ngIf="isFirstPageCover">radio_button_checked</mat-icon>
+      </button>
     </div>
   </div>
+
+  <div class="flex flex-col bottom">
+    <div class="item">
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="imageRotation()">
+        <mat-icon>screen_rotation</mat-icon>
+      </button>
+    </div>
+    <div class="flex flex-col item h-full mt-5" id="reader_toolbar_page">
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="separatePage()">
+        <mat-icon>call_split</mat-icon>
+      </button>
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="mergePage()">
+        <mat-icon>merge</mat-icon>
+      </button>
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="insertPage()">
+        <mat-icon>insert_page_break</mat-icon>
+      </button>
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon delete" (click)="openDeleteMenu($event)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <div class="flex flex-col item h-full mt-5" id="reader_toolbar_section">
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button (click)="openList($event)"
+        class="icon subject">
+        <mat-icon>subject</mat-icon>
+      </button>
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="togglePage()">
+        <mat-icon>swap_horiz</mat-icon>
+      </button>
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="previous()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="next()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+    <!-- <mat-slider vertical="vertical" ngClass="reader_toolbar_progress_slider" [min]="0" [max]="current.comics.chapter.total" class=" w-full">
+     <input matSliderThumb [(ngModel)]="current.comics.chapter.index" (valueChange)="change($event)">
+    </mat-slider> -->
+  </div>
 </div>
+<div class="fixed" id="reader_toolbar_menu" (menuClosed)="closeMenu()" [matMenuTriggerFor]="menu"
+  [matMenuTriggerData]="{data:menuObj.list,type:menuObj.type}"></div>
+<mat-menu #menu="matMenu">
+  <ng-template matMenuContent let-name="data" let-type="type">
+    <!-- <div *ngIf="type=='delete'">
+      <button tabIndex="-1" *ngFor="let item of name;let index=index" mat-menu-item class="menu_item"
+        (mouseover)="mouseoverDeleteMenu(item.id)" (mouseout)="mouseoutDeleteMenu(item.id)" (click)="delete(item.id)">
+        {{item.name}}
+      </button>
+    </div> -->
+    <div *ngIf="type=='list'" style="max-height: 40vh;">
+      <button tabIndex="-1" *ngFor="let item of name;let index=index" mat-menu-item class="menu_item"
+        (click)="onItem(item.id)">
+        {{item.title}}
+      </button>
+    </div>
+  </ng-template>
+</mat-menu>

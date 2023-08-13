@@ -12,7 +12,7 @@
           <img loading="lazy" [src]="n.cover" alt="" />
           <div class="info">
             <div class="name" [attr.read]="!!n.read" [attr.current]="n.id == last_read_id">
-              {{n.short_title}} {{ n.title }}
+              {{ n.title }}
             </div>
             <div class="buttom">
               <div class="sub_title" *ngIf="n.pub_time">

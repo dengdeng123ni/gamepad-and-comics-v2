@@ -31,9 +31,9 @@ export class DbControllerService {
       return []
     }
   }
-  async getImages(id:string) {
-    if (this.DbEvent.Event[this.AppData.origin] && this.DbEvent.Event[this.AppData.origin]["Images"]) {
-      const res = await this.DbEvent.Event[this.AppData.origin]["Images"](id)
+  async getPages(id:string) {
+    if (this.DbEvent.Event[this.AppData.origin] && this.DbEvent.Event[this.AppData.origin]["Pages"]) {
+      const res = await this.DbEvent.Event[this.AppData.origin]["Pages"](id)
       return res
     } else {
       return []

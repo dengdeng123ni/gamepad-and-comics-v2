@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 interface Info {
   cover: string,
   title: string,
-  index:number,
+  read_chapter_id: string | number,
   author?: string,
   intro?: string
 }
@@ -22,15 +22,15 @@ interface Item {
   providedIn: 'root'
 })
 export class DataService {
-  chapters:Array<Item> = [];
+  chapters: Array<Item> = [];
 
-  comics_id="";
-  info:Info = {
+  comics_id = "";
+  info: Info = {
     cover: '',
     title: '',
-    index:0,
+    read_chapter_id: 0,
   };
-  is_init_finish= false;
+  is_init_finish = false;
 
   constructor() { }
 }
