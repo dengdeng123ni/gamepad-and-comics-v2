@@ -76,7 +76,7 @@ export class Mode1Component {
 
   }
 
-  firstPageToggle(){
+  firstPageToggle() {
 
   }
 
@@ -400,8 +400,8 @@ export class Mode1Component {
       this.isWideImage(list[index + steps], list[index + steps + 1])
     ]);
     setTimeout(() => {
-      this.loadImage(list[index + steps + 2]?.src)
-      this.loadImage(list[index + steps + 3]?.src)
+      if (list[index + steps + 2]) this.loadImage(list[index + steps + 2]?.src)
+      if (list[index + steps + 3]) this.loadImage(list[index + steps + 3]?.src)
     }, 100)
     if (index >= (total - 1) && !obj.secondary.image) {
       if (obj.primary.width < obj.primary.height) res.current.primary.end = true;
