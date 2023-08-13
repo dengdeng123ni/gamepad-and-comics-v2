@@ -17,28 +17,29 @@ const dbConfig: DBConfig = {
   version: 7,
   objectStoresMeta: [
     {
-      store: 'comics',
+      store: 'local_comics',
       storeConfig: { keyPath: 'id', autoIncrement: false },
       storeSchema: [
         { name: 'id', keypath: 'id', options: { unique: false } },
       ]
     },
     {
-      store: 'chapter',
+      store: 'local_chapter',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
+
+    {
+      store: 'local_images',
       storeConfig: { keyPath: 'id', autoIncrement: false },
       storeSchema: [
         { name: 'id', keypath: 'id', options: { unique: false } },
       ]
     },
     {
-      store: 'chapter_ce',
-      storeConfig: { keyPath: 'id', autoIncrement: false },
-      storeSchema: [
-        { name: 'id', keypath: 'id', options: { unique: false } },
-      ]
-    },
-    {
-      store: 'images',
+      store: 'cache_chapter',
       storeConfig: { keyPath: 'id', autoIncrement: false },
       storeSchema: [
         { name: 'id', keypath: 'id', options: { unique: false } },
