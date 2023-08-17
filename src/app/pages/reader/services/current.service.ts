@@ -214,7 +214,10 @@ export class CurrentService {
     const obj = this.data.chapters[index + 1];
     if (obj) {
       const id = obj.id;
-      return await this._getChapter(id);
+      await this._chapterChange(id);
+      return true
+    } else {
+      return false
     }
   }
 
@@ -223,7 +226,10 @@ export class CurrentService {
     const obj = this.data.chapters[index - 1];
     if (obj) {
       const id = obj.id;
-      return await this._getChapter(id);
+      await this._chapterChange(id);
+      return true
+    } else {
+      return false
     }
   }
 
@@ -255,13 +261,23 @@ export class CurrentService {
 
   async _change(type: string, option: {
     pages: Array<any>,
-    page_index?: number,
+    page_index: number,
     page_id?: string,
     chapter_id?: string,
     trigger?: string
   }) {
+    this.data.page_index = option.page_index;
+    this.data.pages = option.pages;
+    if (option.chapter_id) this.data.chapter_id = option.chapter_id;
     const types = ['initPage', 'closePage', 'changePage', 'nextPage', 'previousPage', 'nextChapter', 'previousChapter', 'changeChapter'];
-    this.change$.next({ ...option,type, comic_id: this.data.comic_id })
+    this.change$.next({ ...option, type, comic_id: this.data.comic_id })
+  }
+
+  async _chapter(chapter_id: string) {
+    this.chapter$.next(chapter_id)
+  }
+  async _page(page_index: number) {
+    this.page$.next(page_index)
   }
 
 

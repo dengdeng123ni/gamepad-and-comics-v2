@@ -23,3 +23,5 @@ export * from './db/db-event.service';
 // export * from './temporary-file/temporary-file.service'
 export * from './message/message-controller.service'
 export * from './message/message-event.service'
+
+export * from './utils/utils.service'

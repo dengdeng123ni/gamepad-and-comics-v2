@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 interface Events {
   List: Function;
   Detail: Function;
-  Images: Function;
+  Pages: Function;
 }
 
 @Injectable({
@@ -63,7 +63,7 @@ export class DbEventService {
         return {
           id: x.id,
           cover: httpUrlToHttps(x.vertical_cover),
-          title: x.title,
+          title: `${x.short_title} ${x.title}`,
           author: x.author_name.toString(),
           intro: x.classic_lines,
           chapters: x.ep_list.map((c: any) => (
@@ -74,7 +74,7 @@ export class DbEventService {
           )).reverse()
         }
       },
-      Images: async (id: string) => {
+      Pages: async (id: string) => {
         const res = await fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web", {
           "headers": {
             "accept": "application/json, text/plain, */*",

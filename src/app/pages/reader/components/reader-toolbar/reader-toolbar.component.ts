@@ -2,6 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { DataService } from '../../services/data.service';
 import { CurrentService } from '../../services/current.service';
+import { DoublePageThumbnailService } from '../double-page-thumbnail/double-page-thumbnail.service';
+import { ChaptersThumbnailService } from '../chapters-thumbnail/chapters-thumbnail.service';
 
 @Component({
   selector: 'app-reader-toolbar',
@@ -17,9 +19,11 @@ export class ReaderToolbarComponent {
   @ViewChild(MatMenuTrigger) menu: MatMenuTrigger | any;
   constructor(
     public current: CurrentService,
-    public data: DataService
+    public data: DataService,
+    public doublePageThumbnail:DoublePageThumbnailService,
+    public chaptersThumbnail:ChaptersThumbnailService
   ) {
-    this.data.chapters
+
   }
   menuObj: {
     list: any,
@@ -86,9 +90,22 @@ export class ReaderToolbarComponent {
 
   }
   previous() {
-
+    this.current._chapterPrevious();
   }
   next() {
+    this.current._chapterNext();
+  }
 
+  isFullChange() {
+    this.isfullscreen = !this.isfullscreen
+    if (document.fullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    } else {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      }
+    }
   }
 }

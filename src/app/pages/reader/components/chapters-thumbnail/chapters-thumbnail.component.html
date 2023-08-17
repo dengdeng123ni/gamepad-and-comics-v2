@@ -1,0 +1,45 @@
+<div class="warp">
+  <div class="list" id="section">
+    <button
+      mat-button
+      class="item"
+      *ngFor="let n of data.chapters; let index = index"
+      [attr._id]="'section_' + n.id"
+      [attr.select]="n.id == data.chapter_id"
+      [attr.default]="n.id == data.chapter_id"
+      [attr.region]="'section'"
+      [id]="'section_' + n.id"
+      [style]="
+        n.id == data.chapter_id
+          ? 'background: rgba(255, 255, 255, .1);color:#c2185b;border-radius: 4px;'
+          : null
+      "
+      (click)="on(n.id)"
+    >
+      <div class="img">
+        <img
+          loading="lazy"
+          class="w-full"
+          [src]="n.cover"
+        />
+      </div>
+      <div class="info">
+        <div
+          class="name"
+          [attr.read]="!!n.read"
+          [attr.current]="n.id == data.chapter_id"
+        >
+          {{ n.title }}
+        </div>
+        <div class="bottom">
+          <div class="sub_title" *ngIf="n.pub_time">
+            {{n.pub_time | date:'YYYY-MM-dd'}}
+          </div>
+          <!-- <div class="progress">{{n.total}}</div> -->
+          <!-- <div class="date">{{n.lastReadTime | date:'yyyy-MM-dd'}}</div> -->
+        </div>
+      </div>
+    </button>
+  </div>
+</div>
+<!-- #c2185b -->

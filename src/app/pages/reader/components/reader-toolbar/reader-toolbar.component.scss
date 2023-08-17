@@ -1,4 +1,4 @@
-.reader_toolbar_left {
+.reader_toolbar_left,.reader_toolbar_right {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -22,6 +22,9 @@
       height: 100%;
     }
   }
+}
+.reader_toolbar_right{
+  right: 0px;
 }
 
 #reader_toolbar_menu{

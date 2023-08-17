@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-interface Item { id: string, src: string, width: string, height: string }
+interface Item { id: string, src: string, width: number, height: number }
 interface Info {
   cover: string,
   title: string,
@@ -31,7 +31,7 @@ export class DataService {
   };
   comic_id = "";
   chapter_id = "";
-  page_index = ""
+  page_index:number=0;
   page_id = "";
 
   is_edit = false;

@@ -1,14 +1,12 @@
 import { Component, Inject, NgZone } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ContextMenuEventService, GamepadEventService } from 'src/app/library/public-api';
-import { ConfigReaderService } from '../../services/config.service';
-import { CurrentReaderService } from '../../services/current.service';
-import { GeneralService } from '../../services/general.service';
-import { ImagesService } from '../../services/images.service';
 import { DoublePageThumbnailService } from './double-page-thumbnail.service';
+import { UtilsService } from 'src/app/library/public-api';
+import { DataService } from '../../services/data.service';
+import { CurrentService } from '../../services/current.service';
 interface DialogData {
-  id: number;
-  index: number
+  chapter_id: string;
+  page_index: number
 }
 @Component({
   selector: 'app-double-page-thumbnail',
@@ -16,164 +14,57 @@ interface DialogData {
   styleUrls: ['./double-page-thumbnail.component.scss']
 })
 export class DoublePageThumbnailComponent {
-  list = [];
-  chapterId = null;
-  index = -1;
+
+  pages: any = [];
+  page_index = 0;
+  chapter_id = [];
+
+  double_pages: any = [];
+
   constructor(
-    public images: ImagesService,
-    public current: CurrentReaderService,
-    public doublePageThumbnail: DoublePageThumbnailService,
+    public utils: UtilsService,
     private zone: NgZone,
-    public ContextMenuEvent: ContextMenuEventService,
-    public config: ConfigReaderService,
-    public GamepadEvent: GamepadEventService,
-    public general: GeneralService,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    public data: DataService,
+    public current: CurrentService,
+    @Inject(MAT_DIALOG_DATA) public _data: DialogData,
+    public doublePageThumbnail:DoublePageThumbnailService,
   ) {
-    this.init(this.data.id, this.data.index)
-
-    ContextMenuEvent.register('double_page_thumbnail', {
-      send: ($event, data) => {
-        let index_arr = [];
-        $event.querySelectorAll(".index").forEach(node => {
-          index_arr.push(parseInt(node.textContent))
-        })
-        index_arr.sort();
-        const delete_index = data.findIndex(x => x.id == "delete");
-        data[delete_index].submenu = index_arr.map(x => ({ name: x, id: `delete_${x}` }));
-        const index = data.findIndex(x => x.id == "separate_page")
-        if (index > -1) {
-          data.splice(index, 1)
-        }
-        const index2 = data.findIndex(x => x.id == "merge_page")
-        if (index2 > -1) {
-          data.splice(index2, 1)
-        }
-        if (index_arr.length == 1) {
-          const obj = { name: "separate_page", "id": "separate_page" };
-          data.splice(1, 0, obj)
-        } else {
-          const obj = { name: "merge_page", "id": "merge_page" };
-          data.splice(1, 0, obj)
-        }
-        return data
-      },
-      on: e => {
-        if (e.id.split("_")[0] == "delete") {
-          const index = parseInt(e.id.split("_")[1]) - 1;
-          const obj = this.current.comics.chapters.find(x => x.id == this.chapterId).images[index]
-          const id = obj.id;
-          this.current.deletePage(this.current.comics.id, this.chapterId, id).then(() => {
-            this.init(this.chapterId, this.index)
-          })
-        } else if (e.id == "merge_page") {
-          const node = document.querySelector(`[content_menu_value='${e.value}']`)
-          let index_arr = [];
-          node.querySelectorAll(".index").forEach(node => {
-            index_arr.push(parseInt(node.textContent) - 1)
-          })
-          const obj = this.current.comics.chapters.find(x => x.id == this.chapterId).images[index_arr[0]]
-          const obj2 = this.current.comics.chapters.find(x => x.id == this.chapterId).images[index_arr[1]]
-          this.general.mergePage({ id: obj.id, src: obj.src, src2: obj2.src, id2: obj2.id, }).then(() => {
-            this.init(this.chapterId, this.index)
-          })
-        } else if (e.id == "separate_page") {
-          const node = document.querySelector(`[content_menu_value='${e.value}']`)
-          let index_arr = [];
-          node.querySelectorAll(".index").forEach(node => {
-            index_arr.push(parseInt(node.textContent) - 1)
-          })
-          index_arr.sort();
-          const obj = this.current.comics.chapters.find(x => x.id == this.chapterId).images[index_arr[0]]
-          this.general.separatePage({ id: obj.id, src: obj.src }).then(() => {
-            this.init(this.chapterId, this.index)
-          })
-        } else if (e.id == "insertPageBefore" || e.id == "insertPageAfter") {
-          const node = document.querySelector(`[content_menu_value='${e.value}']`)
-          let index_arr = [];
-          node.querySelectorAll(".index").forEach(node => {
-            index_arr.push(parseInt(node.textContent) - 1)
-          })
-          index_arr.sort();
-          const obj = this.current.comics.chapters.find(x => x.id == this.chapterId).images[index_arr[0]]
-          const id = obj.id;
-          this.current.insertPage(this.current.comics.id, this.chapterId, id, "", e.id == "insertPageBefore" ? "before" : "after")
-            .then(() => {
-              this.init(this.chapterId, this.index)
-            })
-        }
-      },
-      menu: [
-        {
-          name: "insert_page", "id": "insertPage", submenu: [
-            {
-              name: "before", id: "insertPageBefore",
-            },
-            {
-              name: "after", id: "insertPageAfter",
-            }
-          ],
-        },
-        { name: "delete", id: "delete" },
-      ]
-    })
-    GamepadEvent.registerAreaEvent('double_page_thumbnail', {
-      LEFT_TRIGGER: () => {
-        this.previousChapter();
-      },
-      RIGHT_TRIGGER: () => {
-        this.nextChapter();
-      }
-    })
+    this.init(_data);
   }
-  async previousChapter() {
-    document.querySelector("#double_page_thumbnail").classList.add("opacity-0");
-    const id = this.general.getPreviousChapterId(this.chapterId);
-    const index = await this.general.getChapterIndex(id);
-    await this.images.loadImages(this.current.comics.chapters.find(x => x.id == this.chapterId).images.map(x => x.small))
-    this.init(id, index);
-  }
-  async nextChapter() {
-    document.querySelector("#double_page_thumbnail").classList.add("opacity-0");
-    const id = this.general.getNextChapterId(this.chapterId);
-    const index = await this.general.getChapterIndex(id);
-    await this.images.loadImages(this.current.comics.chapters.find(x => x.id == this.chapterId).images.map(x => x.small))
-    this.init(id, index);
-  }
-  async init(id, index) {
-    this.chapterId = id;
-    this.index = index;
-    const list = this.current.comics.chapters.find(x => x.id == this.chapterId).images.map(x => ({
-      id: x.id,
-      width: x.width,
-      height: x.height,
-      src: x.small
-    }))
-
-    const double_list = await this.images.getPageDouble(list, { isFirstPageCover: this.current.comics.isFirstPageCover, pageOrder: this.current.comics.pageOrder });
-    double_list.forEach(x => {
-      x.images.forEach(c => {
-        if (!x.select) x.select = (c.index - 1) == index;
-      })
-    })
+  async init(_data?: DialogData) {
+    if (_data) {
+      this.pages = await this.current._getChapter(_data.chapter_id);
+      this.page_index = this.data.page_index;
+    } else {
+      this.pages = this.data.pages as any;
+      this.page_index = this.data.page_index;
+    }
+    const double_list = await this.getDoublePages(this.pages, this.page_index)
+    this.double_pages = double_list;
     this.zone.run(() => {
-      this.list = double_list;
       this.complete()
       setTimeout(() => this.complete(), 150)
     })
   }
 
+  async getDoublePages(pages: { id: string; width: number; height: number; src: string; }[], page_index: number) {
+    const list = pages.map((x: { id: string; width: number; height: number; src: string; }) => ({
+      id: x.id,
+      width: x.width,
+      height: x.height,
+      src: x.src
+    }))
+
+    const double_list = await this.utils.Images.getPageDouble(list, { isFirstPageCover: true, pageOrder: false });
+    double_list.forEach((x: any) => {
+      x.images.forEach((c: any) => {
+        if (!x.select) x.select = (c.index - 1) == page_index;
+      })
+    })
+    return double_list
+  }
   ngAfterViewInit() {
-    // if(this.list.length){
-    //   this.list.forEach(x => {
-    //     x.images.forEach(c => {
-    //       x.select = (c.index - 1) == this.index;
-    //     })
-    //   })
-    //   setTimeout(()=>{
-    //     this.complete()
-    //   },50)
-    // }
+
   }
   complete = () => {
     const node = document.querySelector("#double_page_thumbnail button[select=true]");
@@ -182,7 +73,7 @@ export class DoublePageThumbnailComponent {
       node.scrollIntoView({ block: "center", inline: "center" });
       (node as any).focus();
       setTimeout(() => {
-        document.querySelector("#double_page_thumbnail").classList.remove("opacity-0");
+        document.querySelector("#double_page_thumbnail")!.classList.remove("opacity-0");
       }, 150)
     } else {
       setTimeout(() => {
@@ -191,17 +82,17 @@ export class DoublePageThumbnailComponent {
     }
   }
 
-  onClickItem($event, data) {
+  on(data: any) {
     if (data.images.length == 1) {
       const index = data.images[0].index;
-      this.current.chapterPageChange(this.chapterId, index - 1);
+      this.current._chapterPageChange(this.data.chapter_id, index - 1);
     } else {
-      if (this.current.comics.pageOrder) {
+      if (false) {
         const index = data.images[0].index;
-        this.current.chapterPageChange(this.chapterId, index - 1);
+        this.current._chapterPageChange(this.data.chapter_id, index - 1);
       } else {
         const index = data.images[0].index;
-        this.current.chapterPageChange(this.chapterId, index - 2);
+        this.current._chapterPageChange(this.data.chapter_id, index - 2);
       }
     }
   }
@@ -209,6 +100,11 @@ export class DoublePageThumbnailComponent {
   close() {
     this.doublePageThumbnail.close();
   }
+
+
+
+
+
 
 
 
