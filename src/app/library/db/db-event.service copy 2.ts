@@ -5,6 +5,7 @@ interface Events {
   List: Function;
   Detail: Function;
   Pages: Function;
+  Image:Function
 }
 
 @Injectable({
@@ -109,13 +110,39 @@ export class DbEventService {
             const json = await res.json();
             return `${json.data[0].url}?token=${json.data[0].token}`
           }
-          obj["id"] = x.path;
-          obj["src"] = await getImageUrl(x.path)
+          const utf8_to_b64 = (str: string) => {
+            return window.btoa(encodeURIComponent(str));
+          }
+          obj["id"] = `${id}_${index}`;
+          obj["src"] = `${window.location.origin}/image/bilibili/${id}_${index}/${utf8_to_b64(x.path)}`
           obj["width"] = x.x;
           obj["height"] = x.y;
           data.push(obj)
         }
         return data
+      },
+      Image: async (id: string) => {
+        const b64_to_utf8 = (str: string) => {
+          return decodeURIComponent(window.atob(str));
+        }
+        const _id = b64_to_utf8(id);
+        const getImageUrl = async (id: string) => {
+          const res = await fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web", {
+            "headers": {
+              "accept": "application/json, text/plain, */*",
+              "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+              "content-type": "application/json;charset=UTF-8"
+            },
+            "body": `{\"urls\":\"[\\\"${id}\\\"]\"}`,
+            "method": "POST",
+          });
+          const json = await res.json();
+          return `${json.data[0].url}?token=${json.data[0].token}`
+        }
+        const url = await getImageUrl(_id);
+        const res = await fetch(url);
+        const blob = await res.blob();
+        return blob
       }
     })
   }

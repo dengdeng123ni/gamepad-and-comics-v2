@@ -16,6 +16,8 @@ export class MessageControllerService {
       const data = event.data;
       window.postMessage(data, '*');
     })
+
+
     navigator.serviceWorker.addEventListener('message', async (event) => {
       // 处理接收到的消息
       const type = event.data.type;
@@ -30,7 +32,6 @@ export class MessageControllerService {
         if (navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage(event.data)
       }
     }, false);
-console.log(123);
 
   }
 }

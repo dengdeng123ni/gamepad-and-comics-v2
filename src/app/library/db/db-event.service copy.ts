@@ -83,8 +83,11 @@ export class DbEventService {
             const json = await res.json();
             return `${json.data[0].url}?token=${json.data[0].token}`
           }
+          const utf8_to_b64 = (str: string) => {
+            return window.btoa(encodeURIComponent(str));
+          }
           obj["id"] = x.path;
-          obj["src"] = "http://localhost:9880/file/L1VzZXJzL3poaWFuZ3plbmcvaUNsb3VkJUU0JUJBJTkxJUU3JTlCJTk4JUVGJUJDJTg4JUU1JUJEJTkyJUU2JUExJUEzJUVGJUJDJTg5L0RvY3VtZW50cy8lRTUlQTQlOUElRTUlQjElODIlRTYlQkMlQUIlRTclOTQlQkIvJUU3JTk0JUI1JUU5JTk0JUFGJUU0JUJBJUJBLSVFNSU4RCVCNy8lRTclQUMlQUMwNyVFNSU4RCVCNy81NC5wbmc="
+          obj["src"] = `/bilibili/${id}_${index}/${utf8_to_b64(x.path)}`
           obj["width"] = x.x;
           obj["height"] = x.y;
           data.push(obj)

@@ -39,4 +39,12 @@ export class DbControllerService {
       return []
     }
   }
+  async getImage(id:string) {
+    if (this.DbEvent.Event[this.AppData.origin] && this.DbEvent.Event[this.AppData.origin]["Image"]) {
+      const res = await this.DbEvent.Event[this.AppData.origin]["Image"](id)
+      return res
+    } else {
+      return []
+    }
+  }
 }

@@ -1249,8 +1249,18 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       this.debugger = new DebugHandler(this, this.adapter);
       this.idle = new IdleScheduler(this.adapter, IDLE_DELAY, MAX_IDLE_DELAY, this.debugger);
       this._data_temporary_files = {};
+
       this._data_proxy_response = {};
-      this.proxy_hostnames = ["manga.bilibili.com", "i0.hdslb.com"];
+
+      this._data_images = {};
+
+
+      this.proxy_hostnames = ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"];
+      this.image_cache = null;
+      this.init();
+    }
+    async init() {
+      this.image_cache = await caches.open('image');
     }
     getCacheImage = async (src) => {
       const cache = await caches.open('image');
@@ -1348,7 +1358,6 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       })
     }
     async onWebsiteProxyRequest(event) {
-      console.log(event);
       const req = event.request;
       const local_url = new URL(this.adapter.origin);
       const req_url = new URL(req.url);
@@ -1406,23 +1415,93 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         }, 30000)
       })
     }
-
+    async onWebsiteProxyRequestImageCache(event) {
+      if (event.request.destination == "image") {
+        const res = await this.image_cache.match(event.request.url);
+        if (res) {
+          return res
+        } else {
+          // 勿动，不知道为啥，存起来，r返回就是null，必须再取一次
+          const r = await this.onWebsiteProxyRequest(event);
+          const request = new Request(event.request.url);
+          await this.image_cache.put(request, r);
+          const r2 = await this.image_cache.match(event.request.url);
+          return r2
+        }
+      } else {
+        return this.onWebsiteProxyRequest(event)
+      }
+    }
+    async onLocalProxyRequest(id) {
+      await this.broadcast({ type: "local_image", id: id })
+      let bool = true;
+      return new Promise((r, j) => {
+        const getFile = () => {
+          setTimeout(() => {
+            if (this._data_images[id]) {
+              let rsponse = this._data_images[id].response;
+              const readableStream = new ReadableStream({
+                start(controller) {
+                  for (const data of rsponse.body) {
+                    controller.enqueue(Uint8Array.from(data));
+                  }
+                  controller.close();
+                },
+              });
+              delete rsponse.body;
+              const headers = new Headers();
+              rsponse.init.headers.forEach(x => {
+                headers.append(x.name, x.value);
+              })
+              rsponse.init.headers = headers
+              delete this._data_images[id]
+              r(new Response(readableStream, rsponse.init))
+            } else {
+              if (bool) getFile()
+            }
+          }, 0)
+        }
+        getFile()
+        setTimeout(() => {
+          bool = false;
+          r(new Response(""))
+          j(new Response(""))
+        }, 30000)
+      })
+    }
+    async onLocalProxyRequestImageCache(event) {
+      const req = event.request;
+      let str = req.url.split("/");
+      const id=str.pop();
+      const url = str.join("/");
+      const res = await this.image_cache.match(url);
+      if (res&&res.headers.get('content-length')) {
+        return res
+      } else {
+        const r = await this.onLocalProxyRequest(id);
+        const request = new Request(url);
+        await this.image_cache.put(request, r);
+        const r2 = await this.image_cache.match(url);
+        return r2
+      }
+    }
     onFetch(event) {
       const req = event.request;
       const local_url = new URL(this.adapter.origin);
       const req_url = new URL(req.url);
       if (local_url.hostname == req_url.hostname) {
-        if (req.url.split("/")[3] == "image") {
-          event.respondWith(this.getCacheImage(req.url))
+        if (req_url.pathname.split("/")[1] == "image") {
+          event.respondWith(this.onLocalProxyRequestImageCache(event))
           return;
         }
-        if (req.url.split("/")[3] == "temporary_file") {
-          event.respondWith(this.getTemporaryFile(req.url.split("/")[4]))
-          return;
-        }
+        // if (req.url.split("/")[3] == "temporary_file") {
+        //   event.respondWith(this.getTemporaryFile(req.url.split("/")[4]))
+        //   return;
+        // }
       } else {
+        console.log(req_url.hostname);
         if (this.proxy_hostnames.includes(req_url.hostname)) {
-          event.respondWith(this.onWebsiteProxyRequest(event))
+          event.respondWith(this.onWebsiteProxyRequestImageCache(event))
           return;
         }
       }
@@ -1464,6 +1543,10 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       }
       if (data && data.type && data.type == "proxy_response") {
         this._data_proxy_response[data.id] = data;
+        return;
+      }
+      if (data && data.type && data.type == "local_image") {
+        this._data_images[data.id] = data;
         return;
       }
 
