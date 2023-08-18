@@ -9,14 +9,16 @@ export class CurrentService {
 
   constructor(
     public DbController: DbControllerService,
-    public Data: DataService
+    public data: DataService
   ) { }
 
   async init(id: string) {
-    this.Data.comics_id=id;
+    this.data.comics_id=id;
     const res = await this.DbController.getDetail(id);
-    this.Data.chapters = res.chapters;
+    this.data.chapters = res.chapters;
     delete res.chapters;
-    this.Data.info = res
+    this.data.info = res;
+    this.data.chapter_id=this.data.info.chapter_id;
+
   }
 }

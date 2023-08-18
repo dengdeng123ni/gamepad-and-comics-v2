@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
+interface Item { id: string, src: string, width: number, height: number }
 interface Info {
   cover: string,
   title: string,
-  read_chapter_id: string | number,
   author?: string,
-  intro?: string
+  intro?: string,
+  chapter_id:string
 }
-interface Item {
-  id: string | number,
+interface ChaptersItem {
+  id: string,
   cover: string,
   title: string,
   short_title?: string,
@@ -22,15 +23,19 @@ interface Item {
   providedIn: 'root'
 })
 export class DataService {
-  chapters: Array<Item> = [];
-
-  comics_id = "";
+  pages: Array<Item> = [];
+  chapters: Array<ChaptersItem> = [];
   info: Info = {
     cover: '',
     title: '',
-    read_chapter_id: 0,
+    chapter_id:""
   };
-  is_init_finish = false;
+  comics_id = "";
+  chapter_id = "";
+  page_index: number = 0;
+  page_id = "";
+
+  is_edit = false;
 
   constructor() { }
 }

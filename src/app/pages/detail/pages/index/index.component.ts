@@ -23,7 +23,7 @@ export class IndexComponent {
     this.router.navigate(['/'])
   }
   continue() {
-    this.router.navigate(['/', this.data.comics_id,this.data.info.read_chapter_id,])
+    this.router.navigate(['/', this.data.comics_id,this.data.chapter_id,])
   }
 
   on_list($event: HTMLElement) {

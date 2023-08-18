@@ -29,12 +29,14 @@ export class DataService {
     cover: '',
     title: ''
   };
-  comic_id = "";
+  comics_id = "";
   chapter_id = "";
-  page_index:number=0;
+  page_index: number = 0;
   page_id = "";
 
   is_edit = false;
+
+
 
 
   constructor() { }

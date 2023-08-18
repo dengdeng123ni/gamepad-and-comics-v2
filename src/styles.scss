@@ -1,3 +1,4 @@
+@import "@angular/material/prebuilt-themes/pink-bluegrey.css";
 html,
 body {
   height: 100%;
@@ -74,4 +75,21 @@ body {
   .mat-bottom-sheet-container {
     width: 100vw;
   }
+}
+
+
+//
+
+._side_bottom {
+  .mat-bottom-sheet-container {
+    max-width: 100% !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    height: 100%;
+    max-height: 100% !important;
+  }
+}
+img, svg, video, canvas, audio, iframe, embed, object {
+  display: block;
+  vertical-align: middle;
 }

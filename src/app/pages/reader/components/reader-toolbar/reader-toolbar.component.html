@@ -5,19 +5,19 @@
         <mat-icon>keyboard_return</mat-icon>
       </button>
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="firstPageCoverChange()">
-        <mat-icon *ngIf="!isFirstPageCover">radio_button_unchecked</mat-icon>
-        <mat-icon *ngIf="isFirstPageCover">radio_button_checked</mat-icon>
+        <mat-icon *ngIf="!double_page_reader.isFirstPageCover">radio_button_unchecked</mat-icon>
+        <mat-icon *ngIf="double_page_reader.isFirstPageCover">radio_button_checked</mat-icon>
       </button>
     </div>
   </div>
 
-  <div class="flex flex-col bottom">
+  <div class="list bottom">
     <div class="item">
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="imageRotation()">
         <mat-icon>screen_rotation</mat-icon>
       </button>
     </div>
-    <div class="flex flex-col item h-full mt-5" id="reader_toolbar_page">
+    <div class="item mt-5" id="reader_toolbar_page">
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="separatePage()">
         <mat-icon>call_split</mat-icon>
       </button>
@@ -32,7 +32,7 @@
         <mat-icon>delete</mat-icon>
       </button>
     </div>
-    <div class="flex flex-col item h-full mt-5" id="reader_toolbar_section">
+    <div class="item mt-5" id="reader_toolbar_section">
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button (click)="openList($event)" class="icon subject">
         <mat-icon>subject</mat-icon>
       </button>
@@ -46,15 +46,12 @@
         <mat-icon>chevron_right</mat-icon>
       </button>
     </div>
-    <!-- <mat-slider vertical="vertical" ngClass="reader_toolbar_progress_slider" [min]="0" [max]="current.comics.chapter.total" class=" w-full">
-     <input matSliderThumb [(ngModel)]="current.comics.chapter.index" (valueChange)="change($event)">
-    </mat-slider> -->
   </div>
 </div>
 <div
-  class="flex flex-col absolute h-full justify-between top-0 right-0 bottom-0 reader_toolbar_right">
-  <div class="flex flex-col top">
-    <div class="flex flex-col item h-full">
+  class="reader_toolbar_right">
+  <div class="list top">
+    <div class="item">
       <button matTooltipPosition="left" tabIndex="-1" mat-icon-button class="icon" (click)="chaptersThumbnail.open()">
         <mat-icon>subject</mat-icon>
       </button>
@@ -62,7 +59,7 @@
         class="icon filter_image_list" (click)="doublePageThumbnail.open()">
         <mat-icon>grid_view</mat-icon>
       </button>
-      <button matTooltipPosition="left" tabIndex="-1" mat-icon-button class="icon">
+      <button matTooltipPosition="left" tabIndex="-1" mat-icon-button class="icon" (click)="onePageThumbnailMode2.open()">
         <mat-icon>filter</mat-icon>
       </button>
       <button matTooltipPosition="left" tabIndex="-1" mat-icon-button class="icon">
@@ -70,7 +67,7 @@
       </button>
     </div>
   </div>
-  <div class="flex flex-col bottom">
+  <div class="item bottom">
     <!-- <div class="flex flex-col item ">
 
     </div> -->

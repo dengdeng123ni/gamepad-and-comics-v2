@@ -4,6 +4,10 @@ import { DataService } from '../../services/data.service';
 import { CurrentService } from '../../services/current.service';
 import { DoublePageThumbnailService } from '../double-page-thumbnail/double-page-thumbnail.service';
 import { ChaptersThumbnailService } from '../chapters-thumbnail/chapters-thumbnail.service';
+import { OnePageThumbnailMode1Service } from '../one-page-thumbnail-mode1/one-page-thumbnail-mode1.service';
+import { OnePageThumbnailMode2Service } from '../one-page-thumbnail-mode2/one-page-thumbnail-mode2.service';
+import { OnePageThumbnailMode3Service } from '../one-page-thumbnail-mode3/one-page-thumbnail-mode3.service';
+import { ReaderEventService } from '../../services/reader-event.service';
 
 @Component({
   selector: 'app-reader-toolbar',
@@ -14,16 +18,21 @@ export class ReaderToolbarComponent {
   isfullscreen = !!document.fullscreenElement;
   isMobile = (navigator as any).userAgentData.mobile;
 
-  isFirstPageCover = true;
-
+  double_page_reader:any={}
   @ViewChild(MatMenuTrigger) menu: MatMenuTrigger | any;
   constructor(
     public current: CurrentService,
     public data: DataService,
+    public ReaderEvent:ReaderEventService,
     public doublePageThumbnail:DoublePageThumbnailService,
-    public chaptersThumbnail:ChaptersThumbnailService
+    public chaptersThumbnail:ChaptersThumbnailService,
+    public onePageThumbnailMode1:OnePageThumbnailMode1Service,
+    public onePageThumbnailMode2:OnePageThumbnailMode2Service,
+    public onePageThumbnailMode3:OnePageThumbnailMode3Service
   ) {
-
+    ReaderEvent.register$.subscribe((x:any)=>{
+      if(x.key=="double_page_reader") this.double_page_reader=x.config;
+    })
   }
   menuObj: {
     list: any,
@@ -36,10 +45,46 @@ export class ReaderToolbarComponent {
     window.history.back()
   }
   firstPageCoverChange() {
-
+    this.double_page_reader= this.ReaderEvent._runEvent('double_page_reader','FirstPageToggle')
   }
 
   imageRotation() {
+    const node: any = document.querySelector(".swiper-slide-active")
+    const rotate = node.getAttribute("rotate");
+    const nodes: any = document.querySelectorAll(".swiper-slide-active img")
+    if (nodes.length == 1) {
+      const scale = (nodes[0].height / nodes[0].width)
+      if (rotate == "90") {
+        node.style = `transform: rotate(180deg) scale(1);`;
+        node.setAttribute("rotate", "180")
+      } else if (rotate == "180") {
+        node.style = `transform: rotate(270deg) scale(${scale});`;
+        node.setAttribute("rotate", "270")
+      }
+      else if (rotate == "270") {
+        node.style = "";
+        node.setAttribute("rotate", "")
+      } else {
+        node.style = `transform: rotate(90deg) scale(${scale});`;
+        node.setAttribute("rotate", "90")
+      }
+    } else if (nodes.length == 2) {
+      const scale = ((nodes[0].height + nodes[1].height) / 2 / (nodes[0].width + nodes[1].width))
+      if (rotate == "90") {
+        node.style = `transform: rotate(180deg) scale(1);`;
+        node.setAttribute("rotate", "180")
+      } else if (rotate == "180") {
+        node.style = `transform: rotate(270deg) scale(${scale});`;
+        node.setAttribute("rotate", "270")
+      }
+      else if (rotate == "270") {
+        node.style = "";
+        node.setAttribute("rotate", "")
+      } else {
+        node.style = `transform: rotate(90deg) scale(${scale});`;
+        node.setAttribute("rotate", "90")
+      }
+    }
 
   }
   separatePage() {
@@ -87,7 +132,7 @@ export class ReaderToolbarComponent {
       this.current._chapterChange(id);
   }
   togglePage() {
-
+    this.double_page_reader= this.ReaderEvent._runEvent('double_page_reader','PageToggle')
   }
   previous() {
     this.current._chapterPrevious();

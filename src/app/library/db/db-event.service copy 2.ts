@@ -63,15 +63,17 @@ export class DbEventService {
         return {
           id: x.id,
           cover: httpUrlToHttps(x.vertical_cover),
-          title: `${x.short_title} ${x.title}`,
+          title: x.title,
           author: x.author_name.toString(),
           intro: x.classic_lines,
           chapters: x.ep_list.map((c: any) => (
             {
               ...c,
-              cover: httpUrlToHttps(c.cover)
+              cover: httpUrlToHttps(c.cover),
+              title: `${c.short_title} ${c.title}`
             }
-          )).reverse()
+          )).reverse(),
+          chapter_id: x.read_epid
         }
       },
       Pages: async (id: string) => {
@@ -84,7 +86,7 @@ export class DbEventService {
           "body": `{\"ep_id\":${id}}`,
           "method": "POST"
         });
-       const json= await res.json();
+        const json = await res.json();
         let data = [];
         for (let index = 0; index < json.data.images.length; index++) {
           let x = json.data.images[index];

@@ -42,7 +42,7 @@ export class CurrentService {
   public initAfter$ = new Subject();
 
   public pageBefore$ = new Subject<number>();
-  public page$ = new Subject<number>();
+  public page$ = new Subject<any>();
   public pageAfter$ = new Subject<number>();
 
   public chapterBefore$ = new Subject<any>();
@@ -136,7 +136,7 @@ export class CurrentService {
 
   async _init(comic_id: string, chapter_id: string) {
     this.data.chapter_id = chapter_id;
-    this.data.comic_id = comic_id;
+    this.data.comics_id = comic_id;
     const list = await this.DbController.getPages(chapter_id);
     this.init$.next(list)
     this.data.pages = list;
@@ -270,14 +270,30 @@ export class CurrentService {
     this.data.pages = option.pages;
     if (option.chapter_id) this.data.chapter_id = option.chapter_id;
     const types = ['initPage', 'closePage', 'changePage', 'nextPage', 'previousPage', 'nextChapter', 'previousChapter', 'changeChapter'];
-    this.change$.next({ ...option, type, comic_id: this.data.comic_id })
+    if (type == "changePage") this._page(option)
+    if (type == "changeChapter") this._chapter(option)
+    console.log(option);
+
+    this.change$.next({ ...option, type, comic_id: this.data.comics_id })
   }
 
-  async _chapter(chapter_id: string) {
-    this.chapter$.next(chapter_id)
+  async _chapter(option: {
+    pages: Array<any>,
+    page_index: number,
+    page_id?: string,
+    chapter_id?: string,
+    trigger?: string
+  }) {
+    this.chapter$.next(option)
   }
-  async _page(page_index: number) {
-    this.page$.next(page_index)
+  async _page(option: {
+    pages: Array<any>,
+    page_index: number,
+    page_id?: string,
+    chapter_id?: string,
+    trigger?: string
+  }) {
+    this.page$.next(option)
   }
 
 

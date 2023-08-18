@@ -13,21 +13,23 @@ import SwiperCore, {
 import { SwiperComponent } from 'swiper/angular';
 import { CurrentService } from '../../services/current.service';
 import { DataService } from '../../services/data.service';
+import { ReaderEventService } from '../../services/reader-event.service';
 SwiperCore.use([Manipulation, Navigation, Pagination, Mousewheel, Keyboard, Autoplay]);
 interface Item { id?: string | number, src: string, width?: string, height?: string }
 @Component({
-  selector: 'app-mode1',
-  templateUrl: './mode1.component.html',
-  styleUrls: ['./mode1.component.scss']
+  selector: 'app-double-page-reader',
+  templateUrl: './double-page-reader.component.html',
+  styleUrls: ['./double-page-reader.component.scss']
 })
 
 
-export class Mode1Component {
+export class DoublePageReaderComponent {
   @ViewChild('swiper', { static: false }) swiper!: SwiperComponent;
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown = (event: KeyboardEvent) => {
     if (event.key == "c") this.pageToggle();
+    if (event.key == "v") this.firstPageToggle();
   }
   @HostListener('window:keyup', ['$event'])
   handleKeyUp = (event: KeyboardEvent) => {
@@ -43,17 +45,19 @@ export class Mode1Component {
   isPageFirst = true;
   isFirst = false;
 
-  isPageOrder = false;
-  isPageTurnDirection = true;
-
-  isFirstPageCover = true;
-
+  config = {
+    isPageOrder: false,
+    isPageTurnDirection: true,
+    isFirstPageCover: true
+  };
 
   init$;
   change$;
 
+
   constructor(
     public current: CurrentService,
+    public readerEvent: ReaderEventService,
     public data: DataService
   ) {
     this.init$ = this.current.init().subscribe(x => {
@@ -76,6 +80,12 @@ export class Mode1Component {
       }
     })
 
+    this.config = readerEvent._register('double_page_reader', {
+      FirstPageToggle: () => this.firstPageToggle(),
+      PageToggle: () => this.pageToggle(),
+      getConfig: () => this.config
+    })
+
   }
   on($event: MouseEvent) {
     this.current.on$.next($event)
@@ -83,10 +93,17 @@ export class Mode1Component {
   //
   ngOnDestroy() {
     this.init$.unsubscribe();
+    this.change$.unsubscribe();
   }
 
   firstPageToggle() {
+    this.config.isFirstPageCover = !this.config.isFirstPageCover;
+    if (this.index == 0) {
+      this.pageToggle();
+      this.pageToggle();
+    } else {
 
+    }
   }
 
   pageToggle() {
@@ -106,12 +123,12 @@ export class Mode1Component {
 
   slidePrevTransitionEnd(swiper: Array<Swiper>) {
     if (this.isMobile) {
-      this.isPageTurnDirection ? this.previous() : this.next();
+      this.config.isPageTurnDirection ? this.previous() : this.next();
     } else {
       if (!this.isWaitPrevious) {
         this.isWaitPrevious = true;
         setTimeout(() => {
-          this.isPageTurnDirection ? this.previous() : this.next();
+          this.config.isPageTurnDirection ? this.previous() : this.next();
           this.isWaitPrevious = false;
         }, 400)
       }
@@ -120,12 +137,12 @@ export class Mode1Component {
   }
   slideNextTransitionEnd(swiper: Array<Swiper>) {
     if (this.isMobile) {
-      this.isPageTurnDirection ? this.next() : this.previous();
+      this.config.isPageTurnDirection ? this.next() : this.previous();
     } else {
       if (!this.isWaitNext) {
         this.isWaitNext = true;
         setTimeout(() => {
-          this.isPageTurnDirection ? this.next() : this.previous();
+          this.config.isPageTurnDirection ? this.next() : this.previous();
           this.isWaitNext = false;
         }, 400)
       }
@@ -202,7 +219,7 @@ export class Mode1Component {
     let next = "";
     let current = "";
 
-    if (this.isPageOrder) {
+    if (this.config.isPageOrder) {
       // 普通模式
       if (res.previous.primary.start) previous = previous + `<img style="opacity: 0;"  src="${res.previous.primary.image.src}" />`;
       if (res.previous.secondary.image.src) previous = previous + `<img previousimage id="${res.previous.secondary.image.id}" src="${res.previous.secondary.image.src}" />`;
@@ -237,7 +254,7 @@ export class Mode1Component {
     }
 
     this.swiper.swiperRef.removeAllSlides();
-    if (this.isPageTurnDirection) {
+    if (this.config.isPageTurnDirection) {
       if (!!previous) this.appendSlide(previous)
       if (!!current) this.appendSlide(current)
       if (!!next) this.appendSlide(next)
@@ -277,7 +294,7 @@ export class Mode1Component {
       const obj = await this.isWideImage(images[index], images[index + 1]);
       const total = images.length;
 
-      if (this.isFirstPageCover == true && index == 0) {
+      if (this.config.isFirstPageCover == true && index == 0) {
         obj.secondary.image = "";
       }
       if (obj.primary.width > obj.primary.height || obj.secondary.width > obj.secondary.height) {
@@ -398,16 +415,16 @@ export class Mode1Component {
 
     if (this.isPageFirst) {
       this.isPageFirst = false;
-      if (this.isFirstPageCover == true && index == 0) {
+      if (this.config.isFirstPageCover == true && index == 0) {
         obj.secondary.image = "";
         steps = 1;
       }
     } else {
-      if (index == 0 && !this.isSwitch && this.isFirstPageCover == true) {
+      if (index == 0 && !this.isSwitch && this.config.isFirstPageCover == true) {
         obj.secondary.image = "";
         steps = 1;
       }
-      if (index == 0 && this.isSwitch && this.isFirstPageCover == false) {
+      if (index == 0 && this.isSwitch && this.config.isFirstPageCover == false) {
         obj.secondary.image = "";
         steps = 1;
       }

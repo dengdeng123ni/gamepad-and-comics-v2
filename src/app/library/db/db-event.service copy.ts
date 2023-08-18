@@ -49,7 +49,14 @@ export class DbEventService {
           title: x.title,
           author: x.author_name.toString(),
           intro: x.classic_lines,
-          chapters: x.ep_list
+          chapters: x.ep_list.map((c: any) => (
+            {
+              ...c,
+              cover: httpUrlToHttps(c.cover),
+              title: `${c.short_title} ${c.title}`
+            }
+          )).reverse(),
+          chapter_id: x.read_epid
         }
       },
       Pages: async (id: string) => {
