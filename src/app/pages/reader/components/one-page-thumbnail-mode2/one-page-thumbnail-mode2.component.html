@@ -1,4 +1,4 @@
-<div class="list opacity-0" id="one_page_thumbnail_mode2">
+<div class="list opacity-0" id="one_page_thumbnail_mode2" (mouseenter)="enter()" (mouseleave)="leave()">
   <button
     mat-button
     class="item"
@@ -18,7 +18,6 @@
         [height]="n.height"
         loading="lazy"
         [src]="n.src"
-        [alt]="index"
       />
     </div>
     <div class="index">

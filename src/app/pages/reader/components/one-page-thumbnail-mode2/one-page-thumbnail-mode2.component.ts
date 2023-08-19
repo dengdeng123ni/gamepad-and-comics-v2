@@ -18,6 +18,8 @@ export class OnePageThumbnailMode2Component {
 
   old_index = -1;
   change$;
+
+  is_hover = false;
   constructor(
     public current: CurrentService,
     public data: DataService,
@@ -50,6 +52,9 @@ export class OnePageThumbnailMode2Component {
       setTimeout(() => {
         if (this.data.page_index || this.page_index === 0) {
           if (this.old_index == this.page_index) return
+          console.log(this.is_hover);
+
+
           let container = document.querySelector("#one_page_thumbnail_mode2") as any;
           let node = document.querySelector(`[_id=one_page_thumbnail_mode2_${this.page_index}]`);
           let observer = new IntersectionObserver(
@@ -58,7 +63,7 @@ export class OnePageThumbnailMode2Component {
                 console.log(x.intersectionRatio);
 
                 if (x.intersectionRatio != 1) {
-                  node!.scrollIntoView({ block: "center", inline: "center" })
+                   if (!this.is_hover) node!.scrollIntoView({ block: "center", inline: "center" })
                   container.classList.remove("opacity-0");
                   this.old_index = this.page_index;
                 }
@@ -70,6 +75,12 @@ export class OnePageThumbnailMode2Component {
         }
       })
     })
+  }
+  enter() {
+    this.is_hover = true;
+  }
+  leave() {
+    this.is_hover = false;
   }
 
   ngOnDestroy() {

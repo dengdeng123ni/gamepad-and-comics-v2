@@ -36,6 +36,7 @@ export class DoublePageThumbnailService {
 
   isToggle = () => {
     if (this.opened) this.close()
+    else this.open()
   }
   close() {
     this._dialog.closeAll();

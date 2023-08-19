@@ -87,9 +87,6 @@ export class DoublePageReaderComponent {
     })
 
   }
-  on($event: MouseEvent) {
-    this.current.on$.next($event)
-  }
   //
   ngOnDestroy() {
     this.init$.unsubscribe();
@@ -210,7 +207,7 @@ export class DoublePageReaderComponent {
     if (Number.isNaN(index)) index = 0;
     this.index = index;
     if (this.index < 0) this.index = 0;
-    const res = await this.getCurrentImages(this.list, this.index);
+    const res:any = await this.getCurrentImages(this.list, this.index);
     if (!res.previous.primary.image.src && !res.previous.secondary.image.src) res.previous = await this.getPreviousLast();
     if (!res.next.primary.image.src && !res.next.secondary.image.src) res.next = await this.getNextFirst();
 
@@ -218,10 +215,11 @@ export class DoublePageReaderComponent {
     let previous = "";
     let next = "";
     let current = "";
+console.log(res);
 
     if (this.config.isPageOrder) {
       // 普通模式
-      if (res.previous.primary.start) previous = previous + `<img style="opacity: 0;"  src="${res.previous.primary.image.src}" />`;
+      if (res.previous.primary.start) previous = previous + `<img style="opacity: 0;" src="${res.previous.primary.image.src}" />`;
       if (res.previous.secondary.image.src) previous = previous + `<img previousimage id="${res.previous.secondary.image.id}" src="${res.previous.secondary.image.src}" />`;
       if (res.previous.primary.image.src) previous = previous + `<img previousimage id="${res.previous.primary.image.id}" src="${res.previous.primary.image.src}" />`;
       if (res.previous.primary.end) previous = previous + `<img style="opacity: 0;" src="${res.previous.primary.image.src}" />`;

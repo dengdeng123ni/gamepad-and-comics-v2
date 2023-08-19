@@ -17,30 +17,7 @@ export class CurrentService {
     public webDb: NgxIndexedDBService
   ) {
 
-    this.on$.subscribe(event$ => {
-      const { x, y } = event$;
-      const { innerWidth, innerHeight } = window;
-      if (x > (innerWidth * 0.33) && x < (innerWidth * 0.66) && y > (innerHeight * 0.33) && y < (innerHeight * 0.66)) {
-        this.readerNavbarBar$.next(true)
-      } else {
-        if (x < (innerWidth / 2)) {
-          this._change("previousPage",{
-            pages:this.data.pages,
-            page_index:this.data.page_index
-          })
-        }
-        else {
-          this._change("nextPage",{
-            pages:this.data.pages,
-            page_index:this.data.page_index
-          })
-        }
-      }
 
-    })
-    this.page$.subscribe(index => {
-      this._setChapterIndex(this.data.chapter_id, index)
-    })
   }
 
 
@@ -263,6 +240,8 @@ export class CurrentService {
 
   async _getChapterIndex(id: string): Promise<number> {
     const res: any = await firstValueFrom(this.webDb.getByID("last_read_chapter_page", id))
+    console.log(res);
+
     if (res) {
       return res.page_index
     } else {
@@ -285,10 +264,11 @@ export class CurrentService {
     this.data.pages = option.pages;
     if (option.chapter_id) this.data.chapter_id = option.chapter_id;
     const types = ['initPage', 'closePage', 'changePage', 'nextPage', 'previousPage', 'nextChapter', 'previousChapter', 'changeChapter'];
-    if (type == "changePage") this._page(option)
+    if (type == "changePage") {
+      this._page(option)
+      this._setChapterIndex(this.data.chapter_id.toString(), option.page_index)
+    }
     if (type == "changeChapter") this._chapter(option)
-    console.log(option);
-
     this.change$.next({ ...option, type, comic_id: this.data.comics_id })
   }
 
