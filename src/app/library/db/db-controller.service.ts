@@ -22,7 +22,6 @@ export class DbControllerService {
       return []
     }
   }
-
   async getDetail(id:string) {
     if (this.DbEvent.Event[this.AppData.origin] && this.DbEvent.Event[this.AppData.origin]["Detail"]) {
       const res = await this.DbEvent.Event[this.AppData.origin]["Detail"](id)

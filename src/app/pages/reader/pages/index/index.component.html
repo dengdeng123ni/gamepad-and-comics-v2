@@ -2,7 +2,8 @@
   <mat-drawer [opened]="left.opened" mode="side" style="min-width: 192px;" id="scroll">
     <app-one-page-thumbnail-mode2 *ngIf="left.opened"></app-one-page-thumbnail-mode2>
   </mat-drawer>
-  <app-double-page-reader></app-double-page-reader>
+  <app-double-page-reader (click)="on($event)"></app-double-page-reader>
   <app-reader-toolbar></app-reader-toolbar>
+  <app-reader-navbar-bar></app-reader-navbar-bar>
   <!-- <app-double-page-thumbnail></app-double-page-thumbnail> -->
 </mat-drawer-container>

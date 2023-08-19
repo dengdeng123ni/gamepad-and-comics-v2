@@ -1,8 +1,8 @@
 <mat-drawer-container autosize>
   <div class="container">
     <app-menu></app-menu>
-    <div class="content">
-      <comics-list class="comics_list" [list]="Data.list" (on_list)="on_list($event)"
+    <div class="content" >
+      <comics-list class="comics_list" [list]="data.list" (on_list)="on_list($event)"
         (on_item)="on_item($event)"></comics-list>
       <tool-bar class="tool_bar" *ngIf="AppData.origin=='local'"></tool-bar>
     </div>

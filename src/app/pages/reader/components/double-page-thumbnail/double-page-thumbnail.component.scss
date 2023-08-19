@@ -6,6 +6,7 @@
   direction: rtl;
   overflow: auto;
   transition: all 0.3s;
+
 }
 .list[page_order=true]{
   direction: ltr;
@@ -36,6 +37,8 @@
     overflow: hidden;
     height: fit-content;
     direction: ltr;
+    width: 100%;
+    height: 100%;
   }
 
   .single[page=l] {
@@ -46,6 +49,8 @@
     height: fit-content;
     grid-template-columns: 1fr;
     direction: ltr;
+    width: 100%;
+    height: 100%;
   }
 
   .single[page=p] {
@@ -55,6 +60,8 @@
     overflow: hidden;
     height: fit-content;
     direction: rtl;
+    width: 100%;
+    height: 100%;
   }
 
   .single[page=p][first=true] {
@@ -63,11 +70,25 @@
 
   .img {
     position: relative;
+    width: 100%;
+    height: 100%;
     img{
       max-width: 100%;
       height: auto;
-    }
+      width: 100%;
 
+    }
+    img::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      content: ' ';
+      background-size: cover;
+      background: #303030;
+    }
   }
 
   .index {
@@ -135,4 +156,10 @@
 
 [content_menu_select=true] {
   background-color: rgba(255, 255, 255, .1);
+}
+:host ::ng-deep {
+  .mdc-button__label{
+   width: 100%;
+   height: 100%;
+  }
 }

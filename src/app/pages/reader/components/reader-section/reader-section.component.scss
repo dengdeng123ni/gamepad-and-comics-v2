@@ -1,0 +1,48 @@
+.warp{
+  width: 280px;
+  height: 100%;
+  overflow: hidden;
+}
+.list{
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  height: 100%;
+  max-height: 60vh;
+  .item{
+
+    height: 42px;
+    justify-content: left;
+    padding-left: 18px;
+    min-height: 42px;
+
+    span{
+      color: rgba(255, 255, 255, .87);
+    }
+    span[read=true]{
+      color: rgba(255, 255, 255, .34);
+    }
+
+    span[current=true]{
+      color: #c2185b;
+    }
+  }
+
+}
+
+.title{
+  height: 48px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-left: 12px;
+    font-size: 18px;
+
+}
+:host ::ng-deep {
+  .mdc-button__label{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

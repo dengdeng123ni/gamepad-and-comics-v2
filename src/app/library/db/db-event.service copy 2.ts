@@ -5,7 +5,7 @@ interface Events {
   List: Function;
   Detail: Function;
   Pages: Function;
-  Image:Function
+  Image: Function
 }
 
 @Injectable({
@@ -139,10 +139,22 @@ export class DbEventService {
           const json = await res.json();
           return `${json.data[0].url}?token=${json.data[0].token}`
         }
+        const readStreamToString = async (stream: any) => {
+          const reader = stream.getReader();
+          let result = [];
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            result.push(Array.from(value));
+          }
+          return result;
+        }
         const url = await getImageUrl(_id);
-        const res = await fetch(url);
-        const blob = await res.blob();
-        return blob
+        const rsponse = await fetch(url);
+        const data = await readStreamToString(rsponse.body)
+        let headers: any = [];
+        rsponse.headers.forEach(function (value, name) { headers.push({ value, name }) });
+        return { body: data, init: { bodyUsed: rsponse.bodyUsed, headers: headers, ok: rsponse.ok, redirected: rsponse.redirected, status: rsponse.status, statusText: rsponse.statusText, type: rsponse.type, url: rsponse.url } }
       }
     })
   }

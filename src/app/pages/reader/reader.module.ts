@@ -13,6 +13,8 @@ import { OnePageThumbnailMode2Component } from './components/one-page-thumbnail-
 import { OnePageThumbnailMode3Component } from './components/one-page-thumbnail-mode3/one-page-thumbnail-mode3.component';
 import { OnePageThumbnailMode4Component } from './components/one-page-thumbnail-mode4/one-page-thumbnail-mode4.component';
 import { DoublePageReaderComponent } from './components/double-page-reader/double-page-reader.component';
+import { ReaderNavbarBarComponent } from './components/reader-navbar-bar/reader-navbar-bar.component';
+import { ReaderSectionComponent } from './components/reader-section/reader-section.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { DoublePageReaderComponent } from './components/double-page-reader/doubl
     OnePageThumbnailMode2Component,
     OnePageThumbnailMode3Component,
     OnePageThumbnailMode4Component,
-    DoublePageReaderComponent
+    DoublePageReaderComponent,
+    ReaderNavbarBarComponent,
+    ReaderSectionComponent
   ],
   imports: [
     CommonModule,

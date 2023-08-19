@@ -11,18 +11,22 @@ import { OnePageThumbnailMode2Service } from '../../components/one-page-thumbnai
   styleUrls: ['./index.component.scss']
 })
 export class IndexComponent {
-   constructor(
-    public current:CurrentService,
-    public data:DataService,
+  constructor(
+    public current: CurrentService,
+    public data: DataService,
     public router: Router,
     public route: ActivatedRoute,
-    public left:OnePageThumbnailMode2Service
-    ){
-      let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params));
-     id$.subscribe(params => this.current._init(params.get('id') as string,params.get('sid') as string))
+    public left: OnePageThumbnailMode2Service
+  ) {
+    let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params));
+    id$.subscribe(params => this.current._init(params.get('id') as string, params.get('sid') as string))
     //  console.log();
 
-   }
+  }
+
+  on($event: MouseEvent) {
+     this.current.on$.next($event)
+  }
 
 
 

@@ -20,8 +20,23 @@ export class CurrentService {
     this.on$.subscribe(event$ => {
       const { x, y } = event$;
       const { innerWidth, innerHeight } = window;
-      if (x < (innerWidth / 2)) this.previousPage$.next(event$)
-      else this.nextPage$.next(event$)
+      if (x > (innerWidth * 0.33) && x < (innerWidth * 0.66) && y > (innerHeight * 0.33) && y < (innerHeight * 0.66)) {
+        this.readerNavbarBar$.next(true)
+      } else {
+        if (x < (innerWidth / 2)) {
+          this._change("previousPage",{
+            pages:this.data.pages,
+            page_index:this.data.page_index
+          })
+        }
+        else {
+          this._change("nextPage",{
+            pages:this.data.pages,
+            page_index:this.data.page_index
+          })
+        }
+      }
+
     })
     this.page$.subscribe(index => {
       this._setChapterIndex(this.data.chapter_id, index)
