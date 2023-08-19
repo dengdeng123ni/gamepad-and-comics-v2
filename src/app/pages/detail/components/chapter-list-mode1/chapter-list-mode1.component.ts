@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DataService } from '../../services/data.service';
 interface Item {
   id: string | number,
   cover: string,
@@ -10,6 +11,7 @@ interface Item {
   selected?: boolean,
   like_count?: number | string,
   comments?: number | string,
+  is_locked?:boolean
 }
 @Component({
   selector: 'app-chapter-list-mode1',
@@ -25,7 +27,9 @@ export class ChapterListMode1Component {
   @Output() on_item = new EventEmitter<{ $event: HTMLElement, data: any }>();
 
   @Output() on_list = new EventEmitter<HTMLElement>();
+  constructor(public data:DataService){
 
+  }
   on($event: MouseEvent) {
     const node = $event.target as HTMLElement;
     if (node.getAttribute("id") == 'list') {

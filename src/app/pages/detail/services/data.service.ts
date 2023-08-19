@@ -5,7 +5,7 @@ interface Info {
   title: string,
   author?: string,
   intro?: string,
-  chapter_id:string
+  chapter_id: string
 }
 interface ChaptersItem {
   id: string,
@@ -18,6 +18,7 @@ interface ChaptersItem {
   selected?: boolean,
   like_count?: number | string,
   comments?: number | string,
+  is_locked?: boolean
 }
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,7 @@ export class DataService {
   info: Info = {
     cover: '',
     title: '',
-    chapter_id:""
+    chapter_id: ""
   };
   comics_id = "";
   chapter_id = "";
@@ -36,6 +37,8 @@ export class DataService {
   page_id = "";
 
   is_edit = false;
+  is_locked = true;
+  is_cache = false;
 
   constructor() { }
 }
