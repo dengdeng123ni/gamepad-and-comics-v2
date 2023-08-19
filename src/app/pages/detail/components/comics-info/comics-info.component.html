@@ -1,7 +1,7 @@
 <div class="warp">
   <div class="toolabr">
     <button mat-icon-button matTooltipPosition="below"  class="icon" [attr.region]="'back'" (click)="back($event)"> <mat-icon>chevron_left</mat-icon></button>
-    <button mat-button [attr.region]="'continue'" id="continue" [attr.select]="true" [attr.default]="true" (click)="continue($event)">继续</button>
+    <button mat-button [attr.region]="'continue'" id="continue" [attr.select]="true" [attr.default]="true" [disabled]="!info.title" (click)="continue($event)">继续</button>
     <!-- matTooltipPosition="below" [matTooltipShowDelay]="i18n.tooltipShowDelay" [matTooltip]="info.chapter.title"  -->
   </div>
   <div class="img">

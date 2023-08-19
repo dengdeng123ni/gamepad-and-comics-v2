@@ -62,7 +62,7 @@ export class DoublePageReaderComponent {
   ) {
     this.init$ = this.current.init().subscribe(x => {
       this.list = x;
-      this.change(0)
+      this.change(this.data.page_index)
     })
 
     this.change$ = this.current.change().subscribe(x => {

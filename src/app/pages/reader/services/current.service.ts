@@ -136,6 +136,7 @@ export class CurrentService {
     this.data.chapters = res.chapters;
     delete res.chapters;
     this.data.info = res;
+    this.data.page_index = await this._getChapterIndex(chapter_id);
   }
 
 
@@ -206,7 +207,7 @@ export class CurrentService {
     const obj = this.data.chapters[index + 1];
     if (obj) {
       const id = obj.id;
-      await this._chapterChange(id);
+      await this._chapterPageChange(id, 0);
       return true
     } else {
       return false
@@ -218,7 +219,7 @@ export class CurrentService {
     const obj = this.data.chapters[index - 1];
     if (obj) {
       const id = obj.id;
-      await this._chapterChange(id);
+      await this._chapterPageChange(id, 0);
       return true
     } else {
       return false
@@ -231,7 +232,8 @@ export class CurrentService {
   }
   async _chapterChange(chapter_id: string) {
     const pages = await this._setChapter(chapter_id);
-    const page_index = await this._getChapterIndex(chapter_id);
+    let page_index = await this._getChapterIndex(chapter_id);
+    if (pages.length - 2 < page_index) page_index = 0;
     this._change('changeChapter', { chapter_id, pages, page_index })
   }
   async _pageChange(page_index: number) {
@@ -239,9 +241,7 @@ export class CurrentService {
   }
 
   async _getChapterIndex(id: string): Promise<number> {
-    const res: any = await firstValueFrom(this.webDb.getByID("last_read_chapter_page", id))
-    console.log(res);
-
+    const res: any = await firstValueFrom(this.webDb.getByID("last_read_chapter_page", id.toString()))
     if (res) {
       return res.page_index
     } else {
@@ -250,7 +250,7 @@ export class CurrentService {
   }
 
   async _setChapterIndex(id: string, index: number) {
-    await firstValueFrom(this.webDb.update("last_read_chapter_page", { 'chapter_id': id, "page_index": index }))
+    await firstValueFrom(this.webDb.update("last_read_chapter_page", { 'chapter_id': id.toString(), "page_index": index }))
   }
 
   async _change(type: string, option: {

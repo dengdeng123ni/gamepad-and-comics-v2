@@ -7,6 +7,8 @@ import { MaterialModule } from 'src/app/library/material.module';
 import { ComicsListComponent } from './components/comics-list/comics-list.component';
 import { ToolBarComponent } from './complex-components/tool-bar/tool-bar.component';
 import { MenuComponent } from './complex-components/menu/menu.component';
+import { QueryComponent } from './components/query/query.component';
+import { BookmarksComponent } from './components/bookmarks/bookmarks.component';
 
 
 @NgModule({
@@ -14,7 +16,9 @@ import { MenuComponent } from './complex-components/menu/menu.component';
     IndexComponent,
     ComicsListComponent,
     ToolBarComponent,
-    MenuComponent
+    MenuComponent,
+    QueryComponent,
+    BookmarksComponent
   ],
   imports: [
     CommonModule,
