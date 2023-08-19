@@ -1,9 +1,9 @@
 import { Component, Inject, NgZone } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DoublePageThumbnailService } from './double-page-thumbnail.service';
-import { UtilsService } from 'src/app/library/public-api';
 import { DataService } from '../../services/data.service';
 import { CurrentService } from '../../services/current.service';
+import { UtilsService } from 'src/app/library/public-api';
 interface DialogData {
   chapter_id: string;
   page_index: number
