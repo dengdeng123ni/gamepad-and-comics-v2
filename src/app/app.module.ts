@@ -56,9 +56,9 @@ const dbConfig: DBConfig = {
     },
     {
       store: 'last_read_comics',
-      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeConfig: { keyPath: 'comics_id', autoIncrement: false },
       storeSchema: [
-        { name: 'id', keypath: 'id', options: { unique: false } },
+        { name: 'comics_id', keypath: 'comics_id', options: { unique: false } },
       ]
     },
     {
