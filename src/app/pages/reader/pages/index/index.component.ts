@@ -30,6 +30,10 @@ export class IndexComponent {
      this.current.on$.next($event)
   }
 
+  close(){
+
+  }
+
 
 
 }

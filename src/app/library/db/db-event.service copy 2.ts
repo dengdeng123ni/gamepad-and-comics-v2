@@ -7,13 +7,26 @@ interface Events {
   Pages: Function;
   Image: Function
 }
+interface Config {
+  name: string,
+  tab: Tab,
+  is_edit: Boolean;
+  is_locked: Boolean;
+  is_cache: Boolean;
+  is_tab: Boolean;
+}
+interface Tab {
+  url: string,
+  host_names: Array<string>,
+}
+declare let window: any;
 
 @Injectable({
   providedIn: 'root'
 })
 export class DbEventService {
-  public Event: { [key: string]: Events } = {};
-
+  public Events: { [key: string]: Events } = {};
+  public Configs: { [key: string]: Config } = {};
   constructor(public http: HttpClient) {
     this.register('bilibili', {
       List: async () => {
@@ -156,11 +169,28 @@ export class DbEventService {
         rsponse.headers.forEach(function (value, name) { headers.push({ value, name }) });
         return { body: data, init: { bodyUsed: rsponse.bodyUsed, headers: headers, ok: rsponse.ok, redirected: rsponse.redirected, status: rsponse.status, statusText: rsponse.statusText, type: rsponse.type, url: rsponse.url } }
       }
-    })
+    }, {
+      name: "bilibili",
+      tab: {
+        url: "https://manga.bilibili.com/",
+        host_names: ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"],
+      },
+      is_edit: false,
+      is_locked: true,
+      is_cache: true,
+      is_tab: true
+    });
   }
-  register(key: string, events: Events) {
-    if (this.Event[key]) this.Event[key] = { ...this.Event[key], ...events };
-    else this.Event[key] = events;
+
+  register = (key: string, events: Events, config: Config) => {
+    if (this.Events[key]) this.Events[key] = { ...this.Events[key], ...events };
+    else this.Events[key] = events;
+    if (this.Events[key]) this.Configs[key] = { ...this.Configs[key], ...config };
+    else this.Configs[key] = config;
+    let proxy_hostnames: { url: string; host_name: string; }[] = []
+    Object.keys(this.Configs).forEach(x => this.Configs[x].tab.host_names.forEach(c => proxy_hostnames.push({ url: this.Configs[x].tab.url, host_name: c })));
+    if (navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({ type: "pulg_config", proxy_hostnames: proxy_hostnames, configs: this.Configs })
+
   }
 
 }

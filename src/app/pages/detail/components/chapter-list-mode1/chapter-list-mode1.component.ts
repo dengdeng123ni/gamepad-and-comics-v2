@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DataService } from '../../services/data.service';
+import { ContextMenuEventService } from 'src/app/library/public-api';
 interface Item {
   id: string | number,
   cover: string,
@@ -27,8 +28,19 @@ export class ChapterListMode1Component {
   @Output() on_item = new EventEmitter<{ $event: HTMLElement, data: any }>();
 
   @Output() on_list = new EventEmitter<HTMLElement>();
-  constructor(public data:DataService){
+  constructor(public data:DataService,public ContextMenuEvent: ContextMenuEventService,){
+    ContextMenuEvent.register('chapter_item', {
+      close: (e: any) => {
 
+      },
+      on: async (e: { value: string; id: string; }) => {
+      },
+      menu: [
+        { name: "thumbnail", id: "thumbnail" },
+        { name: "export", id: "export" },
+        { name: "delete", id: "delete" },
+      ]
+    })
   }
   on($event: MouseEvent) {
     const node = $event.target as HTMLElement;

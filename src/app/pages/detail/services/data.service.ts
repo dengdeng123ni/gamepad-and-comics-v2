@@ -37,7 +37,7 @@ export class DataService {
   page_id = "";
 
   is_edit = false;
-  is_locked = true;
+  is_locked = false;
   is_cache = false;
 
   constructor() { }

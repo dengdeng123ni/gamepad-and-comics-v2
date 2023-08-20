@@ -11,6 +11,8 @@ import { DBConfig } from "ngx-indexed-db";
 import { HttpClientModule } from '@angular/common/http';
 import { DetailModule } from './pages/detail/detail.module';
 import { ReaderModule } from './pages/reader/reader.module';
+import { ContextMenuComponent } from './library/public-api';
+import { MaterialModule } from './library/material.module';
 
 const dbConfig: DBConfig = {
   name: 'db',
@@ -71,7 +73,8 @@ const dbConfig: DBConfig = {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ContextMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -85,6 +88,7 @@ const dbConfig: DBConfig = {
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
+    MaterialModule,
     ListModule,
     DetailModule,
     ReaderModule

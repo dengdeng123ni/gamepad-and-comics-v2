@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DbControllerService, MessageControllerService, MessageEventService } from './library/public-api';
+import { ContextMenuControllerService, DbControllerService, MessageControllerService, MessageEventService } from './library/public-api';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +12,7 @@ export class AppComponent {
     public MessageController: MessageControllerService,
     public MessageEvent: MessageEventService,
     public DbController: DbControllerService,
+    public ContextMenuController:ContextMenuControllerService
   ) {
     MessageEvent.service_worker_register('local_image', async (event: any) => {
       const data = event.data;

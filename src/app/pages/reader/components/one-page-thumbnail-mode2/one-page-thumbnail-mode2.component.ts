@@ -52,9 +52,6 @@ export class OnePageThumbnailMode2Component {
       setTimeout(() => {
         if (this.data.page_index || this.page_index === 0) {
           if (this.old_index == this.page_index) return
-          console.log(this.is_hover);
-
-
           let container = document.querySelector("#one_page_thumbnail_mode2") as any;
           let node = document.querySelector(`[_id=one_page_thumbnail_mode2_${this.page_index}]`);
           let observer = new IntersectionObserver(
@@ -85,6 +82,7 @@ export class OnePageThumbnailMode2Component {
 
   ngOnDestroy() {
     this.change$.unsubscribe();
+    this.OnePageThumbnailMode2.close();
   }
   ngOnInit(): void {
 
