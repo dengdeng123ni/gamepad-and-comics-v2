@@ -6,7 +6,7 @@
     <app-double-page-reader *ngIf="data.comics_config.reader_mode=='double_page_reader'"></app-double-page-reader>
     <app-multiple-page-reader-mode1 *ngIf="data.comics_config.reader_mode=='up_down_page_reader'"></app-multiple-page-reader-mode1>
     <app-multiple-page-reader-mode2 *ngIf="data.comics_config.reader_mode=='left_right_page_reader'&&data.comics_config.is_page_order"></app-multiple-page-reader-mode2>
-    <app-multiple-page-reader-mode3 *ngIf="data.comics_config.reader_mode=='left_right_page_reader'&&data.comics_config.is_page_order"></app-multiple-page-reader-mode3>
+    <app-multiple-page-reader-mode3 *ngIf="data.comics_config.reader_mode=='left_right_page_reader'&&!data.comics_config.is_page_order"></app-multiple-page-reader-mode3>
     <app-one-page-reader *ngIf="data.comics_config.reader_mode=='one_page_reader'"></app-one-page-reader>
   </div>
   <app-reader-toolbar></app-reader-toolbar>

@@ -18,17 +18,17 @@ export class MultiplePageReaderMode1Component {
     public current: CurrentService,
     public data: DataService
   ) {
-
     this.pages = this.data.pages;
-    this.change(this.data.page_index)
 
     this.change$ = this.current.change().subscribe(x => {
+      if (x.trigger == "up_down_page_reader") return
       if (x.type == "changePage") {
         this.pages = x.pages;
-        this.change(x.page_index);
+        this.pageChnage(x.page_index);
       } else if (x.type == "changeChapter") {
         this.pages = x.pages;
-        this.change(x.page_index);
+        this.pageChnage(x.page_index);
+        this.init();
       } else if (x.type == "nextPage") {
         this.next()
       } else if (x.type == "previousPage") {
@@ -40,17 +40,38 @@ export class MultiplePageReaderMode1Component {
     this.change$.unsubscribe();
   }
   ngAfterViewInit() {
-    this.change(this.data.page_index)
+    const container = document.getElementById("multiple_page_reader_mode1")
+    if(container) container.classList.remove("opacity-0");
+    this.pageChnage(this.data.page_index)
+    this.init();
   }
 
-  async change(page_index: number) {
-    const container = document.getElementById("one_page_reader")
-    if (container) return
-    container!.classList.remove("opacity-0");
-    const node = document.getElementById(`one_page_reader_${page_index}`);
+  async pageChnage(page_index: number) {
+    const node = document.getElementById(`multiple_page_reader_mode1_${page_index}`);
     node!.scrollIntoView(true)
   }
-
+  async init() {
+    let list = [];
+    const nodes = document.querySelectorAll(".list img");
+    nodes.forEach(x => list.push(x.getBoundingClientRect()))
+    var observer = new IntersectionObserver(
+      (changes) => {
+        changes.forEach((change: any) => {
+          if (change.isIntersecting || change.isVisible) {
+            var container = change.target;
+            const id = parseInt(container.getAttribute('id'));
+            const index = parseInt(container.getAttribute('index'));
+            this.current._change('changePage', { pages: this.data.pages, page_index: index, trigger: "up_down_page_reader" })
+          } else {
+            var container = change.target;
+            const id = parseInt(container.getAttribute('id'));
+            const index = parseInt(container.getAttribute('index'));
+          }
+        });
+      }
+    );
+    nodes.forEach(node => observer.observe(node))
+  }
   next() {
     const page_index = this.page_index + 1;
     if (page_index >= this.pages.length) {

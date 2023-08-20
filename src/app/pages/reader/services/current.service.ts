@@ -34,9 +34,9 @@ export class CurrentService {
 
   public init$ = new Subject<any>();
 
-  public page$ = new Subject<any>();
+  // public page$ = new Subject<any>();
 
-  public chapter$ = new Subject<any>();
+  // public chapter$ = new Subject<any>();
 
   public imageReadingTime$ = new Subject<any>();
 
@@ -87,12 +87,12 @@ export class CurrentService {
   public init() {
     return this.init$
   }
-  public page() {
-    return this.page$
-  }
-  public chapter() {
-    return this.chapter$
-  }
+  // public page() {
+  //   return this.page$
+  // }
+  // public chapter() {
+  //   return this.chapter$
+  // }
   public comicsLast() {
     return this.comicsLast$
   }
@@ -156,7 +156,6 @@ export class CurrentService {
   async _setChapter(id: string) {
     this.data.chapter_id = id;
     let list = await this._getChapter(id);
-    this.chapter$.next(this.data.chapters);
     this.data.pages = list;
     return list
   }
@@ -253,31 +252,7 @@ export class CurrentService {
     this.data.pages = option.pages;
     if (option.chapter_id) this.data.chapter_id = option.chapter_id;
     const types = ['initPage', 'closePage', 'changePage', 'nextPage', 'previousPage', 'nextChapter', 'previousChapter', 'changeChapter'];
-    if (type == "changePage") {
-      this._page(option)
-      this._setChapterIndex(this.data.chapter_id.toString(), option.page_index)
-    }
-    if (type == "changeChapter") this._chapter(option)
     this.change$.next({ ...option, type, comic_id: this.data.comics_id })
-  }
-
-  async _chapter(option: {
-    pages: Array<any>,
-    page_index: number,
-    page_id?: string,
-    chapter_id?: string,
-    trigger?: string
-  }) {
-    this.chapter$.next(option)
-  }
-  async _page(option: {
-    pages: Array<any>,
-    page_index: number,
-    page_id?: string,
-    chapter_id?: string,
-    trigger?: string
-  }) {
-    this.page$.next(option)
   }
 
 
