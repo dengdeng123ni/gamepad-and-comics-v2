@@ -7,15 +7,15 @@
     </div>
     <div class="item mt-5">
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="firstPageCoverChange()">
-        <mat-icon *ngIf="!double_page_reader.isFirstPageCover">radio_button_unchecked</mat-icon>
-        <mat-icon *ngIf="double_page_reader.isFirstPageCover">radio_button_checked</mat-icon>
+        <mat-icon *ngIf="!data.comics_config.is_first_page_cover">radio_button_unchecked</mat-icon>
+        <mat-icon *ngIf="data.comics_config.is_first_page_cover">radio_button_checked</mat-icon>
       </button>
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="togglePage()">
         <mat-icon>swap_horiz</mat-icon>
       </button>
-      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="togglePage()">
+      <!-- <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="togglePage()">
         <mat-icon>settings</mat-icon>
-      </button>
+      </button> -->
     </div>
   </div>
 

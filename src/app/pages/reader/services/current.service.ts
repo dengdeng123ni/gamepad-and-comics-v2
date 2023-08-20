@@ -9,9 +9,9 @@ import { NgxIndexedDBService } from 'ngx-indexed-db';
 })
 export class CurrentService {
 
-  _chapters: any = {};
+  private _chapters: any = {};
 
-  is_init_free = false;
+
 
   reader_modes = ['double_page_reader', 'up_down_page_reader', 'left_right_page_reader', 'one_page_reader']
   constructor(
@@ -43,10 +43,6 @@ export class CurrentService {
 
   public init$ = new Subject<any>();
 
-  // public page$ = new Subject<any>();
-
-  // public chapter$ = new Subject<any>();
-
   public imageReadingTime$ = new Subject<any>();
 
   public comicsLast$ = new Subject();
@@ -57,51 +53,33 @@ export class CurrentService {
 
   public chapterEnd$ = new Subject();
   public chapterStart$ = new Subject();
-  public chapterPrevious$ = new Subject<any>();
-  public chapterNext$ = new Subject<any>();
 
-  public chapterFirstBefore$ = new Subject<void>();
-  public chapterLastAfter$ = new Subject<void>();
 
 
   public switch$ = new Subject();
   public readerNavbarBar$ = new Subject();
 
-  public previousPage$ = new Subject();
-  public nextPage$ = new Subject();
 
   public reader_mode_change$ = new Subject<string>();
 
+  public event$ = new Subject<{ key: string, value: any }>();
 
+  // 切换阅读模式
   public readerModeChange() {
     return this.reader_mode_change$
   }
-
-
-  public previousPage() {
-    return this.previousPage$
-  }
-  public nextPage() {
-    return this.nextPage$
-  }
+  // 打开关闭上下工具栏
   public readerNavbarBar() {
     return this.readerNavbarBar$
   }
-  public switch() {
-    return this.switch$
-  }
+
   public delete() {
     return this.delete$
   }
   public init() {
     return this.init$
   }
-  // public page() {
-  //   return this.page$
-  // }
-  // public chapter() {
-  //   return this.chapter$
-  // }
+
   public comicsLast() {
     return this.comicsLast$
   }
@@ -114,31 +92,44 @@ export class CurrentService {
   public chapterStart() {
     return this.chapterStart$
   }
-  public chapterPrevious() {
-    return this.chapterPrevious$
-  }
-  public chapterNext() {
-    return this.chapterNext$
-  }
+
   public change() {
     return this.change$
   }
 
+  public event() {
+    return this.event$
+  }
+
   async _init(comic_id: string, chapter_id: string) {
-    this.is_init_free = false;
+    this.data.is_init_free = false;
     this.data.chapter_id = chapter_id;
     this.data.comics_id = comic_id;
-    const list = await this.DbController.getPages(chapter_id);
-    this.init$.next(list)
+    const _res = await Promise.all([this.DbController.getPages(chapter_id), this.DbController.getDetail(comic_id), this._getChapterIndex(chapter_id), this._getWebDbComicsConfig(comic_id)])
+    const list = _res[0];
+    const res = _res[1];
+    this.data.page_index = _res[2];
+    this.data.comics_config = _res[3];
     this.data.pages = list;
-    const res = await this.DbController.getDetail(comic_id);
     this.data.chapters = res.chapters;
     delete res.chapters;
     this.data.comics_info = res;
-    this.data.page_index = await this._getChapterIndex(chapter_id);
-    this.is_init_free = true;
+    this.init$.next(this.data)
+    this.data.is_init_free = true;
   }
 
+  async _getWebDbComicsConfig(id: string) {
+    const res = await firstValueFrom(this.webDb.getByID("comics_config", id.toString()))
+    if (res) {
+      return { ...this.data.comics_config, ...res }
+    } else {
+      return this.data.comics_config
+    }
+  }
+
+  async _setWebDbComicsConfig(id: string) {
+    await firstValueFrom(this.webDb.update("comics_config", { 'comics_id': id.toString(), ...this.data.comics_config }))
+  }
 
   async _setNextChapter() {
     const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id);
@@ -259,10 +250,19 @@ export class CurrentService {
     this.data.page_index = option.page_index;
     this.data.pages = option.pages;
     if (option.chapter_id) this.data.chapter_id = option.chapter_id;
+    if (type == "changePage") {
+      this._setChapterIndex(this.data.chapter_id.toString(), option.page_index)
+    } else if (type == "changeChapter") {
+      this._setWebDbComicsConfig(this.data.comics_id);
+    }
     const types = ['initPage', 'closePage', 'changePage', 'nextPage', 'previousPage', 'nextChapter', 'previousChapter', 'changeChapter'];
     this.change$.next({ ...option, type })
   }
 
+  close() {
+    this._setWebDbComicsConfig(this.data.comics_id);
+    this.data.is_init_free=false;
+  }
 
 
 

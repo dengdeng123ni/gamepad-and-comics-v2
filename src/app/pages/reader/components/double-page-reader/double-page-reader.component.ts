@@ -13,7 +13,6 @@ import SwiperCore, {
 import { SwiperComponent } from 'swiper/angular';
 import { CurrentService } from '../../services/current.service';
 import { DataService } from '../../services/data.service';
-import { ReaderEventService } from '../../services/reader-event.service';
 import { PagesItem } from 'src/app/library/public-api';
 SwiperCore.use([Manipulation, Navigation, Pagination, Mousewheel, Keyboard, Autoplay]);
 @Component({
@@ -45,20 +44,13 @@ export class DoublePageReaderComponent {
   isPageFirst = true;
   isFirst = false;
 
-  config = {
-    isPageOrder: false,
-    isPageTurnDirection: true,
-    isFirstPageCover: true
-  };
-
   change$;
-
+  event$;
 
   is_init = false;
 
   constructor(
     public current: CurrentService,
-    public readerEvent: ReaderEventService,
     public data: DataService
   ) {
 
@@ -79,21 +71,24 @@ export class DoublePageReaderComponent {
         this.previous()
       }
     })
-
-    this.config = readerEvent._register('double_page_reader', {
-      FirstPageToggle: () => this.firstPageToggle(),
-      PageToggle: () => this.pageToggle(),
-      getConfig: () => this.config
+    this.event$ = this.current.event().subscribe(x => {
+      if (x.key == "double_page_reader_FirstPageToggle") {
+        this.firstPageToggle();
+      } else if (x.key == "double_page_reader_togglePage") {
+        this.pageToggle();
+      }
     })
+
 
   }
 
   ngOnDestroy() {
     this.change$.unsubscribe();
+    this.event$.unsubscribe();
   }
 
   firstPageToggle() {
-    this.config.isFirstPageCover = !this.config.isFirstPageCover;
+    this.data.comics_config.is_first_page_cover = !this.data.comics_config.is_first_page_cover;
     if (this.index == 0) {
       this.pageToggle();
       this.pageToggle();
@@ -119,12 +114,12 @@ export class DoublePageReaderComponent {
 
   slidePrevTransitionEnd(swiper: Array<Swiper>) {
     if (this.isMobile) {
-      this.config.isPageTurnDirection ? this.previous() : this.next();
+      this.data.comics_config.is_page_direction ? this.previous() : this.next();
     } else {
       if (!this.isWaitPrevious) {
         this.isWaitPrevious = true;
         setTimeout(() => {
-          this.config.isPageTurnDirection ? this.previous() : this.next();
+          this.data.comics_config.is_page_direction ? this.previous() : this.next();
           this.isWaitPrevious = false;
         }, 400)
       }
@@ -133,12 +128,12 @@ export class DoublePageReaderComponent {
   }
   slideNextTransitionEnd(swiper: Array<Swiper>) {
     if (this.isMobile) {
-      this.config.isPageTurnDirection ? this.next() : this.previous();
+      this.data.comics_config.is_page_direction ? this.next() : this.previous();
     } else {
       if (!this.isWaitNext) {
         this.isWaitNext = true;
         setTimeout(() => {
-          this.config.isPageTurnDirection ? this.next() : this.previous();
+          this.data.comics_config.is_page_direction ? this.next() : this.previous();
           this.isWaitNext = false;
         }, 400)
       }
@@ -215,7 +210,7 @@ export class DoublePageReaderComponent {
     let next = "";
     let current = "";
 
-    if (this.config.isPageOrder) {
+    if (this.data.comics_config.is_page_order) {
       // 普通模式
       if (res.previous.primary.start) previous = previous + `<img style="opacity: 0;" src="${res.previous.primary.image.src}" />`;
       if (res.previous.secondary.image.src) previous = previous + `<img previousimage id="${res.previous.secondary.image.id}" src="${res.previous.secondary.image.src}" />`;
@@ -250,7 +245,7 @@ export class DoublePageReaderComponent {
     }
 
     this.swiper.swiperRef.removeAllSlides();
-    if (this.config.isPageTurnDirection) {
+    if (this.data.comics_config.is_page_direction) {
       if (!!previous) this.appendSlide(previous)
       if (!!current) this.appendSlide(current)
       if (!!next) this.appendSlide(next)
@@ -290,7 +285,7 @@ export class DoublePageReaderComponent {
       const obj = await this.isWideImage(images[index], images[index + 1]);
       const total = images.length;
 
-      if (this.config.isFirstPageCover == true && index == 0) {
+      if (this.data.comics_config.is_first_page_cover == true && index == 0) {
         obj.secondary.image = "";
       }
       if (obj.primary.width > obj.primary.height || obj.secondary.width > obj.secondary.height) {
@@ -411,16 +406,16 @@ export class DoublePageReaderComponent {
 
     if (this.isPageFirst) {
       this.isPageFirst = false;
-      if (this.config.isFirstPageCover == true && index == 0) {
+      if (this.data.comics_config.is_first_page_cover == true && index == 0) {
         obj.secondary.image = "";
         steps = 1;
       }
     } else {
-      if (index == 0 && !this.isSwitch && this.config.isFirstPageCover == true) {
+      if (index == 0 && !this.isSwitch && this.data.comics_config.is_first_page_cover == true) {
         obj.secondary.image = "";
         steps = 1;
       }
-      if (index == 0 && this.isSwitch && this.config.isFirstPageCover == false) {
+      if (index == 0 && this.isSwitch && this.data.comics_config.is_first_page_cover == false) {
         obj.secondary.image = "";
         steps = 1;
       }

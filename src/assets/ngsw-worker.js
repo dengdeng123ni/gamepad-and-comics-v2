@@ -1499,7 +1499,6 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         //   return;
         // }
       } else {
-        console.log(req_url.hostname);
         if (this.proxy_hostnames.includes(req_url.hostname)) {
           event.respondWith(this.onWebsiteProxyRequestImageCache(event))
           return;

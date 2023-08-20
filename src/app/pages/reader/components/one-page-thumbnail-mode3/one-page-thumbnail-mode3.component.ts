@@ -42,8 +42,6 @@ export class OnePageThumbnailMode3Component {
           let observer = new IntersectionObserver(
             changes => {
               changes.forEach(x => {
-                console.log(x.intersectionRatio);
-
                 if (x.intersectionRatio != 3) {
                   node!.scrollIntoView({ block: "center", inline: "center" })
                   container.classList.remove("opacity-0");

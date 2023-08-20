@@ -22,15 +22,13 @@ export class IndexComponent {
   ) {
     let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params));
     id$.subscribe(params => this.current._init(params.get('id') as string, params.get('sid') as string))
-    //  console.log();
-
   }
 
   on($event: MouseEvent) {
      this.current.on$.next($event)
   }
   ngOnDestroy() {
-    this.current.is_init_free = false;
+    this.current.close();
   }
   close(){
 

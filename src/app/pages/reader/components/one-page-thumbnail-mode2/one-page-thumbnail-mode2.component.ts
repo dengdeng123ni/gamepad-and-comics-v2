@@ -57,8 +57,6 @@ export class OnePageThumbnailMode2Component {
           let observer = new IntersectionObserver(
             changes => {
               changes.forEach(x => {
-                console.log(x.intersectionRatio);
-
                 if (x.intersectionRatio != 1) {
                    if (!this.is_hover) node!.scrollIntoView({ block: "center", inline: "center" })
                   container.classList.remove("opacity-0");

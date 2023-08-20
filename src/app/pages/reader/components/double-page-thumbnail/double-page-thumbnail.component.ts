@@ -55,7 +55,7 @@ export class DoublePageThumbnailComponent {
       src: x.src
     }))
 
-    const double_list = await this.utils.Images.getPageDouble(list, { isFirstPageCover: true, pageOrder: false });
+    const double_list = await this.utils.Images.getPageDouble(list, { isFirstPageCover: this.data.comics_config.is_first_page_cover, pageOrder: this.data.comics_config.is_page_order });
     double_list.forEach((x: any) => {
       x.images.forEach((c: any) => {
         if (!x.select) x.select = (c.index - 1) == page_index;

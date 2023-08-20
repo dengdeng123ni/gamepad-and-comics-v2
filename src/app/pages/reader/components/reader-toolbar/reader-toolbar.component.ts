@@ -7,7 +7,6 @@ import { ChaptersThumbnailService } from '../chapters-thumbnail/chapters-thumbna
 import { OnePageThumbnailMode1Service } from '../one-page-thumbnail-mode1/one-page-thumbnail-mode1.service';
 import { OnePageThumbnailMode2Service } from '../one-page-thumbnail-mode2/one-page-thumbnail-mode2.service';
 import { OnePageThumbnailMode3Service } from '../one-page-thumbnail-mode3/one-page-thumbnail-mode3.service';
-import { ReaderEventService } from '../../services/reader-event.service';
 import { ReaderChangeService } from '../reader-change/reader-change.service';
 
 @Component({
@@ -19,22 +18,18 @@ export class ReaderToolbarComponent {
   isfullscreen = !!document.fullscreenElement;
   isMobile = (navigator as any).userAgentData.mobile;
 
-  double_page_reader:any={}
+  double_page_reader: any = {}
   @ViewChild(MatMenuTrigger) menu: MatMenuTrigger | any;
   constructor(
     public current: CurrentService,
     public data: DataService,
-    public ReaderEvent:ReaderEventService,
-    public doublePageThumbnail:DoublePageThumbnailService,
-    public chaptersThumbnail:ChaptersThumbnailService,
-    public onePageThumbnailMode1:OnePageThumbnailMode1Service,
-    public onePageThumbnailMode2:OnePageThumbnailMode2Service,
-    public onePageThumbnailMode3:OnePageThumbnailMode3Service,
-    public ReaderChange:ReaderChangeService
+    public doublePageThumbnail: DoublePageThumbnailService,
+    public chaptersThumbnail: ChaptersThumbnailService,
+    public onePageThumbnailMode1: OnePageThumbnailMode1Service,
+    public onePageThumbnailMode2: OnePageThumbnailMode2Service,
+    public onePageThumbnailMode3: OnePageThumbnailMode3Service,
+    public ReaderChange: ReaderChangeService
   ) {
-    ReaderEvent.register$.subscribe((x:any)=>{
-      if(x.key=="double_page_reader") this.double_page_reader=x.config;
-    })
   }
   menuObj: {
     list: any,
@@ -47,7 +42,7 @@ export class ReaderToolbarComponent {
     window.history.back()
   }
   firstPageCoverChange() {
-    this.double_page_reader= this.ReaderEvent._runEvent('double_page_reader','FirstPageToggle')
+    this.current.event$.next({ key: "double_page_reader_FirstPageToggle", value: null })
   }
 
   imageRotation() {
@@ -125,16 +120,14 @@ export class ReaderToolbarComponent {
     let node = (document.getElementById(`reader_toolbar_menu`) as any);
     node.style.top = `${this.menuObj.list.length < 3 ? p.top : p.bottom}px`;
     node.style.left = `${p.x + p.width + 4}px`;
-    console.log(this.menuObj.list);
-
     setTimeout(() => this.menu.openMenu(), 0)
 
   }
   onItem(id: string) {
-      this.current._chapterChange(id);
+    this.current._chapterChange(id);
   }
   togglePage() {
-    this.double_page_reader= this.ReaderEvent._runEvent('double_page_reader','PageToggle')
+    this.current.event$.next({ key: "double_page_reader_togglePage", value: null })
   }
   previous() {
     this.current._chapterPrevious();
@@ -156,13 +149,13 @@ export class ReaderToolbarComponent {
     }
   }
 
-  openReaderChangeView($event:any){
+  openReaderChangeView($event: any) {
     const node = ($event.target as HTMLElement);
     const position = node.getBoundingClientRect();
     const openTargetHeight = 36;
     const x = window.innerWidth - (position.x - 15);
-    const y =( window.innerHeight-512)/2;
+    const y = (window.innerHeight - 512) / 2;
     // this.uploadSelect.open({ x, y });
-    this.ReaderChange.open({ top:`${y}px`, right:`${x}px` })
+    this.ReaderChange.open({ top: `${y}px`, right: `${x}px` })
   }
 }
