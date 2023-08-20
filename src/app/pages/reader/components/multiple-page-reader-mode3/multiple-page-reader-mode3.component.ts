@@ -12,16 +12,15 @@ export class MultiplePageReaderMode3Component {
   page_index = 0;
 
   change$;
-  init$;
 
   constructor(
     public current: CurrentService,
     public data: DataService
   ) {
-    this.init$ = this.current.init().subscribe(x => {
-      this.pages = x;
-      this.change(this.data.page_index)
-    })
+
+    this.pages = this.data.pages;
+    this.change(this.data.page_index)
+
     this.change$ = this.current.change().subscribe(x => {
       if (x.type == "changePage") {
         this.pages = x.pages;
@@ -38,7 +37,6 @@ export class MultiplePageReaderMode3Component {
   }
   ngOnDestroy() {
     this.change$.unsubscribe();
-    this.init$.unsubscribe();
   }
   ngAfterViewInit() {
     this.change(this.data.page_index)

@@ -29,7 +29,9 @@ export class IndexComponent {
   on($event: MouseEvent) {
      this.current.on$.next($event)
   }
-
+  ngOnDestroy() {
+    this.current.is_init_free = false;
+  }
   close(){
 
   }

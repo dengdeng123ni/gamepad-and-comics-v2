@@ -11,12 +11,15 @@ export class CurrentService {
 
   _chapters: any = {};
 
+  is_init_free = false;
   constructor(
     public DbController: DbControllerService,
     public data: DataService,
     public webDb: NgxIndexedDBService
   ) {
-
+    this.reader_mode_change$.subscribe(x=>{
+      this.data.comics_config.reader_mode=x;
+    })
 
   }
 
@@ -29,17 +32,11 @@ export class CurrentService {
 
   public change$ = new Subject<any>();
 
-  public initBefore$ = new Subject<any>();
   public init$ = new Subject<any>();
-  public initAfter$ = new Subject();
 
-  public pageBefore$ = new Subject<number>();
   public page$ = new Subject<any>();
-  public pageAfter$ = new Subject<number>();
 
-  public chapterBefore$ = new Subject<any>();
   public chapter$ = new Subject<any>();
-  public chapterAfter$ = new Subject<any>();
 
   public imageReadingTime$ = new Subject<any>();
 
@@ -64,6 +61,14 @@ export class CurrentService {
   public previousPage$ = new Subject();
   public nextPage$ = new Subject();
 
+  public reader_mode_change$ = new Subject<string>();
+
+
+  public readerModeChange() {
+    return this.reader_mode_change$
+  }
+
+
   public previousPage() {
     return this.previousPage$
   }
@@ -79,14 +84,8 @@ export class CurrentService {
   public delete() {
     return this.delete$
   }
-  public initAfter() {
-    return this.initAfter$
-  }
   public init() {
     return this.init$
-  }
-  public initBefore() {
-    return this.initBefore$
   }
   public page() {
     return this.page$
@@ -112,21 +111,12 @@ export class CurrentService {
   public chapterNext() {
     return this.chapterNext$
   }
-  public chapterBefore() {
-    return this.chapterBefore$
-  }
-  public pageBefore() {
-    return this.pageBefore$
-  }
-  public pageAfter() {
-    return this.pageAfter$
-  }
-
   public change() {
     return this.change$
   }
 
   async _init(comic_id: string, chapter_id: string) {
+    this.is_init_free = false;
     this.data.chapter_id = chapter_id;
     this.data.comics_id = comic_id;
     const list = await this.DbController.getPages(chapter_id);
@@ -137,6 +127,7 @@ export class CurrentService {
     delete res.chapters;
     this.data.info = res;
     this.data.page_index = await this._getChapterIndex(chapter_id);
+    this.is_init_free = true;
   }
 
 
@@ -163,11 +154,9 @@ export class CurrentService {
   }
 
   async _setChapter(id: string) {
-    this.chapterBefore$.next(this.data.chapters);
     this.data.chapter_id = id;
     let list = await this._getChapter(id);
     this.chapter$.next(this.data.chapters);
-    this.chapterAfter$.next(this.data.chapters);
     this.data.pages = list;
     return list
   }

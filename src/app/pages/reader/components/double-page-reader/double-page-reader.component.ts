@@ -15,7 +15,7 @@ import { CurrentService } from '../../services/current.service';
 import { DataService } from '../../services/data.service';
 import { ReaderEventService } from '../../services/reader-event.service';
 SwiperCore.use([Manipulation, Navigation, Pagination, Mousewheel, Keyboard, Autoplay]);
-interface Item { id?: string | number, src: string, width?: string, height?: string }
+interface Item { id?: string, src: string, width?: string, height?: string }
 @Component({
   selector: 'app-double-page-reader',
   templateUrl: './double-page-reader.component.html',
@@ -51,19 +51,19 @@ export class DoublePageReaderComponent {
     isFirstPageCover: true
   };
 
-  init$;
   change$;
 
+
+  is_init = false;
 
   constructor(
     public current: CurrentService,
     public readerEvent: ReaderEventService,
     public data: DataService
   ) {
-    this.init$ = this.current.init().subscribe(x => {
-      this.list = x;
-      this.change(this.data.page_index)
-    })
+
+    this.list = this.data.pages as any;
+    this.change(this.data.page_index)
 
     this.change$ = this.current.change().subscribe(x => {
       if (x.type == "changePage") {
@@ -87,9 +87,8 @@ export class DoublePageReaderComponent {
     })
 
   }
-  //
+
   ngOnDestroy() {
-    this.init$.unsubscribe();
     this.change$.unsubscribe();
   }
 
@@ -207,7 +206,7 @@ export class DoublePageReaderComponent {
     if (Number.isNaN(index)) index = 0;
     this.index = index;
     if (this.index < 0) this.index = 0;
-    const res:any = await this.getCurrentImages(this.list, this.index);
+    const res: any = await this.getCurrentImages(this.list, this.index);
     if (!res.previous.primary.image.src && !res.previous.secondary.image.src) res.previous = await this.getPreviousLast();
     if (!res.next.primary.image.src && !res.next.secondary.image.src) res.next = await this.getNextFirst();
 

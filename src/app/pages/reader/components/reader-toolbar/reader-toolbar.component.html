@@ -6,11 +6,6 @@
       </button>
     </div>
     <div class="item mt-5">
-      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="back()">
-        <mat-icon>chrome_reader_mode</mat-icon>
-      </button>
-    </div>
-    <div class="item mt-5">
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="firstPageCoverChange()">
         <mat-icon *ngIf="!double_page_reader.isFirstPageCover">radio_button_unchecked</mat-icon>
         <mat-icon *ngIf="double_page_reader.isFirstPageCover">radio_button_checked</mat-icon>
@@ -68,6 +63,9 @@
       <button matTooltipPosition="left"tabIndex="-1" mat-icon-button
         class="icon filter_image_list" (click)="doublePageThumbnail.open()">
         <mat-icon>grid_view</mat-icon>
+      </button>
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="openReaderChangeView($event)">
+        <mat-icon>chrome_reader_mode</mat-icon>
       </button>
       <!-- <button matTooltipPosition="left" tabIndex="-1" mat-icon-button class="icon" (click)="onePageThumbnailMode2.open()">
         <mat-icon>filter</mat-icon>

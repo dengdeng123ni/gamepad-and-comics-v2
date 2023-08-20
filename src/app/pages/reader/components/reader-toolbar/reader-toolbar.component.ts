@@ -8,6 +8,7 @@ import { OnePageThumbnailMode1Service } from '../one-page-thumbnail-mode1/one-pa
 import { OnePageThumbnailMode2Service } from '../one-page-thumbnail-mode2/one-page-thumbnail-mode2.service';
 import { OnePageThumbnailMode3Service } from '../one-page-thumbnail-mode3/one-page-thumbnail-mode3.service';
 import { ReaderEventService } from '../../services/reader-event.service';
+import { ReaderChangeService } from '../reader-change/reader-change.service';
 
 @Component({
   selector: 'app-reader-toolbar',
@@ -28,7 +29,8 @@ export class ReaderToolbarComponent {
     public chaptersThumbnail:ChaptersThumbnailService,
     public onePageThumbnailMode1:OnePageThumbnailMode1Service,
     public onePageThumbnailMode2:OnePageThumbnailMode2Service,
-    public onePageThumbnailMode3:OnePageThumbnailMode3Service
+    public onePageThumbnailMode3:OnePageThumbnailMode3Service,
+    public ReaderChange:ReaderChangeService
   ) {
     ReaderEvent.register$.subscribe((x:any)=>{
       if(x.key=="double_page_reader") this.double_page_reader=x.config;
@@ -152,5 +154,15 @@ export class ReaderToolbarComponent {
         document.documentElement.requestFullscreen();
       }
     }
+  }
+
+  openReaderChangeView($event:any){
+    const node = ($event.target as HTMLElement);
+    const position = node.getBoundingClientRect();
+    const openTargetHeight = 36;
+    const x = window.innerWidth - (position.x - 15);
+    const y =( window.innerHeight-512)/2;
+    // this.uploadSelect.open({ x, y });
+    this.ReaderChange.open({ top:`${y}px`, right:`${x}px` })
   }
 }
