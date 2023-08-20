@@ -14,8 +14,8 @@ import { SwiperComponent } from 'swiper/angular';
 import { CurrentService } from '../../services/current.service';
 import { DataService } from '../../services/data.service';
 import { ReaderEventService } from '../../services/reader-event.service';
+import { PagesItem } from 'src/app/library/public-api';
 SwiperCore.use([Manipulation, Navigation, Pagination, Mousewheel, Keyboard, Autoplay]);
-interface Item { id?: string, src: string, width?: string, height?: string }
 @Component({
   selector: 'app-double-page-reader',
   templateUrl: './double-page-reader.component.html',
@@ -34,7 +34,7 @@ export class DoublePageReaderComponent {
   @HostListener('window:keyup', ['$event'])
   handleKeyUp = (event: KeyboardEvent) => {
   }
-  list: Array<Item> = [];
+  list: Array<PagesItem> = [];
 
   index = 0;
 
@@ -376,7 +376,7 @@ export class DoublePageReaderComponent {
     }
   }
 
-  async getCurrentImages(list: Array<Item>, index: number) {
+  async getCurrentImages(list: Array<PagesItem>, index: number) {
     const total = list.length;
 
     const res = {

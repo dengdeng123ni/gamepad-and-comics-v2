@@ -1,32 +1,12 @@
 import { Injectable } from '@angular/core';
-interface Item { id: string, src: string, width: number, height: number }
-interface Info {
-  cover: string,
-  title: string,
-  author?: string,
-  intro?: string,
-  chapter_id: string
-}
-interface ChaptersItem {
-  id: string,
-  cover: string,
-  title: string,
-  short_title?: string,
-  pub_time?: string | Date | number,
-  read?: number,
-  ord?: number,
-  selected?: boolean,
-  like_count?: number | string,
-  comments?: number | string,
-  is_locked?: boolean
-}
+import { ChaptersItem, ComicsInfo, PagesItem } from 'src/app/library/public-api';
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  pages: Array<Item> = [];
+  pages: Array<PagesItem> = [];
   chapters: Array<ChaptersItem> = [];
-  info: Info = {
+  comics_info: ComicsInfo = {
     cover: '',
     title: '',
     chapter_id: ""

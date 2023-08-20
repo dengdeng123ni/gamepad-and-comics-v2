@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
-import { DbControllerService } from 'src/app/library/public-api';
+import { DbControllerService, PagesItem } from 'src/app/library/public-api';
 import { Subject, firstValueFrom } from 'rxjs';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 
@@ -12,25 +12,34 @@ export class CurrentService {
   _chapters: any = {};
 
   is_init_free = false;
+
+  reader_modes = ['double_page_reader', 'up_down_page_reader', 'left_right_page_reader', 'one_page_reader']
   constructor(
     public DbController: DbControllerService,
     public data: DataService,
     public webDb: NgxIndexedDBService
   ) {
-    this.reader_mode_change$.subscribe(x=>{
-      this.data.comics_config.reader_mode=x;
+    this.reader_mode_change$.subscribe(x => {
+      if (this.reader_modes.includes(x)) this.data.comics_config.reader_mode = x;
+      else this.data.comics_config.reader_mode = "double_page_reader";
+      if (this.data.comics_config.reader_mode == "double_page_reader") this.data.comics_config.is_double_page = true;
+      else this.data.comics_config.is_double_page = false;
     })
 
   }
 
 
-  public mode$ = new Subject<number>();
-
   public on$ = new Subject<MouseEvent>();
 
   public delete$ = new Subject();
 
-  public change$ = new Subject<any>();
+  public change$ = new Subject<{
+    type: string,
+    pages: Array<PagesItem>,
+    page_index: number,
+    chapter_id?: string,
+    trigger?: string
+  }>();
 
   public init$ = new Subject<any>();
 
@@ -125,7 +134,7 @@ export class CurrentService {
     const res = await this.DbController.getDetail(comic_id);
     this.data.chapters = res.chapters;
     delete res.chapters;
-    this.data.info = res;
+    this.data.comics_info = res;
     this.data.page_index = await this._getChapterIndex(chapter_id);
     this.is_init_free = true;
   }
@@ -242,9 +251,8 @@ export class CurrentService {
   }
 
   async _change(type: string, option: {
-    pages: Array<any>,
+    pages: Array<PagesItem>,
     page_index: number,
-    page_id?: string,
     chapter_id?: string,
     trigger?: string
   }) {
@@ -252,7 +260,7 @@ export class CurrentService {
     this.data.pages = option.pages;
     if (option.chapter_id) this.data.chapter_id = option.chapter_id;
     const types = ['initPage', 'closePage', 'changePage', 'nextPage', 'previousPage', 'nextChapter', 'previousChapter', 'changeChapter'];
-    this.change$.next({ ...option, type, comic_id: this.data.comics_id })
+    this.change$.next({ ...option, type })
   }
 
 

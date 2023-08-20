@@ -25,3 +25,22 @@ export * from './message/message-controller.service'
 export * from './message/message-event.service'
 
 export * from './utils/utils.service'
+
+
+export interface PagesItem { id: string, src: string, width: number, height: number }
+export interface ComicsInfo {
+  cover: string,
+  title: string,
+  author?: string,
+  intro?: string,
+  chapter_id:string
+}
+export interface ChaptersItem {
+  id: string,
+  cover: string,
+  title: string,
+  pub_time?: string | Date | number,
+  read?: number,
+  selected?: boolean
+}
+export interface ComicsItem { id: string | number, cover: string, title: string, subTitle: string }
