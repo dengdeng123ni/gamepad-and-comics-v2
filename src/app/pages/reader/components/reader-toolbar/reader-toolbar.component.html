@@ -4,9 +4,22 @@
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="back()">
         <mat-icon>keyboard_return</mat-icon>
       </button>
+    </div>
+    <div class="item mt-5">
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="back()">
+        <mat-icon>chrome_reader_mode</mat-icon>
+      </button>
+    </div>
+    <div class="item mt-5">
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="firstPageCoverChange()">
         <mat-icon *ngIf="!double_page_reader.isFirstPageCover">radio_button_unchecked</mat-icon>
         <mat-icon *ngIf="double_page_reader.isFirstPageCover">radio_button_checked</mat-icon>
+      </button>
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="togglePage()">
+        <mat-icon>swap_horiz</mat-icon>
+      </button>
+      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="togglePage()">
+        <mat-icon>settings</mat-icon>
       </button>
     </div>
   </div>
@@ -17,7 +30,7 @@
         <mat-icon>screen_rotation</mat-icon>
       </button>
     </div>
-    <div class="item mt-5" id="reader_toolbar_page">
+    <div class="item mt-5" id="reader_toolbar_page" *ngIf="data.is_edit">
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="separatePage()">
         <mat-icon>call_split</mat-icon>
       </button>
@@ -35,9 +48,6 @@
     <div class="item mt-5" id="reader_toolbar_section">
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button (click)="openList($event)" class="icon subject">
         <mat-icon>subject</mat-icon>
-      </button>
-      <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="togglePage()">
-        <mat-icon>swap_horiz</mat-icon>
       </button>
       <button matTooltipPosition="right" tabIndex="-1" mat-icon-button class="icon" (click)="previous()">
         <mat-icon>chevron_left</mat-icon>

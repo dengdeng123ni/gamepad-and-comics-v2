@@ -15,6 +15,11 @@ import { OnePageThumbnailMode4Component } from './components/one-page-thumbnail-
 import { DoublePageReaderComponent } from './components/double-page-reader/double-page-reader.component';
 import { ReaderNavbarBarComponent } from './components/reader-navbar-bar/reader-navbar-bar.component';
 import { ReaderSectionComponent } from './components/reader-section/reader-section.component';
+import { OnePageReaderComponent } from './components/one-page-reader/one-page-reader.component';
+import { MultiplePageReaderMode1Component } from './components/multiple-page-reader-mode1/multiple-page-reader-mode1.component';
+import { MultiplePageReaderMode3Component } from './components/multiple-page-reader-mode3/multiple-page-reader-mode3.component';
+import { MultiplePageReaderMode2Component } from './components/multiple-page-reader-mode2/multiple-page-reader-mode2.component';
+import { ReaderChangeComponent } from './components/reader-change/reader-change.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +33,12 @@ import { ReaderSectionComponent } from './components/reader-section/reader-secti
     OnePageThumbnailMode4Component,
     DoublePageReaderComponent,
     ReaderNavbarBarComponent,
-    ReaderSectionComponent
+    ReaderSectionComponent,
+    OnePageReaderComponent,
+    MultiplePageReaderMode1Component,
+    MultiplePageReaderMode3Component,
+    MultiplePageReaderMode2Component,
+    ReaderChangeComponent
   ],
   imports: [
     CommonModule,

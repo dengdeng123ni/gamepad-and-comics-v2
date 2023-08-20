@@ -215,7 +215,6 @@ export class DoublePageReaderComponent {
     let previous = "";
     let next = "";
     let current = "";
-console.log(res);
 
     if (this.config.isPageOrder) {
       // 普通模式

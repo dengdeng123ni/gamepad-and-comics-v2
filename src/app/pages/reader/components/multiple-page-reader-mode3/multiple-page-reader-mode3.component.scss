@@ -1,0 +1,19 @@
+.list{
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  transform: scale(1);
+  justify-content: top;
+  /* align-items: center; */
+  margin: 0 auto;
+  height: 100%;
+  overflow: auto;
+    img{
+      height: 100%;
+      margin: 0 auto;
+      min-width: fit-content;
+    }
+}
+.list[direction=false]{
+  flex-direction: row-reverse;
+}
