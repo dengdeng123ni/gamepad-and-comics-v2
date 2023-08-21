@@ -127,7 +127,7 @@
     </div> -->
     <div *ngIf="type=='list'" style="max-height: 40vh;">
       <button tabIndex="-1" *ngFor="let item of name;let index=index" mat-menu-item class="menu_item"
-        (click)="onItem(item.id)">
+        (click)="onItem(item.id)" [attr._id]="'_menu_item_'+item.id">
         {{item.title}}
       </button>
     </div>

@@ -59,4 +59,12 @@ export class ChapterListMode1Component {
       this.on_item.emit({ $event: target_node, data: { ...this.list[index], index } });
     }
   }
+
+  ngAfterViewInit() {
+    setTimeout(()=>{
+      const node= document.getElementById(`${this.data.chapter_id}`)
+      node!.scrollIntoView({ block: "center", inline: "center" })
+      node?.focus()
+    })
+  }
 }

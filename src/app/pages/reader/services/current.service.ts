@@ -263,6 +263,7 @@ export class CurrentService {
   close() {
     this._setWebDbComicsConfig(this.data.comics_id);
     this.data.is_init_free=false;
+    this.webDb.openCursor
   }
 
 

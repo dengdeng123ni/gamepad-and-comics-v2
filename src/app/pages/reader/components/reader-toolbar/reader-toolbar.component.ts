@@ -120,7 +120,14 @@ export class ReaderToolbarComponent {
     let node = (document.getElementById(`reader_toolbar_menu`) as any);
     node.style.top = `${this.menuObj.list.length < 3 ? p.top : p.bottom}px`;
     node.style.left = `${p.x + p.width + 4}px`;
-    setTimeout(() => this.menu.openMenu(), 0)
+    setTimeout(() => {
+      this.menu.openMenu();
+      setTimeout(()=>{
+        const node:any= document.querySelector(`[_id=_menu_item_${this.data.chapter_id}]`)
+        node!.scrollIntoView({ block: "center", inline: "center" })
+        if(node) node?.focus()
+      },0)
+    }, 0)
 
   }
   onItem(id: string) {
