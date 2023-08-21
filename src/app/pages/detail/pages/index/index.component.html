@@ -1,8 +1,8 @@
 <mat-drawer-container autosize>
   <div class="container">
-    <app-comics-info [info]="data.comics_info" (on_back)="back()" (on_continue)="continue()"></app-comics-info>
+    <app-comics-info *ngIf="data.is_init_free" [info]="data.comics_info" (on_back)="back()" (on_continue)="continue()"></app-comics-info>
     <div class="content">
-      <app-chapter-list-mode1 (on_list)="on_list($event)"
+      <app-chapter-list-mode1 *ngIf="data.is_init_free" (on_list)="on_list($event)"
       (on_item)="on_item($event)" class="chapter_list_mode1" [list]="data.chapters"></app-chapter-list-mode1>
       <!-- <app-chapter-list-mode2 (on_list)="on_list($event)"
       (on_item)="on_item($event)" class="chapter_list_mode1" [list]="data.chapters"></app-chapter-list-mode2> -->

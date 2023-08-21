@@ -129,6 +129,9 @@ export class ReaderToolbarComponent {
   togglePage() {
     this.current.event$.next({ key: "double_page_reader_togglePage", value: null })
   }
+  togglePage2() {
+    this.current.event$.next({ key: "left_right_page_reader_togglePage", value: null })
+  }
   previous() {
     this.current._chapterPrevious();
   }

@@ -20,6 +20,7 @@ export class DataService {
   is_locked = false;
   is_cache = false;
   is_local_record = false;
+
   comics_config = {
     reader_mode: "double_page_reader",
     is_page_order: false,
@@ -27,7 +28,13 @@ export class DataService {
     is_first_page_cover: true,
     is_double_page: true,
   }
+
+  chapter_config = {
+    is_cover_exist: false,
+  }
+
   is_init_free = false;
+
 
   constructor() { }
 }

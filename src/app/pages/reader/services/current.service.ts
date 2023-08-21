@@ -253,6 +253,7 @@ export class CurrentService {
     if (type == "changePage") {
       this._setChapterIndex(this.data.chapter_id.toString(), option.page_index)
     } else if (type == "changeChapter") {
+      history.replaceState(null, "", `${this.data.comics_id}/${this.data.chapter_id}`);
       this._setWebDbComicsConfig(this.data.comics_id);
     }
     const types = ['initPage', 'closePage', 'changePage', 'nextPage', 'previousPage', 'nextChapter', 'previousChapter', 'changeChapter'];
