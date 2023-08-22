@@ -1283,7 +1283,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
             } else {
               if (bool) getFile()
             }
-          }, 0)
+          }, 66)
         }
         getFile()
         setTimeout(() => {
@@ -1347,7 +1347,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
             } else {
               if (bool) getFile()
             }
-          }, 0)
+          }, 66)
         }
         getFile()
         setTimeout(() => {
@@ -1405,7 +1405,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
             } else {
               if (bool) getFile()
             }
-          }, 0)
+          }, 66)
         }
         getFile()
         setTimeout(() => {
@@ -1459,7 +1459,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
             } else {
               if (bool) getFile()
             }
-          }, 0)
+          }, 66)
         }
         getFile()
         setTimeout(() => {
