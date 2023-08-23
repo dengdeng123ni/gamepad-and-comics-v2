@@ -7,7 +7,7 @@ import { ComicsItem } from 'src/app/library/public-api';
 export class DataService {
 
   list: Array<ComicsItem> = [];
-
+ _list: Array<ComicsItem> = [];
   is_edit = false;
   is_locked = false;
   is_cache = false;

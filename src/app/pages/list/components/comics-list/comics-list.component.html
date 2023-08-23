@@ -3,7 +3,7 @@
     <button
       class="item"
       mat-button
-      *ngFor="let n of _list;let index=index"
+      *ngFor="let n of data._list;let index=index"
       [attr._id]="n.id"
       [attr.index]="index"
       [attr.region]="'comics_list_item'"

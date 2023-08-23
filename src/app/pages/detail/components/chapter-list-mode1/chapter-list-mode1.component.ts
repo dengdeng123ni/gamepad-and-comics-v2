@@ -4,6 +4,7 @@ import { ContextMenuEventService } from 'src/app/library/public-api';
 import { ExportSettingsService } from '../export-settings/export-settings.service';
 import { DoublePageThumbnailService } from '../double-page-thumbnail/double-page-thumbnail.service';
 import { CurrentService } from '../../services/current.service';
+import { Router } from '@angular/router';
 interface Item {
   id: string | number,
   cover: string,
@@ -23,15 +24,9 @@ interface Item {
   styleUrls: ['./chapter-list-mode1.component.scss']
 })
 export class ChapterListMode1Component {
-  @Input() is_edit?: boolean = false;
-  @Input() list: Array<Item> = [];
-  @Input() size?: string = "middle"; // large middle small
-  @Input() last_read_id?: string | number = "";
-
-  @Output() on_item = new EventEmitter<{ $event: HTMLElement, data: any }>();
-
-  @Output() on_list = new EventEmitter<HTMLElement>();
-  constructor(public data: DataService,public current:CurrentService,public doublePageThumbnail:DoublePageThumbnailService, public ContextMenuEvent: ContextMenuEventService, public exportSettings: ExportSettingsService,) {
+  constructor(public data: DataService,
+    public router:Router,
+    public current:CurrentService,public doublePageThumbnail:DoublePageThumbnailService, public ContextMenuEvent: ContextMenuEventService, public exportSettings: ExportSettingsService,) {
     ContextMenuEvent.register('chapter_item', {
       close: (e: any) => {
 
@@ -73,7 +68,7 @@ export class ChapterListMode1Component {
   on($event: MouseEvent) {
     const node = $event.target as HTMLElement;
     if (node.getAttribute("id") == 'list') {
-      this.on_list.emit(node);
+
     } else {
       const getTargetNode = (node: HTMLElement): HTMLElement => {
         if (node.getAttribute("region") == "chapter_item") {
@@ -85,9 +80,9 @@ export class ChapterListMode1Component {
       const target_node = getTargetNode(node);
       const index = parseInt(target_node.getAttribute("index") as string);
       if (this.data.is_edit) {
-        this.list[index].selected = !this.list[index].selected;
+        this.data.chapters[index].selected = !this.data.chapters[index].selected;
       } else {
-        this.on_item.emit({ $event: target_node, data: { ...this.list[index], index } });
+        this.router.navigate(['/', this.data.comics_id,this.data.chapters[index].id,])
       }
 
     }

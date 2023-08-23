@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DataService } from '../../services/data.service';
 interface Item {
   id: string | number,
   cover: string,
@@ -15,7 +16,9 @@ interface Item {
 })
 
 export class ComicsListComponent {
+constructor(public data:DataService){
 
+}
   @Input() is_edit?: boolean = false;
   @Input() list: Array<Item> = [];
   @Input() size?: string = "middle"; // large middle small
@@ -26,7 +29,6 @@ export class ComicsListComponent {
   @Output() on_list = new EventEmitter<HTMLElement>();
 
   page_size = 0;
-  _list: any = [];
   on($event: MouseEvent) {
     const node = $event.target as HTMLElement;
     if (node.getAttribute("id") == 'list') {
@@ -41,7 +43,7 @@ export class ComicsListComponent {
       }
       const target_node = getTargetNode(node);
       const index = parseInt(target_node.getAttribute("index") as string);
-      this.on_item.emit({ $event: target_node, data: { ...this._list[index], index } });
+      this.on_item.emit({ $event: target_node, data: { ...this.data._list[index], index } });
     }
   }
 
@@ -80,6 +82,6 @@ export class ComicsListComponent {
   }
 
   add_pages() {
-    this._list = [...this._list, ...this.list.splice(0, this.page_size)]
+    this.data._list = [...this.data._list, ...this.list.splice(0, this.page_size)]
   }
 }

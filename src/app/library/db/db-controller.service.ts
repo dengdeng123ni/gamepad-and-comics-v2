@@ -12,6 +12,7 @@ interface Events {
   providedIn: 'root'
 })
 export class DbControllerService {
+  lists: any = {};
   details: any = {};
   pages: any = {};
   constructor(
@@ -32,10 +33,10 @@ export class DbControllerService {
   async getDetail(id: string) {
     if (this.DbEvent.Events[this.AppData.origin] && this.DbEvent.Events[this.AppData.origin]["Detail"]) {
       if (this.details[id]) {
-        return this.details[id]
+        return JSON.parse(JSON.stringify(this.details[id]))
       } else {
         const res = await this.DbEvent.Events[this.AppData.origin]["Detail"](id);
-        this.details[id] = res;
+        this.details[id] = JSON.parse(JSON.stringify(res));
         return res
       }
     } else {
@@ -45,10 +46,10 @@ export class DbControllerService {
   async getPages(id: string) {
     if (this.DbEvent.Events[this.AppData.origin] && this.DbEvent.Events[this.AppData.origin]["Pages"]) {
       if (this.pages[id]) {
-        return this.pages[id]
+        return JSON.parse(JSON.stringify(this.pages[id]))
       } else {
         const res = await this.DbEvent.Events[this.AppData.origin]["Pages"](id);
-        this.pages[id] = res;
+        this.pages[id] = JSON.parse(JSON.stringify(res));
         return res
       }
     } else {

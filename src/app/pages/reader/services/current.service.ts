@@ -241,6 +241,10 @@ export class CurrentService {
     await firstValueFrom(this.webDb.update("last_read_chapter_page", { 'chapter_id': id.toString(), "page_index": index }))
   }
 
+  async _readChapter(id: string, index: number) {
+    // await firstValueFrom(this.webDb.update("read_comics_chapter", { 'comics_id': this.data.comics_id, read: index }))
+  }
+
   async _change(type: string, option: {
     pages: Array<PagesItem>,
     page_index: number,

@@ -41,6 +41,7 @@ export interface ChaptersItem {
   title: string,
   pub_time?: string | Date | number,
   read?: number,
-  selected?: boolean
+  selected?: boolean,
+  is_locked?:boolean
 }
 export interface ComicsItem { id: string | number, cover: string, title: string, subTitle: string,selected?: boolean }
