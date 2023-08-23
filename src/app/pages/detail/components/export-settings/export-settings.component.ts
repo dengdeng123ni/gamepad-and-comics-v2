@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ExportSettingsService } from './export-settings.service';
 import { DataService } from '../../services/data.service';
 import { DbControllerService, DownloadService, I18nService } from 'src/app/library/public-api';
+import { LoadingService } from '../loading/loading.service';
 
 @Component({
   selector: 'app-export-settings',
@@ -14,7 +15,7 @@ export class ExportSettingsComponent {
     public DbController: DbControllerService,
     public download: DownloadService,
     public data: DataService,
-
+    public loading:LoadingService,
     public i18n: I18nService
   ) {
     this.pageOrder = this.data.comics_config.is_page_order;
@@ -32,7 +33,7 @@ export class ExportSettingsComponent {
     node.querySelector("button").click();
   }
   async on() {
-
+    this.loading.open();
     const chapters = this.data.chapters.filter(x => x.selected);
     if(chapters.length==0) return
     if (this.type == "PDF") {
@@ -63,5 +64,6 @@ export class ExportSettingsComponent {
         await this.download.epub({ name: `${this.data.comics_info.title}_${x.title}`.replace("\"", "").replace(/\s*/g, ''), images: pages.map((x: { src: any; }) => x.src), pageOrder: this.pageOrder, isFirstPageCover: this.isFirstPageCover, page: this.page })
       }
     }
+    this.loading.close();
   }
 }

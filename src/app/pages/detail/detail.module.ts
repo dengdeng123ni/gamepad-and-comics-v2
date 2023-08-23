@@ -10,6 +10,8 @@ import { ChapterListMode2Component } from './components/chapter-list-mode2/chapt
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ExportSettingsComponent } from './components/export-settings/export-settings.component';
 import { EditToolbarComponent } from './components/edit-toolbar/edit-toolbar.component';
+import { LoadingComponent } from './components/loading/loading.component';
+import { DoublePageThumbnailComponent } from './components/double-page-thumbnail/double-page-thumbnail.component';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import { EditToolbarComponent } from './components/edit-toolbar/edit-toolbar.com
     ChapterListMode2Component,
     ToolbarComponent,
     ExportSettingsComponent,
-    EditToolbarComponent
+    EditToolbarComponent,
+    LoadingComponent,
+    DoublePageThumbnailComponent
   ],
   imports: [
     CommonModule,

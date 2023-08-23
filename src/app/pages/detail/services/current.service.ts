@@ -8,11 +8,11 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root'
 })
 export class CurrentService {
-
+  private _chapters: any = {};
   constructor(
     public DbController: DbControllerService,
     public data: DataService,
-    public webDb: NgxIndexedDBService
+    public webDb: NgxIndexedDBService,
   ) { }
 
   async init(comic_id: string) {
@@ -39,5 +39,27 @@ export class CurrentService {
     } else {
       return this.data.comics_config
     }
+  }
+
+  async _getChapter(id: string) {
+    let list = [];
+    if (this._chapters[id]) {
+      list = this._chapters[id]
+    } else {
+      list = await this.DbController.getPages(id);
+      this._chapters[id] = list;
+    }
+    return list
+  }
+  async _getChapterIndex(id: string): Promise<number> {
+    const res: any = await firstValueFrom(this.webDb.getByID("last_read_chapter_page", id.toString()))
+    if (res) {
+      return res.page_index
+    } else {
+      return 0
+    }
+  }
+  async _chapterPageChange(chapter_id: string, page_index: number) {
+
   }
 }
