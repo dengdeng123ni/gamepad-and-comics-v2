@@ -3,6 +3,7 @@ import { DbControllerService } from 'src/app/library/public-api';
 import { DataService } from './data.service';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class CurrentService {
     public DbController: DbControllerService,
     public data: DataService,
     public webDb: NgxIndexedDBService,
+    public router: Router,
   ) { }
 
   async init(comic_id: string) {
@@ -60,6 +62,12 @@ export class CurrentService {
     }
   }
   async _chapterPageChange(chapter_id: string, page_index: number) {
+    await this._setChapterIndex(chapter_id,page_index)
+    this.router.navigate(['/', this.data.comics_id,this.data.chapter_id])
 
+  }
+
+  async _setChapterIndex(id: string, index: number) {
+    await firstValueFrom(this.webDb.update("last_read_chapter_page", { 'chapter_id': id.toString(), "page_index": index }))
   }
 }

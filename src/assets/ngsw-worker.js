@@ -1248,15 +1248,18 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       this.scope.addEventListener("notificationclick", (event) => this.onClick(event));
       this.debugger = new DebugHandler(this, this.adapter);
       this.idle = new IdleScheduler(this.adapter, IDLE_DELAY, MAX_IDLE_DELAY, this.debugger);
+
       this._data_temporary_files = {};
 
       this._data_proxy_response = {};
 
       this._data_images = {};
+      this._data_pulg_config = {};
 
+      this._proxy_hostnames = [];
 
-      this.proxy_hostnames = ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"];
       this.image_cache = null;
+
       this.init();
     }
     async init() {
@@ -1283,7 +1286,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
             } else {
               if (bool) getFile()
             }
-          }, 66)
+          }, 0)
         }
         getFile()
         setTimeout(() => {
@@ -1347,7 +1350,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
             } else {
               if (bool) getFile()
             }
-          }, 66)
+          }, 0)
         }
         getFile()
         setTimeout(() => {
@@ -1405,7 +1408,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
             } else {
               if (bool) getFile()
             }
-          }, 66)
+          }, 0)
         }
         getFile()
         setTimeout(() => {
@@ -1459,7 +1462,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
             } else {
               if (bool) getFile()
             }
-          }, 66)
+          }, 0)
         }
         getFile()
         setTimeout(() => {
@@ -1472,10 +1475,10 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
     async onLocalProxyRequestImageCache(event) {
       const req = event.request;
       let str = req.url.split("/");
-      const id=str.pop();
+      const id = str.pop();
       const url = str.join("/");
       const res = await this.image_cache.match(url);
-      if (res&&res.headers.get('content-length')) {
+      if (res && res.headers.get('content-length')) {
         return res
       } else {
         const r = await this.onLocalProxyRequest(id);
@@ -1499,7 +1502,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         //   return;
         // }
       } else {
-        if (this.proxy_hostnames.includes(req_url.hostname)) {
+        if (this._proxy_hostnames.includes(req_url.hostname)) {
           event.respondWith(this.onWebsiteProxyRequestImageCache(event))
           return;
         }
@@ -1546,6 +1549,12 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       }
       if (data && data.type && data.type == "local_image") {
         this._data_images[data.id] = data;
+        return;
+      }
+
+      if (data && data.type && data.type == "pulg_config") {
+        this._data_pulg_config = data.configs;
+        this._proxy_hostnames = data.proxy_hostnames;
         return;
       }
 

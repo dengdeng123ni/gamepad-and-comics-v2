@@ -66,7 +66,7 @@ export class ChapterListMode1Component {
       menu: [
         { name: "thumbnail", id: "thumbnail" },
         { name: "export", id: "export" },
-        { name: "delete", id: "delete" },
+        // { name: "delete", id: "delete" },
       ]
     })
   }

@@ -2,11 +2,18 @@ import { Injectable } from '@angular/core';
 import { AppDataService } from 'src/app/library/public-api';
 import { DbEventService } from './db-event.service';
 interface Item { id: string | number, cover: string, title: string, subTitle: string }
+interface Events {
+  List: Function;
+  Detail: Function;
+  Pages: Function;
+  Image: Function
+}
 @Injectable({
   providedIn: 'root'
 })
 export class DbControllerService {
-
+  details: any = {};
+  pages: any = {};
   constructor(
     private AppData: AppDataService,
     private DbEvent: DbEventService,
@@ -14,7 +21,7 @@ export class DbControllerService {
 
   }
 
-  async getList():Promise<Array<Item>> {
+  async getList(): Promise<Array<Item>> {
     if (this.DbEvent.Events[this.AppData.origin] && this.DbEvent.Events[this.AppData.origin]["List"]) {
       const res = await this.DbEvent.Events[this.AppData.origin]["List"]()
       return res
@@ -22,23 +29,33 @@ export class DbControllerService {
       return []
     }
   }
-  async getDetail(id:string) {
+  async getDetail(id: string) {
     if (this.DbEvent.Events[this.AppData.origin] && this.DbEvent.Events[this.AppData.origin]["Detail"]) {
-      const res = await this.DbEvent.Events[this.AppData.origin]["Detail"](id)
-      return res
+      if (this.details[id]) {
+        return this.details[id]
+      } else {
+        const res = await this.DbEvent.Events[this.AppData.origin]["Detail"](id);
+        this.details[id] = res;
+        return res
+      }
     } else {
       return []
     }
   }
-  async getPages(id:string) {
+  async getPages(id: string) {
     if (this.DbEvent.Events[this.AppData.origin] && this.DbEvent.Events[this.AppData.origin]["Pages"]) {
-      const res = await this.DbEvent.Events[this.AppData.origin]["Pages"](id)
-      return res
+      if (this.pages[id]) {
+        return this.pages[id]
+      } else {
+        const res = await this.DbEvent.Events[this.AppData.origin]["Pages"](id);
+        this.pages[id] = res;
+        return res
+      }
     } else {
       return []
     }
   }
-  async getImage(id:string) {
+  async getImage(id: string) {
     if (this.DbEvent.Events[this.AppData.origin] && this.DbEvent.Events[this.AppData.origin]["Image"]) {
       const res = await this.DbEvent.Events[this.AppData.origin]["Image"](id)
       return res
