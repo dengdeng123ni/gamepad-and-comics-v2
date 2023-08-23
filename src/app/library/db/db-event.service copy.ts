@@ -12,7 +12,7 @@ interface Events {
   providedIn: 'root'
 })
 export class DbEventService {
-  public Events: { [key: string]: Events } = {};
+  public Event: { [key: string]: Events } = {};
 
   constructor(public http: HttpClient) {
     this.register('bilibili', {
@@ -101,8 +101,8 @@ export class DbEventService {
     })
   }
   register(key: string, events: Events) {
-    if (this.Events[key]) this.Events[key] = { ...this.Events[key], ...events };
-    else this.Events[key] = events;
+    if (this.Event[key]) this.Event[key] = { ...this.Event[key], ...events };
+    else this.Event[key] = events;
   }
 
 }

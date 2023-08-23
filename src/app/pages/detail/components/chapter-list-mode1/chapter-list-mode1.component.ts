@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DataService } from '../../services/data.service';
 import { ContextMenuEventService } from 'src/app/library/public-api';
+import { ExportSettingsService } from '../export-settings/export-settings.service';
 interface Item {
   id: string | number,
   cover: string,
@@ -12,7 +13,7 @@ interface Item {
   selected?: boolean,
   like_count?: number | string,
   comments?: number | string,
-  is_locked?:boolean
+  is_locked?: boolean
 }
 @Component({
   selector: 'app-chapter-list-mode1',
@@ -28,12 +29,25 @@ export class ChapterListMode1Component {
   @Output() on_item = new EventEmitter<{ $event: HTMLElement, data: any }>();
 
   @Output() on_list = new EventEmitter<HTMLElement>();
-  constructor(public data:DataService,public ContextMenuEvent: ContextMenuEventService,){
+  constructor(public data: DataService, public ContextMenuEvent: ContextMenuEventService, public exportSettings: ExportSettingsService,) {
     ContextMenuEvent.register('chapter_item', {
       close: (e: any) => {
 
       },
       on: async (e: { value: string; id: string; }) => {
+        const node = document.getElementById("menu_content");
+        let { x, y, width, height } = node!.getBoundingClientRect();
+        if (window.innerWidth < (x + 262)) x = window.innerWidth - 262
+        if (window.innerHeight < (y + 212)) y = window.innerHeight - 212
+        this.exportSettings.open({
+          position: {
+            top: `${y}px`,
+            left: `${x}px`
+          },
+          delayFocusTrap: false,
+          panelClass: "reader_settings_buttom",
+          backdropClass: "reader_settings_buttom_backdrop"
+        })
       },
       menu: [
         { name: "thumbnail", id: "thumbnail" },
@@ -56,13 +70,18 @@ export class ChapterListMode1Component {
       }
       const target_node = getTargetNode(node);
       const index = parseInt(target_node.getAttribute("index") as string);
-      this.on_item.emit({ $event: target_node, data: { ...this.list[index], index } });
+      if (this.data.is_edit) {
+        this.list[index].selected = !this.list[index].selected;
+      } else {
+        this.on_item.emit({ $event: target_node, data: { ...this.list[index], index } });
+      }
+
     }
   }
 
   ngAfterViewInit() {
-    setTimeout(()=>{
-      const node= document.getElementById(`${this.data.chapter_id}`)
+    setTimeout(() => {
+      const node = document.getElementById(`${this.data.chapter_id}`)
       node!.scrollIntoView({ block: "center", inline: "center" })
       node?.focus()
     })

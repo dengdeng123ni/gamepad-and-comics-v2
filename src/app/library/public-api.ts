@@ -14,8 +14,8 @@ export * from './context-menu/context-menu/context-menu.component';
 // export * from './gamepad/gamepad-sound.service';
 
 // export * from './cache/cache.service';
-// export * from './download/download.service';
-// export * from './i18n/i18n.service';
+export * from './download/download.service';
+export * from './i18n/i18n.service';
 export * from './data/data.service';
 export * from './db/db-controller.service';
 export * from './db/db-event.service';

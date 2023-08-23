@@ -17,9 +17,11 @@ export class DataService {
   page_id: string = "";
 
   is_edit = false;
+
   is_locked = false;
   is_cache = false;
   is_local_record = false;
+  is_download = false;
 
   comics_config = {
     reader_mode: "double_page_reader",

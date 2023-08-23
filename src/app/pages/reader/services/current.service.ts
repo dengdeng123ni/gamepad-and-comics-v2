@@ -119,7 +119,7 @@ export class CurrentService {
   }
 
   async _getWebDbComicsConfig(id: string) {
-    const res = await firstValueFrom(this.webDb.getByID("comics_config", id.toString()))
+    const res:any = await firstValueFrom(this.webDb.getByID("comics_config", id.toString()))
     if (res) {
       return { ...this.data.comics_config, ...res }
     } else {
@@ -131,7 +131,7 @@ export class CurrentService {
     await firstValueFrom(this.webDb.update("comics_config", { 'comics_id': id.toString(), ...this.data.comics_config }))
   }
 
-  async _setNextChapter() {
+  async _setNextChapter():Promise<any> {
     const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id);
     const obj = this.data.chapters[index + 1];
     if (obj) {
@@ -142,7 +142,7 @@ export class CurrentService {
     }
   }
 
-  async _setPreviousChapter() {
+  async _setPreviousChapter():Promise<any> {
     const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id);
     const obj = this.data.chapters[index - 1];
     if (obj) {
@@ -160,7 +160,7 @@ export class CurrentService {
     return list
   }
 
-  async _getNextChapter() {
+  async _getNextChapter():Promise<any> {
     const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id);
     const obj = this.data.chapters[index + 1];
     if (obj) {
@@ -169,7 +169,7 @@ export class CurrentService {
     }
   }
 
-  async _getPreviousChapter() {
+  async _getPreviousChapter():Promise<any> {
     const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id);
     const obj = this.data.chapters[index - 1];
     if (obj) {
