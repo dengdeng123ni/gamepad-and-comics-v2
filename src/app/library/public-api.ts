@@ -33,7 +33,7 @@ export interface ComicsInfo {
   title: string,
   author?: string,
   intro?: string,
-  chapter_id:string
+  chapter_id: string
 }
 export interface ChaptersItem {
   id: string,
@@ -43,4 +43,4 @@ export interface ChaptersItem {
   read?: number,
   selected?: boolean
 }
-export interface ComicsItem { id: string | number, cover: string, title: string, subTitle: string }
+export interface ComicsItem { id: string | number, cover: string, title: string, subTitle: string,selected?: boolean }

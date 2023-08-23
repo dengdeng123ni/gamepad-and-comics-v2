@@ -9,6 +9,10 @@ export class DataService {
   list: Array<ComicsItem> = [];
 
   is_edit = false;
+  is_locked = false;
+  is_cache = false;
+  is_local_record = false;
+  is_download = false;
 
   constructor() { }
 }

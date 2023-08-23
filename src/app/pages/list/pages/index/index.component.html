@@ -1,10 +1,12 @@
 <mat-drawer-container autosize>
-  <div class="container">
+  <div class="container" [attr.edit]="data.is_edit">
     <app-menu></app-menu>
-    <div class="content" >
+    <div class="content">
+      <app-edit-toolbar></app-edit-toolbar>
       <comics-list class="comics_list" [list]="data.list" (on_list)="on_list($event)"
         (on_item)="on_item($event)"></comics-list>
-      <tool-bar class="tool_bar" *ngIf="AppData.origin=='local'"></tool-bar>
+
     </div>
+    <app-toolbar class="toolbar"></app-toolbar>
   </div>
 </mat-drawer-container>
