@@ -19,7 +19,7 @@ export class DataService {
   is_edit = false;
   is_locked = false;
   is_cache = false;
-  is_local_record = false;
+  is_local_record = true;
   is_download = false;
 
   comics_config = {

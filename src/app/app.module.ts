@@ -16,7 +16,7 @@ import { MaterialModule } from './library/material.module';
 
 const dbConfig: DBConfig = {
   name: 'db',
-  version: 11,
+  version: 12,
   objectStoresMeta: [
     {
       store: 'local_comics',

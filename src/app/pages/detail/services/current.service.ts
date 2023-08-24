@@ -20,22 +20,35 @@ export class CurrentService {
   async init(comic_id: string) {
     this.data.is_init_free = false;
     this.data.comics_id = comic_id;
-    const _res = await Promise.all([this.DbController.getDetail(comic_id),this._getWebDbComicsConfig(comic_id)])
-    const res=_res[0];
+    const _res = await Promise.all([this.DbController.getDetail(comic_id), this._getWebDbComicsConfig(comic_id)])
+    const res = _res[0];
+
     this.data.comics_config = _res[1];
-    this.data.chapters = res.chapters;
+    if (this.data.is_local_record) {
+      this.data.chapters = res.chapters;
+      const chapters = await this._getChapterRead(this.data.comics_id);
+      const comics = await this._getComicsRead(this.data.comics_id);
+      for (let index = 0; index < this.data.chapters.length; index++) {
+        this.data.chapters[index].read = chapters[index].read;
+      }
+      console.log(comics);
+
+      this.data.chapter_id = comics.chapter_id;
+    } else {
+      this.data.chapters = res.chapters;
+      this.data.chapter_id = this.data.comics_info.chapter_id;
+    }
     delete res.chapters;
     this.data.comics_info = res;
-    this.data.chapter_id = this.data.comics_info.chapter_id;
     this.data.is_init_free = true;
   }
 
-  async close(){
+  async close() {
     this.data.is_init_free = false;
   }
 
   async _getWebDbComicsConfig(id: string) {
-    const res:any = await firstValueFrom(this.webDb.getByID("comics_config", id.toString()))
+    const res: any = await firstValueFrom(this.webDb.getByID("comics_config", id.toString()))
     if (res) {
       return { ...this.data.comics_config, ...res }
     } else {
@@ -62,11 +75,26 @@ export class CurrentService {
     }
   }
   async _chapterPageChange(chapter_id: string, page_index: number) {
-    await this._setChapterIndex(chapter_id,page_index)
-    this.router.navigate(['/', this.data.comics_id,this.data.chapter_id])
+    await this._setChapterIndex(chapter_id, page_index)
+    this.router.navigate(['/', this.data.comics_id, this.data.chapter_id])
 
   }
-
+  async _getChapterRead(id: string) {
+    const res: any = await firstValueFrom(this.webDb.getByID("read_comics_chapter", id.toString()))
+    if (res) {
+      return res.chapters
+    } else {
+      return this.data.chapters.map(x => ({ id: x.id, read: 0 }))
+    }
+  }
+  async _getComicsRead(comics_id: string) {
+    const res: any = await firstValueFrom(this.webDb.getByID("read_comics", comics_id.toString()))
+    if (res) {
+      return res
+    } else {
+      return { 'comics_id': this.data.comics_id.toString(), chapter_id: this.data.chapters[0].id, chapter_title: this.data.chapters[0].title, chapters_length: this.data.chapters.length }
+    }
+  }
   async _setChapterIndex(id: string, index: number) {
     await firstValueFrom(this.webDb.update("last_read_chapter_page", { 'chapter_id': id.toString(), "page_index": index }))
   }

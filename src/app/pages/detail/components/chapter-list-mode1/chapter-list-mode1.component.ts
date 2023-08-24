@@ -91,7 +91,7 @@ export class ChapterListMode1Component {
   ngAfterViewInit() {
     setTimeout(() => {
       const node = document.getElementById(`${this.data.chapter_id}`)
-      node!.scrollIntoView({ block: "center", inline: "center" })
+      node!.scrollIntoView({ behavior: 'smooth', block: 'center' })
       node?.focus()
     })
   }

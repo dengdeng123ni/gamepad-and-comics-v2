@@ -21,7 +21,7 @@ export class DataService {
   is_edit = false;
   is_locked = false;
   is_cache = false;
-  is_local_record = false;
+  is_local_record = true;
   comics_config = {
     reader_mode: "double_page_reader",
     is_page_order: false,
