@@ -16,10 +16,10 @@ export class IndexComponent {
     public AppData:AppDataService,
     public router:Router
     ) {
-      this.Current.init();
+      // this.Current.init();
   }
 
-  on_list($event: HTMLElement) {
+  on_list($event:any) {
 
   }
 

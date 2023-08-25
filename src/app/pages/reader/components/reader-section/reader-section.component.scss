@@ -1,46 +1,72 @@
-.warp{
+.warp {
   width: 280px;
   height: 100%;
   overflow: hidden;
 }
-.list{
+
+.list {
   display: flex;
   flex-direction: column;
   overflow: auto;
   height: 100%;
   max-height: 60vh;
-  .item{
+
+  .item {
 
     height: 42px;
     justify-content: left;
     padding-left: 18px;
     min-height: 42px;
 
-    span{
+    .name {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      span{
+        width: 226px;
+        overflow: hidden;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: left;
+      }
+      .icon{
+        height: 16px;
+        width: 16px;
+        font-size: 16px
+      }
+
+    }
+
+    .name {
       color: rgba(255, 255, 255, .87);
     }
-    span[read=true]{
+
+    .name[read=true] {
       color: rgba(255, 255, 255, .34);
     }
 
-    span[current=true]{
+    .name[current=true] {
       color: #c2185b;
     }
   }
 
 }
 
-.title{
+.title {
   height: 48px;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    margin-left: 12px;
-    font-size: 18px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin-left: 12px;
+  font-size: 18px;
 
 }
+
 :host ::ng-deep {
-  .mdc-button__label{
+  .mdc-button__label {
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

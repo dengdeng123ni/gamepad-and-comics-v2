@@ -29,7 +29,7 @@ export class DbEventService {
   public Configs: { [key: string]: Config } = {};
   constructor(public http: HttpClient) {
     this.register('bilibili', {
-      List: async () => {
+      List: async (obj:any) => {
         const res = await
           fetch("https://manga.bilibili.com/twirp/bookshelf.v1.Bookshelf/ListFavorite?device=pc&platform=web", {
             "headers": {
@@ -37,7 +37,7 @@ export class DbEventService {
               "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
               "content-type": "application/json;charset=UTF-8"
             },
-            "body": "{\"page_num\":1,\"page_size\":100,\"order\":3,\"wait_free\":0}",
+            "body": `{\"page_num\":${obj.page_num},\"page_size\":${obj.page_size},\"order\":3,\"wait_free\":0}`,
             "method": "POST"
           });
         const json = await res.json();

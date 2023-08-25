@@ -12,6 +12,7 @@ import { ExportSettingsComponent } from './components/export-settings/export-set
 import { EditToolbarComponent } from './components/edit-toolbar/edit-toolbar.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { DoublePageThumbnailComponent } from './components/double-page-thumbnail/double-page-thumbnail.component';
+import { UnlockComponent } from './components/unlock/unlock.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { DoublePageThumbnailComponent } from './components/double-page-thumbnail
     ExportSettingsComponent,
     EditToolbarComponent,
     LoadingComponent,
-    DoublePageThumbnailComponent
+    DoublePageThumbnailComponent,
+    UnlockComponent
   ],
   imports: [
     CommonModule,

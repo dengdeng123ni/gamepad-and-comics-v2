@@ -19,7 +19,7 @@ export class DataService {
   page_id: string = "";
 
   is_edit = false;
-  is_locked = false;
+  is_locked = true;
   is_cache = false;
   is_local_record = true;
   comics_config = {
@@ -30,6 +30,7 @@ export class DataService {
     is_double_page: true,
   }
   is_init_free = false;
+
 
   constructor() { }
 }

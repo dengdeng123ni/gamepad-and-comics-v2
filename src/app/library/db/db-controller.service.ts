@@ -12,6 +12,7 @@ interface Events {
   providedIn: 'root'
 })
 export class DbControllerService {
+
   lists: any = {};
   details: any = {};
   pages: any = {};
@@ -22,10 +23,20 @@ export class DbControllerService {
 
   }
 
-  async getList(): Promise<Array<Item>> {
+  async getList(id:string): Promise<Array<Item>> {
+
     if (this.DbEvent.Events[this.AppData.origin] && this.DbEvent.Events[this.AppData.origin]["List"]) {
-      const res = await this.DbEvent.Events[this.AppData.origin]["List"]()
-      return res
+      if (this.lists[id]) {
+        return JSON.parse(JSON.stringify(this.lists[id]))
+      } else {
+        const b64_to_utf8=(str:string)=> {
+          return JSON.parse(decodeURIComponent(escape(window.atob(str))));
+        }
+        const obj=b64_to_utf8(id)
+        const res = await this.DbEvent.Events[this.AppData.origin]["List"](obj);
+        this.lists[id] = JSON.parse(JSON.stringify(res));
+        return res
+      }
     } else {
       return []
     }

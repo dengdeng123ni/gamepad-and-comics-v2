@@ -17,7 +17,7 @@ export class DataService {
   page_id: string = "";
 
   is_edit = false;
-  is_locked = false;
+  is_locked = true;
   is_cache = false;
   is_local_record = true;
   is_download = false;
