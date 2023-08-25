@@ -1,34 +1,21 @@
 <div class="warp">
   <div class="list" id="section">
-    <button
-      mat-button
-      class="item"
-      *ngFor="let n of data.chapters; let index = index"
-      [attr._id]="'section_' + n.id"
-      [attr.select]="n.id == data.chapter_id"
-      [attr.default]="n.id == data.chapter_id"
-      [attr.region]="'section'"
-      [id]="'section_' + n.id"
-      [style]="
+    <button mat-button class="item" *ngFor="let n of data.chapters; let index = index" [attr._id]="'section_' + n.id"
+      [attr.select]="n.id == data.chapter_id" [attr.default]="n.id == data.chapter_id" [attr.region]="'section'"
+      [id]="'section_' + n.id" [style]="
         n.id == data.chapter_id
           ? 'background: rgba(255, 255, 255, .1);color:#c2185b;border-radius: 4px;'
           : null
-      "
-      (click)="on(n.id)"
-    >
+      " (click)="on(n.id)">
       <div class="img">
-        <img
-          loading="lazy"
-          class="w-full"
-          [src]="n.cover"
-        />
+        <img loading="lazy" class="w-full" [src]="n.cover" />
+        <div class="lock" *ngIf="data.is_locked">
+          <mat-icon class="lock_icon" *ngIf="n.is_locked">lock</mat-icon>
+          <mat-icon class="lock_icon" *ngIf="!n.is_locked">lock_open</mat-icon>
+        </div>
       </div>
       <div class="info">
-        <div
-          class="name"
-          [attr.read]="!!n.read"
-          [attr.current]="n.id == data.chapter_id"
-        >
+        <div class="name" [attr.read]="!!n.read" [attr.current]="n.id == data.chapter_id">
           {{ n.title }}
         </div>
         <div class="bottom">
@@ -39,6 +26,7 @@
           <!-- <div class="date">{{n.lastReadTime | date:'yyyy-MM-dd'}}</div> -->
         </div>
       </div>
+
     </button>
   </div>
 </div>

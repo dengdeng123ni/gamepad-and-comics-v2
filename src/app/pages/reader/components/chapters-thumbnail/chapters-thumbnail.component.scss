@@ -17,16 +17,34 @@
       min-height: 0;
       height: min-content;
       justify-content: start;
+
       .img {
           min-height: 120px;
           min-width: 75px;
           overflow: hidden;
           display: flex;
-
+          position: relative;
           img {
               width: 75px;
-              object-fit: contain;
+              height: 100%;
+              object-fit: cover;
           }
+      }
+      .lock {
+        position: absolute;
+        bottom: 0px;
+        display: flex;
+        padding: 8px 0;
+        align-items: center;
+        width: 100%;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.8);
+
+        .lock_icon {
+          width: 16px;
+          height: 16px;
+          font-size: 16px;
+        }
       }
   }
 
