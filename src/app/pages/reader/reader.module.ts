@@ -20,6 +20,7 @@ import { MultiplePageReaderMode1Component } from './components/multiple-page-rea
 import { MultiplePageReaderMode3Component } from './components/multiple-page-reader-mode3/multiple-page-reader-mode3.component';
 import { MultiplePageReaderMode2Component } from './components/multiple-page-reader-mode2/multiple-page-reader-mode2.component';
 import { ReaderChangeComponent } from './components/reader-change/reader-change.component';
+import { CustomGridComponent } from './components/custom-grid/custom-grid.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ReaderChangeComponent } from './components/reader-change/reader-change.
     MultiplePageReaderMode1Component,
     MultiplePageReaderMode3Component,
     MultiplePageReaderMode2Component,
-    ReaderChangeComponent
+    ReaderChangeComponent,
+    CustomGridComponent
   ],
   imports: [
     CommonModule,
