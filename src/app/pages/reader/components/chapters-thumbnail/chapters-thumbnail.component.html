@@ -4,7 +4,7 @@
       [attr.select]="n.id == data.chapter_id" [attr.default]="n.id == data.chapter_id" [attr.region]="'section'"
       [id]="'section_' + n.id" [style]="
         n.id == data.chapter_id
-          ? 'background: rgba(255, 255, 255, .1);color:#c2185b;border-radius: 4px;'
+          ? 'background: rgba(255, 255, 255, .1);color:rgba(255, 255, 255, .87);border-radius: 4px;'
           : null
       " (click)="on(n.id)">
       <div class="img">
@@ -30,4 +30,4 @@
     </button>
   </div>
 </div>
-<!-- #c2185b -->
+<!-- rgba(255, 255, 255, .87) -->

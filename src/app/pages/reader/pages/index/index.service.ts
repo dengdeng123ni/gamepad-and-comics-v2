@@ -4,6 +4,9 @@ import { DataService } from '../../services/data.service';
 import { ChaptersThumbnailService } from '../../components/chapters-thumbnail/chapters-thumbnail.service';
 import { DoublePageThumbnailService } from '../../components/double-page-thumbnail/double-page-thumbnail.service';
 import { OnePageThumbnailMode3Service } from '../../components/one-page-thumbnail-mode3/one-page-thumbnail-mode3.service';
+import { OnePageThumbnailMode1Service } from '../../components/one-page-thumbnail-mode1/one-page-thumbnail-mode1.service';
+import { OnePageThumbnailMode2Service } from '../../components/one-page-thumbnail-mode2/one-page-thumbnail-mode2.service';
+import { EventService } from '../../services/event.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +17,11 @@ export class IndexService {
     public current: CurrentService,
     public data: DataService,
     public doublePageThumbnail: DoublePageThumbnailService,
-    public onePageThumbnailMode3: OnePageThumbnailMode3Service,
     public chaptersThumbnail: ChaptersThumbnailService,
+    public onePageThumbnailMode1: OnePageThumbnailMode1Service,
+    public onePageThumbnailMode2: OnePageThumbnailMode2Service,
+    public onePageThumbnailMode3: OnePageThumbnailMode3Service,
+    public event: EventService
   ) {
     this.current.on$.subscribe(event$ => {
       const { x, y } = event$;
@@ -44,7 +50,65 @@ export class IndexService {
           })
         }
       }
-
     })
+    event.register('double_page_thumbnail', {
+      name: "双页缩略图",
+      fun: () => doublePageThumbnail.isToggle
+    })
+    event.register('one_page_thumbnail_list', {
+      name: "单页列表缩略图",
+      fun: () => doublePageThumbnail.isToggle
+    })
+    event.register('one_page_thumbnail_left', {
+      name: "单页左侧缩略图",
+      fun: () => doublePageThumbnail.isToggle
+    })
+    event.register('double_page_thumbnail_bottom', {
+      name: "单页下侧缩略图",
+      fun: () => doublePageThumbnail.isToggle
+    })
+    event.register('toolbar', {
+      name: "工具栏",
+      fun: () => doublePageThumbnail.isToggle
+    })
+    event.register('previous', {
+      name: "上一章",
+      fun: () => doublePageThumbnail.isToggle
+    })
+    event.register('next', {
+      name: "下一章",
+      fun: () => doublePageThumbnail.isToggle
+    })
+    event.register('chapters_thumbnail', {
+      name: "章节列表",
+      fun: () => doublePageThumbnail.isToggle
+    })
+    event.register('toggle_page', {
+      name: "跨页匹配",
+      fun: () => doublePageThumbnail.isToggle
+    })
+
+    event.register('back', {
+      name: "返回",
+      fun: () => doublePageThumbnail.isToggle
+    })
+
+    event.register('double_page_first_page_toggle', {
+      name: "设置第一页为封面",
+      fun: () => doublePageThumbnail.isToggle
+    })
+  }
+
+  togglePage() {
+    this.current.event$.next({ key: "double_page_reader_togglePage", value: null })
+  }
+  togglePage2() {
+    this.current.event$.next({ key: "left_right_page_reader_togglePage", value: null })
+  }
+  previous() {
+    this.current._chapterPrevious();
+  }
+  next() {
+    this.current._chapterNext();
   }
 }

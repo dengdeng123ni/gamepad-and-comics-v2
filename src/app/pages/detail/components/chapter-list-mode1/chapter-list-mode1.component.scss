@@ -93,7 +93,7 @@
   }
   .item[current=true] {
     .name {
-      color: #c2185b;
+      color: rgba(255, 255, 255, .87);
     }
   }
 
@@ -288,7 +288,7 @@ img::before {
     }
 
     span[current=true] {
-      color: #c2185b;
+      color: rgba(255, 255, 255, .87);
     }
   }
 }
