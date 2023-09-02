@@ -57,48 +57,53 @@ export class IndexService {
     })
     event.register('one_page_thumbnail_list', {
       name: "单页列表缩略图",
-      fun: () => doublePageThumbnail.isToggle
+      fun: () => onePageThumbnailMode1.isToggle
     })
     event.register('one_page_thumbnail_left', {
       name: "单页左侧缩略图",
-      fun: () => doublePageThumbnail.isToggle
+      fun: () => onePageThumbnailMode2.isToggle
     })
     event.register('double_page_thumbnail_bottom', {
       name: "单页下侧缩略图",
-      fun: () => doublePageThumbnail.isToggle
+      fun: () => onePageThumbnailMode3.isToggle
     })
     event.register('toolbar', {
       name: "工具栏",
-      fun: () => doublePageThumbnail.isToggle
+      fun: () => this.current.readerNavbarBar$.next(true)
     })
     event.register('previous', {
       name: "上一章",
-      fun: () => doublePageThumbnail.isToggle
+      fun: () => this.previous
     })
     event.register('next', {
       name: "下一章",
-      fun: () => doublePageThumbnail.isToggle
+      fun: () => this.next
     })
     event.register('chapters_thumbnail', {
       name: "章节列表",
-      fun: () => doublePageThumbnail.isToggle
+      fun: () => chaptersThumbnail.isToggle
     })
     event.register('toggle_page', {
       name: "跨页匹配",
-      fun: () => doublePageThumbnail.isToggle
+      fun: () => this.togglePage
     })
 
     event.register('back', {
       name: "返回",
-      fun: () => doublePageThumbnail.isToggle
+      fun: () => this.back
     })
 
     event.register('double_page_first_page_toggle', {
       name: "设置第一页为封面",
-      fun: () => doublePageThumbnail.isToggle
+      fun: () => this.firstPageCoverChange
     })
   }
-
+  back() {
+    window.history.back()
+  }
+  firstPageCoverChange() {
+    this.current.event$.next({ key: "double_page_reader_FirstPageToggle", value: null })
+  }
   togglePage() {
     this.current.event$.next({ key: "double_page_reader_togglePage", value: null })
   }
