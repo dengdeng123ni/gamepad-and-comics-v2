@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 interface Events {
-
+   name:string,
+   fun:Function
 }
 @Injectable({
   providedIn: 'root'
