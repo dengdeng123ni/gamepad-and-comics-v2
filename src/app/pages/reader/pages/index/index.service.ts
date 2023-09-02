@@ -64,7 +64,7 @@ export class IndexService {
       fun: () => onePageThumbnailMode2.isToggle
     })
     event.register('double_page_thumbnail_bottom', {
-      name: "单页下侧缩略图",
+      name: "单页下方缩略图",
       fun: () => onePageThumbnailMode3.isToggle
     })
     event.register('toolbar', {
