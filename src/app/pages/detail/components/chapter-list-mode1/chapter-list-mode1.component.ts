@@ -40,10 +40,14 @@ export class ChapterListMode1Component {
     public router: Router,
     public current: CurrentService, public doublePageThumbnail: DoublePageThumbnailService, public ContextMenuEvent: ContextMenuEventService, public exportSettings: ExportSettingsService,) {
     ContextMenuEvent.register('chapter_item', {
+      open:()=>{
+        // this.close()
+      },
       close: (e: any) => {
 
       },
       on: async (e: { value: string; id: string; }) => {
+
         const index=this.data.chapters.findIndex(x=>x.id.toString()==e.value.toString());
           this.data.chapters[index].selected = !this.data.chapters[index].selected;
         if (e.id == "delete") {
