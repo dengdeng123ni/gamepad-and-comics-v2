@@ -22,6 +22,7 @@ import { MultiplePageReaderMode2Component } from './components/multiple-page-rea
 import { ReaderChangeComponent } from './components/reader-change/reader-change.component';
 import { CustomGridComponent } from './components/custom-grid/custom-grid.component';
 import { ToolbarOptionComponent } from './components/toolbar-option/toolbar-option.component';
+import { SetChapterFirstPageCoverComponent } from './components/set-chapter-first-page-cover/set-chapter-first-page-cover.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { ToolbarOptionComponent } from './components/toolbar-option/toolbar-opti
     MultiplePageReaderMode2Component,
     ReaderChangeComponent,
     CustomGridComponent,
-    ToolbarOptionComponent
+    ToolbarOptionComponent,
+    SetChapterFirstPageCoverComponent
   ],
   imports: [
     CommonModule,

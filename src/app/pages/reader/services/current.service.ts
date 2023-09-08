@@ -272,11 +272,22 @@ export class CurrentService {
     if (this._chapters_IsFirstPageCover[id]) {
       return this._chapters_IsFirstPageCover[id]
     } else {
-      const pages = await this._getChapter(id)
-      const is_first_page_cover = await this._getIsFirstPageCover(pages);
-      this._chapters_IsFirstPageCover[id] = is_first_page_cover;
-      return is_first_page_cover
+      const res:any=await this._getChapterFirstPageCover(id);
+      if(res){
+        return res.is_first_page_cover
+      }else{
+        const pages = await this._getChapter(id)
+        const is_first_page_cover = await this._getIsFirstPageCover(pages);
+        this._chapters_IsFirstPageCover[id] = is_first_page_cover;
+        return is_first_page_cover
+      }
     }
+  }
+  async _getChapterFirstPageCover(chapter_id: string){
+    return  await firstValueFrom(this.webDb.getByID("chapter_first_page_cover", chapter_id.toString()))
+  }
+  async _setChapterFirstPageCover(chapter_id: string, is_first_page_cover: boolean){
+    await firstValueFrom(this.webDb.update("chapter_first_page_cover", { 'chapter_id': chapter_id.toString(), "is_first_page_cover": is_first_page_cover }))
   }
   async _setChapterIndex(id: string, index: number) {
     await firstValueFrom(this.webDb.update("last_read_chapter_page", { 'chapter_id': id.toString(), "page_index": index }))
@@ -355,7 +366,7 @@ export class CurrentService {
         if (this.deltaE(image1.x0, image2.x1) < 5 && this.deltaE(image1.y0, image2.y1) < 5) {
           bool = false
         } else {
-          if (!image1.is_left_white && !image1.is_right_white) {
+          if (!image1.is_left_white && !image1.is_right_white && !image2.is_left_white && !image2.is_right_white) {
             bool = false;
           } else {
             bool = true;

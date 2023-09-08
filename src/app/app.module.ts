@@ -16,7 +16,7 @@ import { MaterialModule } from './library/material.module';
 
 const dbConfig: DBConfig = {
   name: 'db',
-  version: 12,
+  version: 13,
   objectStoresMeta: [
     {
       store: 'local_comics',
@@ -90,6 +90,13 @@ const dbConfig: DBConfig = {
     },
     {
       store: 'last_read_chapter_page',
+      storeConfig: { keyPath: 'chapter_id', autoIncrement: false },
+      storeSchema: [
+        { name: 'chapter_id', keypath: 'chapter_id', options: { unique: false } },
+      ]
+    },
+    {
+      store: 'chapter_first_page_cover',
       storeConfig: { keyPath: 'chapter_id', autoIncrement: false },
       storeSchema: [
         { name: 'chapter_id', keypath: 'chapter_id', options: { unique: false } },

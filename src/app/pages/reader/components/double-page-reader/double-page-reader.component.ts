@@ -203,7 +203,7 @@ export class DoublePageReaderComponent {
     if (Number.isNaN(index)) index = 0;
     this.index = index;
     if (this.index < 0) this.index = 0;
-    if(this.index==0) this.is_first_page_cover = await this.current._getChapter_IsFirstPageCover(this.data.chapter_id);
+    if(this.isPageFirst&&this.index==0) this.is_first_page_cover = await this.current._getChapter_IsFirstPageCover(this.data.chapter_id);
     const res: any = await this.getCurrentImages(this.list, this.index);
     if (!res.previous.primary.image.src && !res.previous.secondary.image.src) res.previous = await this.getPreviousLast();
     if (!res.next.primary.image.src && !res.next.secondary.image.src) res.next = await this.getNextFirst();

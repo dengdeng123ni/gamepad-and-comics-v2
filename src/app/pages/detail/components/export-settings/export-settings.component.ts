@@ -39,7 +39,7 @@ export class ExportSettingsComponent {
     for (let index = 0; index < chapters.length; index++) {
       const x = chapters[index]
       const pages = await this.DbController.getPages(x.id);
-      const isFirstPageCover= await this.current._getChapter_IsFirstPageCover(pages);
+      const isFirstPageCover= await this.current._getChapter_IsFirstPageCover(x.id);
       if (this.type == "PDF") await this.download.pdf({ name: `${this.data.comics_info.title}_${x.title}`.replace("\"", "").replace(/\s*/g, ''), images: pages.map((x: { src: any; }) => x.src), pageOrder: this.pageOrder, isFirstPageCover: isFirstPageCover, page: this.page })
       if (this.type == "PPT") await this.download.ppt({ name: `${this.data.comics_info.title}_${x.title}`.replace("\"", "").replace(/\s*/g, ''), images: pages.map((x: { src: any; }) => x.src), pageOrder: this.pageOrder, isFirstPageCover: isFirstPageCover, page: this.page })
       if (this.type == "ZIP") await this.download.zip({ name: `${this.data.comics_info.title}_${x.title}`.replace("\"", "").replace(/\s*/g, ''), images: pages.map((x: { src: any; }) => x.src), pageOrder: this.pageOrder, isFirstPageCover: isFirstPageCover, page: this.page })

@@ -1,0 +1,50 @@
+<!-- transform: scale(0.8); -->
+<div class="warp mode_change">
+
+
+  <div class="box1">
+    <button mat-button class="mode_1 flex items-center justify-center flex-col item" [attr._id]="'mode_1'"
+      [attr.select]="data.comics_config.reader_mode == 'double_page_reader'"
+      [attr.default]="data.comics_config.reader_mode == 'double_page_reader'" [attr.region]="'mode'"
+      (click)="change('double_page_reader')">
+      <div class="box _box">
+        <div class="left"></div>
+        <div class="right" style="opacity: 0.1;"></div>
+      </div>
+    </button>
+    <div [class]="data.comics_config.reader_mode == 'double_page_reader' ? 'select' : ''"
+      class="index">
+      封面单页
+    </div>
+  </div>
+  <div class="box1">
+    <button mat-button class="mode_1 flex items-center justify-center flex-col item" [attr._id]="'mode_1'"
+      [attr.select]="data.comics_config.reader_mode == 'double_page_reader'"
+      [attr.default]="data.comics_config.reader_mode == 'double_page_reader'" [attr.region]="'mode'"
+      (click)="change('double_page_reader')">
+      <div class="box _box">
+        <div class="left"></div>
+        <div class="right"></div>
+      </div>
+    </button>
+    <div [class]="data.comics_config.reader_mode == 'double_page_reader' ? 'select' : ''"
+      class="index">
+      封面双页
+    </div>
+  </div>
+  <div class="box1">
+    <button mat-button class="mode_1 flex items-center justify-center flex-col item" [attr._id]="'mode_1'"
+      [attr.select]="data.comics_config.reader_mode == 'double_page_reader'"
+      [attr.default]="data.comics_config.reader_mode == 'double_page_reader'" [attr.region]="'mode'"
+      (click)="change('double_page_reader')">
+      <div class="box _box">
+        <!-- <div class="left"></div>
+        <div class="right"></div> -->
+      </div>
+    </button>
+    <div [class]="data.comics_config.reader_mode == 'double_page_reader' ? 'select' : ''"
+      class="index">
+    封面推断
+    </div>
+  </div>
+</div>

@@ -8,6 +8,7 @@ import { OnePageThumbnailMode1Service } from '../one-page-thumbnail-mode1/one-pa
 import { OnePageThumbnailMode2Service } from '../one-page-thumbnail-mode2/one-page-thumbnail-mode2.service';
 import { OnePageThumbnailMode3Service } from '../one-page-thumbnail-mode3/one-page-thumbnail-mode3.service';
 import { ReaderChangeService } from '../reader-change/reader-change.service';
+import { SetChapterFirstPageCoverService } from '../set-chapter-first-page-cover/set-chapter-first-page-cover.service';
 
 @Component({
   selector: 'app-reader-toolbar',
@@ -28,6 +29,7 @@ export class ReaderToolbarComponent {
     public onePageThumbnailMode1: OnePageThumbnailMode1Service,
     public onePageThumbnailMode2: OnePageThumbnailMode2Service,
     public onePageThumbnailMode3: OnePageThumbnailMode3Service,
+    public SetChapterFirstPageCover:SetChapterFirstPageCoverService,
     public ReaderChange: ReaderChangeService
   ) {
   }
@@ -167,5 +169,14 @@ export class ReaderToolbarComponent {
     const y = (window.innerHeight - 512) / 2;
     // this.uploadSelect.open({ x, y });
     this.ReaderChange.open({ top: `${y}px`, right: `${x}px` })
+  }
+  openFirstPageCoverChangeView($event: any) {
+    const node = ($event.target as HTMLElement);
+    const position = node.getBoundingClientRect();
+    const openTargetHeight = 36;
+    const x = window.innerWidth - (position.x - 15);
+    const y = (window.innerHeight - 512) / 2;
+    // this.uploadSelect.open({ x, y });
+    this.SetChapterFirstPageCover.open({position:{ top: `${y}px`, left: `${70}px` },delayFocusTrap:false,})
   }
 }
