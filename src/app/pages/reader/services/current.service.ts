@@ -308,8 +308,6 @@ export class CurrentService {
   async _getIsFirstPageCover(pages: Array<PagesItem>): Promise<boolean> {
     try {
       const getImagePixel = async (url: string) => {
-        console.log(url);
-
         const loadImage = async (url: string) => {
           return await createImageBitmap(await fetch(url).then((r) => r.blob()))
         }
@@ -357,13 +355,15 @@ export class CurrentService {
         if (this.deltaE(image1.x0, image2.x1) < 5 && this.deltaE(image1.y0, image2.y1) < 5) {
           bool = false
         } else {
-          bool = true;
+          if (!image1.is_left_white && !image1.is_right_white) {
+            bool = false;
+          } else {
+            bool = true;
+          }
         }
       }
       return bool
     } catch (error) {
-      console.log(error);
-
       return true
     }
   }
@@ -410,14 +410,10 @@ export class CurrentService {
       }
       let bool = true
       const image1 = await getImagePixel(pages[0].src);
-      console.log(image1);
-
       if (image1.is_right_white && !image1.is_left_white) {
         bool = true;
       } else {
         const image2 = await getImagePixel(pages[1].src);
-        console.log(image2);
-
         if (this.deltaE(image1.x1, image2.x0) < 5 && this.deltaE(image1.y1, image2.y0) < 5) {
           bool = true
         } else {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { DataService } from '../../services/data.service';
 import { ContextMenuEventService } from 'src/app/library/public-api';
 import { ExportSettingsService } from '../export-settings/export-settings.service';
@@ -24,14 +24,28 @@ interface Item {
   styleUrls: ['./chapter-list-mode1.component.scss']
 })
 export class ChapterListMode1Component {
+  @HostListener('window:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key == "Meta") this._ctrl = true;
+    if (event.key == "Control") this._ctrl = true;
+  }
+  @HostListener('window:keyup', ['$event'])
+  handleKeyUp(event: KeyboardEvent) {
+    if (event.key == "Meta") this._ctrl = false;
+    if (event.key == "Control") this._ctrl = false;
+  }
+  // abbreviated list
+  _ctrl = false;
   constructor(public data: DataService,
-    public router:Router,
-    public current:CurrentService,public doublePageThumbnail:DoublePageThumbnailService, public ContextMenuEvent: ContextMenuEventService, public exportSettings: ExportSettingsService,) {
+    public router: Router,
+    public current: CurrentService, public doublePageThumbnail: DoublePageThumbnailService, public ContextMenuEvent: ContextMenuEventService, public exportSettings: ExportSettingsService,) {
     ContextMenuEvent.register('chapter_item', {
       close: (e: any) => {
 
       },
       on: async (e: { value: string; id: string; }) => {
+        const index=this.data.chapters.findIndex(x=>x.id.toString()==e.value.toString());
+          this.data.chapters[index].selected = !this.data.chapters[index].selected;
         if (e.id == "delete") {
         } else if (e.id == "thumbnail") {
           const id = e.value
@@ -79,23 +93,27 @@ export class ChapterListMode1Component {
       }
       const target_node = getTargetNode(node);
       const index = parseInt(target_node.getAttribute("index") as string);
-      if (this.data.is_edit) {
+      if (this.data.is_edit || this._ctrl) {
         this.data.chapters[index].selected = !this.data.chapters[index].selected;
       } else {
-        if(this.data.is_locked){
-          this.router.navigate(['/', this.data.comics_id,this.data.chapters[index].id,])
-        }else{
-          if(this.data.chapters[index].is_locked){
+        if (this.data.is_locked) {
+          this.router.navigate(['/', this.data.comics_id, this.data.chapters[index].id,])
+        } else {
+          if (this.data.chapters[index].is_locked) {
 
-          }else{
-            this.router.navigate(['/', this.data.comics_id,this.data.chapters[index].id,])
+          } else {
+            this.router.navigate(['/', this.data.comics_id, this.data.chapters[index].id,])
           }
         }
       }
 
     }
   }
-
+  close() {
+    if (this.data.is_edit) return
+    if (this._ctrl) return
+    this.data.chapters.forEach(x => x.selected = false)
+  }
   ngAfterViewInit() {
     setTimeout(() => {
       const node = document.getElementById(`${this.data.chapter_id}`)

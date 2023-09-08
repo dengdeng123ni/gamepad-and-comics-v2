@@ -12,6 +12,10 @@
   // margin-top: 2.5vh;
   // margin-bottom: 0.8rem;
 }
+.detail_section[edit=true]{
+  width: calc(100vw - 24px) !important;
+  margin-left: 0 !important;
+}
 
 .warp {
   display: flex;
@@ -93,7 +97,7 @@
   }
   .item[current=true] {
     .name {
-      color: rgba(255, 255, 255, .87);
+      color: #c2185b;
     }
   }
 
