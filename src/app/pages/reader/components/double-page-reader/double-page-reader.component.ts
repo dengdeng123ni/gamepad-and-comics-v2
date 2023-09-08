@@ -43,11 +43,13 @@ export class DoublePageReaderComponent {
 
   isPageFirst = true;
   isFirst = false;
+  is_first_page_cover = false;
 
   change$;
   event$;
 
   is_init = false;
+
 
   constructor(
     public current: CurrentService,
@@ -88,7 +90,7 @@ export class DoublePageReaderComponent {
   }
 
   firstPageToggle() {
-    this.data.comics_config.is_first_page_cover = !this.data.comics_config.is_first_page_cover;
+    this.is_first_page_cover = !this.is_first_page_cover;
     if (this.index == 0) {
       this.pageToggle();
       this.pageToggle();
@@ -201,6 +203,7 @@ export class DoublePageReaderComponent {
     if (Number.isNaN(index)) index = 0;
     this.index = index;
     if (this.index < 0) this.index = 0;
+    if(this.index==0) this.is_first_page_cover = await this.current._getChapter_IsFirstPageCover(this.data.chapter_id);
     const res: any = await this.getCurrentImages(this.list, this.index);
     if (!res.previous.primary.image.src && !res.previous.secondary.image.src) res.previous = await this.getPreviousLast();
     if (!res.next.primary.image.src && !res.next.secondary.image.src) res.next = await this.getNextFirst();
@@ -284,8 +287,9 @@ export class DoublePageReaderComponent {
       const images = list;
       const obj = await this.isWideImage(images[index], images[index + 1]);
       const total = images.length;
-
-      if (this.data.comics_config.is_first_page_cover == true && index == 0) {
+      const id = await this.current._getNextChapterId()
+      const is_first_page_cover = await this.current._getChapter_IsFirstPageCover(id!);
+      if (is_first_page_cover == true && index == 0) {
         obj.secondary.image = "";
       }
       if (obj.primary.width > obj.primary.height || obj.secondary.width > obj.secondary.height) {
@@ -406,16 +410,16 @@ export class DoublePageReaderComponent {
 
     if (this.isPageFirst) {
       this.isPageFirst = false;
-      if (this.data.comics_config.is_first_page_cover == true && index == 0) {
+      if (this.is_first_page_cover == true && index == 0) {
         obj.secondary.image = "";
         steps = 1;
       }
     } else {
-      if (index == 0 && !this.isSwitch && this.data.comics_config.is_first_page_cover == true) {
+      if (index == 0 && !this.isSwitch && this.is_first_page_cover == true) {
         obj.secondary.image = "";
         steps = 1;
       }
-      if (index == 0 && this.isSwitch && this.data.comics_config.is_first_page_cover == false) {
+      if (index == 0 && this.isSwitch && this.is_first_page_cover == false) {
         obj.secondary.image = "";
         steps = 1;
       }

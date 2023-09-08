@@ -27,7 +27,6 @@ export class DataService {
     reader_mode: "double_page_reader",
     is_page_order: false,
     is_page_direction: true,
-    is_first_page_cover: true,
     is_double_page: true,
   }
 
