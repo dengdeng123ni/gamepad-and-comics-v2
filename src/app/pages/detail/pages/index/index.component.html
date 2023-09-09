@@ -3,7 +3,8 @@
     <app-comics-info [info]="data.comics_info" (on_back)="back()" (on_continue)="continue()"></app-comics-info>
     <div class="content" >
       <app-edit-toolbar *ngIf="data.is_edit"></app-edit-toolbar>
-      <app-chapter-list-mode1></app-chapter-list-mode1>
+      <!-- <app-chapter-list-mode1></app-chapter-list-mode1> -->
+      <app-chapter-list-mode2></app-chapter-list-mode2>
       <!-- <app-chapter-list-mode2 (on_list)="on_list($event)"
       (on_item)="on_item($event)" class="chapter_list_mode1" [list]="data.chapters"></app-chapter-list-mode2> -->
     </div>

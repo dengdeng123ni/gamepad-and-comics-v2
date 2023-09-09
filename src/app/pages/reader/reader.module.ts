@@ -23,6 +23,7 @@ import { ReaderChangeComponent } from './components/reader-change/reader-change.
 import { CustomGridComponent } from './components/custom-grid/custom-grid.component';
 import { ToolbarOptionComponent } from './components/toolbar-option/toolbar-option.component';
 import { SetChapterFirstPageCoverComponent } from './components/set-chapter-first-page-cover/set-chapter-first-page-cover.component';
+import { ChaptersListComponent } from './components/chapters-list/chapters-list.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { SetChapterFirstPageCoverComponent } from './components/set-chapter-firs
     ReaderChangeComponent,
     CustomGridComponent,
     ToolbarOptionComponent,
-    SetChapterFirstPageCoverComponent
+    SetChapterFirstPageCoverComponent,
+    ChaptersListComponent
   ],
   imports: [
     CommonModule,
