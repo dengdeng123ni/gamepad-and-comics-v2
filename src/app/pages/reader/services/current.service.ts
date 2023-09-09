@@ -289,6 +289,9 @@ export class CurrentService {
   async _setChapterFirstPageCover(chapter_id: string, is_first_page_cover: boolean){
     await firstValueFrom(this.webDb.update("chapter_first_page_cover", { 'chapter_id': chapter_id.toString(), "is_first_page_cover": is_first_page_cover }))
   }
+  async _delChapterFirstPageCover(chapter_id: string){
+    await firstValueFrom(this.webDb.deleteByKey("chapter_first_page_cover", chapter_id.toString()))
+  }
   async _setChapterIndex(id: string, index: number) {
     await firstValueFrom(this.webDb.update("last_read_chapter_page", { 'chapter_id': id.toString(), "page_index": index }))
   }
