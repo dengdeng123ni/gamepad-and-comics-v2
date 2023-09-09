@@ -25,7 +25,7 @@
       align-items: center;
       width: 100%;
       span{
-        width: 226px;
+        // width: 226px;
         overflow: hidden;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -55,6 +55,11 @@
   }
 
 }
+[multiple=true],
+  [content_menu_select=true] {
+    // background: ;
+    background-color: rgba(255, 255, 255, .1);
+  }
 .list{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
