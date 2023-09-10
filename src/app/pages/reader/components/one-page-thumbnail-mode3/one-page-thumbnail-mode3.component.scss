@@ -63,6 +63,9 @@
       background-size: cover;
       background: #303030;
     }
+    &:last-child{
+      margin-right: auto;
+    }
 }
 
 .index {

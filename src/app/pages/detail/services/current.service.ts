@@ -32,14 +32,15 @@ export class CurrentService {
       for (let index = 0; index < this.data.chapters.length; index++) {
         this.data.chapters[index].read = chapters[index].read;
       }
-      console.log(comics);
-
       this.data.chapter_id = comics.chapter_id;
     } else {
       this.data.chapters = res.chapters;
       this.data.chapter_id = this.data.comics_info.chapter_id;
     }
     delete res.chapters;
+    if(this.data.chapters.length&&this.data.chapters[0]){
+      if(this.data.chapters[0].cover) this.data.chapter_config.is_cover_exist=true;
+    }
     this.data.comics_info = res;
     this.data.is_init_free = true;
   }

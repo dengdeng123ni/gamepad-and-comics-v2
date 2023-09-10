@@ -64,9 +64,9 @@ export class DoublePageReaderComponent {
         this.change(x.page_index);
       } else if (x.type == "changeChapter") {
         this.list = x.pages;
-        this.change(x.page_index);
         this.isPageFirst = true;
         this.isSwitch = false;
+        this.change(x.page_index);
       } else if (x.type == "nextPage") {
         this.next()
       } else if (x.type == "previousPage") {
