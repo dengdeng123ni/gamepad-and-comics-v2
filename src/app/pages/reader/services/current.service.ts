@@ -483,11 +483,13 @@ export class CurrentService {
   }) {
     this.data.page_index = option.page_index;
     this.data.pages = option.pages;
-    if (option.chapter_id) this.data.chapter_id = option.chapter_id;
+    if (!!option.chapter_id) {
+      this.data.chapter_id = option.chapter_id;
+      history.replaceState(null, "", `${this.data.comics_id}/${this.data.chapter_id}`);
+    }
     if (type == "changePage") {
       this._setChapterIndex(this.data.chapter_id.toString(), option.page_index)
     } else if (type == "changeChapter") {
-      history.replaceState(null, "", `${this.data.comics_id}/${this.data.chapter_id}`);
       this._setWebDbComicsConfig(this.data.comics_id);
       this._updateChapterRead(this.data.chapter_id);
     }

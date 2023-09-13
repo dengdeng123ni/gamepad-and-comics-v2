@@ -88,7 +88,7 @@ export class ComicsListComponent {
 
   async add_pages() {
     const list = await this.current.getList(this.page_num, this.page_size)
-    if (!list.length) return
+    if (list.length == 0) return
     this.data.list = [...this.data.list, ...list]
     this.page_num++;
   }
