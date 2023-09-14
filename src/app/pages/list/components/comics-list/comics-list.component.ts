@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DataService } from '../../services/data.service';
 import { CurrentService } from '../../services/current.service';
+import { WindowEventService } from 'src/app/library/public-api';
+import { Router } from '@angular/router';
 interface Item {
   id: string | number,
   cover: string,
@@ -11,50 +13,33 @@ interface Item {
   tags?: Array<string>
 }
 @Component({
-  selector: 'comics-list',
+  selector: 'app-comics-list',
   templateUrl: './comics-list.component.html',
   styleUrls: ['./comics-list.component.scss']
 })
 
 export class ComicsListComponent {
   constructor(public data: DataService,
-    public current: CurrentService
+    public current: CurrentService,
+    public WindowEvent: WindowEventService,
+    public router:Router
   ) {
-
+    WindowEvent.registerClickRegion('comics_item', (e: any) => {
+      const { node } = e;
+      const index = parseInt(node.getAttribute("index") as string);
+      const data=this.data.list[index]
+      this.router.navigate(['/detail', data.id]);
+    })
   }
-  @Input() is_edit?: boolean = false;
-  @Input() list: Array<Item> = [];
-  @Input() size?: string = "middle"; // large middle small
-  @Input() last_read_id?: string | number = "";
 
-  @Output() on_item = new EventEmitter<{ $event: HTMLElement, data: any }>();
-
-  @Output() onlist = new EventEmitter<HTMLElement>();
 
   page_size = 0;
   page_num = 1;
-  on($event: MouseEvent) {
-    const node = $event.target as HTMLElement;
-    if (node.getAttribute("id") == 'list') {
-      this.onlist.emit(node);
-    } else {
-      const getTargetNode = (node: HTMLElement): HTMLElement => {
-        if (node.getAttribute("region") == "comics_list_item") {
-          return node
-        } else {
-          return getTargetNode(node.parentNode as HTMLElement)
-        }
-      }
-      const target_node = getTargetNode(node);
-      const index = parseInt(target_node.getAttribute("index") as string);
-      this.on_item.emit({ $event: target_node, data: { ...this.data.list[index], index } });
-    }
-  }
 
   ngAfterViewInit() {
     const i_w = 172.8;
     const i_h = 276.8;
-    const node: any = document.querySelector("comics-list");
+    const node: any = document.querySelector("app-comics-list");
     let w2 = ((node.clientWidth - 32) / i_w);
     let h2 = (node.clientHeight / i_h);
     if (h2 < 1) h2 = 1;
@@ -68,7 +53,7 @@ export class ComicsListComponent {
   }
 
   getData() {
-    if (this.list.length) {
+    if (this.data.list.length) {
       this.add_pages();
     } else {
       setTimeout(() => {

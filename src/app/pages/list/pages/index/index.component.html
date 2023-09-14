@@ -3,8 +3,7 @@
     <app-menu></app-menu>
     <div class="content">
       <app-edit-toolbar></app-edit-toolbar>
-      <comics-list class="comics_list" [list]="data.list" (on_list)="on_list($event)"
-        (on_item)="on_item($event)"></comics-list>
+      <app-comics-list class="comics_list"></app-comics-list>
 
     </div>
     <app-toolbar class="toolbar"></app-toolbar>

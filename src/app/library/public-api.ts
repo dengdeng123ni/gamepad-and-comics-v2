@@ -26,6 +26,8 @@ export * from './message/message-event.service'
 
 export * from './utils/utils.service'
 
+export * from './window/window-controller.service'
+export * from './window/window-event.service'
 
 export interface PagesItem { id: string, src: string, width: number, height: number }
 export interface ComicsInfo {

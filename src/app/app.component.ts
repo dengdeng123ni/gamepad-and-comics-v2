@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { ContextMenuControllerService, DbControllerService, MessageControllerService, MessageEventService } from './library/public-api';
+import { ContextMenuControllerService, DbControllerService, MessageControllerService, MessageEventService, WindowControllerService } from './library/public-api';
+
 
 @Component({
   selector: 'app-root',
@@ -8,11 +9,16 @@ import { ContextMenuControllerService, DbControllerService, MessageControllerSer
 })
 export class AppComponent {
   is_loading_page = false;
+
+
+
+
   constructor(
     public MessageController: MessageControllerService,
     public MessageEvent: MessageEventService,
+    public WindowController:WindowControllerService,
     public DbController: DbControllerService,
-    public ContextMenuController:ContextMenuControllerService
+    public ContextMenuController: ContextMenuControllerService
   ) {
     MessageEvent.service_worker_register('local_image', async (event: any) => {
       const data = event.data;
@@ -20,6 +26,12 @@ export class AppComponent {
       return { id: data.id, type: "local_image", response: response }
     })
     this.init();
+
+
+
+
+
+
   }
   init() {
     this.getPulgLoadingFree();

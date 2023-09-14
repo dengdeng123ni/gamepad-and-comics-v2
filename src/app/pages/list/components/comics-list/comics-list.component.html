@@ -1,16 +1,16 @@
-<div class="warp" (click)="on($event)">
-  <div class="grid" id="comics_list" [attr.size]="size" [attr.type]="'list'">
+<div class="warp">
+  <div class="grid" id="comics_list" [attr.size]="'middle'" [attr.type]="'list'" [attr.section]="'comics_list'">
     <button
       class="item"
       mat-button
       *ngFor="let n of data.list;let index=index"
       [attr._id]="n.id"
       [attr.index]="index"
-      [attr.region]="'comics_list_item'"
-      [attr.select]="n.id==last_read_id"
+      [attr.region]="'comics_item'"
+      [attr.select]="n.id==''"
       [matTooltipShowDelay]="3000"
       [matTooltip]="n.title"
-      [attr.content_menu_key]="'comics_list_item'"
+      [attr.content_menu_key]="'comics_item'"
       [attr.content_menu_value]="n.id"
       [attr.multiple]="n.selected">
       <div class="img">
@@ -19,7 +19,7 @@
       </div>
       <div class="name">{{n.title}}</div>
       <div class="progress">{{n.subTitle}}</div>
-      <mat-checkbox class="checkbox" [color]="'primary'" *ngIf="is_edit" [(ngModel)]="n.selected"></mat-checkbox>
+      <mat-checkbox class="checkbox" [color]="'primary'" *ngIf="data.is_edit" [(ngModel)]="n.selected"></mat-checkbox>
     </button>
   </div>
 </div>
