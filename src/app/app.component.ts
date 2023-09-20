@@ -27,11 +27,6 @@ export class AppComponent {
     })
     this.init();
 
-
-
-
-
-
   }
   init() {
     this.getPulgLoadingFree();

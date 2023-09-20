@@ -10,6 +10,7 @@ import { QueryComponent } from './components/query/query.component';
 import { BookmarksComponent } from './components/bookmarks/bookmarks.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { EditToolbarComponent } from './components/edit-toolbar/edit-toolbar.component';
+import { ComicsOptionComponent } from './components/comics-option/comics-option.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { EditToolbarComponent } from './components/edit-toolbar/edit-toolbar.com
     QueryComponent,
     BookmarksComponent,
     ToolbarComponent,
-    EditToolbarComponent
+    EditToolbarComponent,
+    ComicsOptionComponent
   ],
   imports: [
     CommonModule,

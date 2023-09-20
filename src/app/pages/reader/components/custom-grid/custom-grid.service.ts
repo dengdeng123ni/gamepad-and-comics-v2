@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ToolbarOptionComponent } from './toolbar-option.component';
+import { CustomGridComponent } from './custom-grid.component';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ToolbarOptionService {
-
-  opened = false;
+export class CustomGridService {
+  public opened=false;
   constructor(
     public _dialog: MatDialog,
   ) {
@@ -16,7 +15,7 @@ export class ToolbarOptionService {
     if (this.opened == false) {
       this.opened = true;
 
-      const dialogRef = this._dialog.open(ToolbarOptionComponent, {
+      const dialogRef = this._dialog.open(CustomGridComponent, {
         panelClass: "_double_page_thumbnail",
         data: data
       });

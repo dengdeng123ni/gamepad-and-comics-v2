@@ -246,6 +246,14 @@ export class CurrentService {
     }
   }
 
+  async _pageNext() {
+    this._change("nextPage", { pages: this.data.pages, page_index: this.data.page_index, chapter_id:this.data.chapter_id })
+  }
+
+  async _pagePrevious() {
+    this._change("previousPage", { pages: this.data.pages, page_index: this.data.page_index, chapter_id:this.data.chapter_id })
+  }
+
   async _chapterPageChange(chapter_id: string, page_index: number) {
     const pages = await this._setChapter(chapter_id);
     this._change('changeChapter', { chapter_id, pages, page_index })
@@ -478,7 +486,7 @@ export class CurrentService {
   async _change(type: string, option: {
     pages: Array<PagesItem>,
     page_index: number,
-    chapter_id?: string,
+    chapter_id: string,
     trigger?: string
   }) {
     this.data.page_index = option.page_index;

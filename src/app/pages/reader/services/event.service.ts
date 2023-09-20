@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 interface Events {
    name:string,
+   icon:string,
+   description?:string,
    fun:Function
 }
 @Injectable({
@@ -15,6 +17,8 @@ export class EventService {
 
   register(key: string, option: {
     name: string,
+    icon:string,
+    description?:string,
     fun: Function
   }) {
     this.Events[key] = option;

@@ -14,7 +14,6 @@ export class WindowControllerService {
     if (region) {
       return { key: "region",node:node, value: region }
     } else {
-
       return this.getTarget(node.parentNode as HTMLElement);
     }
   }
@@ -30,5 +29,12 @@ export class WindowControllerService {
         this.WindowEvent.clickSectionEvents[value](e);
       }
     })
+    // window.addEventListener('mousemove', (e: any) => {
+
+
+    // })
+
+    // focus
+
   }
 }

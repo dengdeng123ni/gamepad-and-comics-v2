@@ -3,6 +3,7 @@ import { DataService } from '../../services/data.service';
 import { CurrentService } from '../../services/current.service';
 import { WindowEventService } from 'src/app/library/public-api';
 import { Router } from '@angular/router';
+declare const window: any;
 interface Item {
   id: string | number,
   cover: string,
@@ -44,7 +45,7 @@ export class ComicsListComponent {
     let h2 = (node.clientHeight / i_h);
     if (h2 < 1) h2 = 1;
     else h2 = h2 + 1;
-    this.page_size = Math.trunc(h2) * Math.trunc(w2);
+    window.comics_query_option.page_size = Math.trunc(h2) * Math.trunc(w2);
     this.add_pages();
     node!.addEventListener('scroll', (e: any) => {
       this.handleScroll(e)
@@ -62,7 +63,7 @@ export class ComicsListComponent {
     }
   }
   async handleScroll(e: any) {
-    const node: any = document.querySelector("comics-list");
+    const node: any = document.querySelector("app-comics-list");
     let scrollHeight = Math.max(node.scrollHeight, node.scrollHeight);
     let scrollTop = e.target.scrollTop;
     let clientHeight = node.innerHeight || Math.min(node.clientHeight, node.clientHeight);
@@ -72,9 +73,9 @@ export class ComicsListComponent {
   }
 
   async add_pages() {
-    const list = await this.current.getList(this.page_num, this.page_size)
+    const list = await this.current.getList()
     if (list.length == 0) return
     this.data.list = [...this.data.list, ...list]
-    this.page_num++;
+    window.comics_query_option.page_num++;
   }
 }

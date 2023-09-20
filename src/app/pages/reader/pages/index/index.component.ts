@@ -6,6 +6,8 @@ import { map } from 'rxjs';
 import { OnePageThumbnailMode2Service } from '../../components/one-page-thumbnail-mode2/one-page-thumbnail-mode2.service';
 import { IndexService } from './index.service';
 import { ChaptersListService } from '../../components/chapters-list/chapters-list.service';
+import { ToolbarOptionService } from '../../components/toolbar-option/toolbar-option.service';
+import { CustomGridService } from '../../components/custom-grid/custom-grid.service';
 
 @Component({
   selector: 'app-index',
@@ -20,11 +22,14 @@ export class IndexComponent {
     public route: ActivatedRoute,
     public left: OnePageThumbnailMode2Service,
     public ChaptersList:ChaptersListService,
-    public index:IndexService
+    public index:IndexService,
+    public ToolbarOption:ToolbarOptionService,
+    public CustomGrid:CustomGridService
   ) {
     let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params));
     id$.subscribe(params => this.current._init(params.get('id') as string, params.get('sid') as string))
-  //  setTimeout(()=>{ this.ChaptersList.open();},1000)
+  //  setTimeout(()=>{ this.CustomGrid.open();},1000)
+  //  setTimeout(()=>{ this.ToolbarOption.open();},1000)
   }
 
   on($event: MouseEvent) {

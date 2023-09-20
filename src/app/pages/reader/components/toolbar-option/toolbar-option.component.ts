@@ -12,7 +12,9 @@ export class ToolbarOptionComponent {
     Object.keys(event.Events).forEach(x=>{
       this.list.push({
         id:x,
-        name:event.Events[x].name
+        name:event.Events[x].name,
+        icon:event.Events[x].icon,
+        description:event.Events[x].description
       })
     })
    }
