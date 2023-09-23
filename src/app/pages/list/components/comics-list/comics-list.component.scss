@@ -14,8 +14,9 @@
 }
 .warp{
   padding: 0.6rem;
+  padding-top: 0;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
 }
 .grid {
   display: grid;

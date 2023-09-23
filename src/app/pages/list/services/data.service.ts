@@ -13,6 +13,7 @@ export class DataService {
   is_local_record = false;
   is_download = false;
 
+  is_loading_free=false;
 
   constructor() {
     window.comics_query_option={

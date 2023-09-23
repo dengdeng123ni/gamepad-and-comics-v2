@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ContextMenuControllerService, DbControllerService, MessageControllerService, MessageEventService, WindowControllerService } from './library/public-api';
+import { ContextMenuControllerService, DbControllerService, MessageControllerService, MessageEventService } from './library/public-api';
 
 
 @Component({
@@ -16,7 +16,6 @@ export class AppComponent {
   constructor(
     public MessageController: MessageControllerService,
     public MessageEvent: MessageEventService,
-    public WindowController:WindowControllerService,
     public DbController: DbControllerService,
     public ContextMenuController: ContextMenuControllerService
   ) {

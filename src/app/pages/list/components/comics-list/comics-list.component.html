@@ -1,5 +1,5 @@
 <app-comics-option></app-comics-option>
-<div class="warp">
+<div class="warp" (click)="on($event)">
   <div class="grid" id="comics_list" [attr.size]="'middle'" [attr.type]="'list'" [attr.section]="'comics_list'">
     <button
       class="item"
