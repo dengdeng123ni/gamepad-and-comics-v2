@@ -7,25 +7,7 @@
   margin-bottom: 0;
   display: flex;
 
-  &:hover {
-    flex-direction: column;
 
-    .item[current=false] {
-      display: block;
-    }
-
-    .item[current=true] {
-      color: #c2185b;
-    }
-
-    .title {
-      margin-right: 12px;
-    }
-
-    .list {
-      margin-right: 24px;
-    }
-  }
 }
 
 .title {

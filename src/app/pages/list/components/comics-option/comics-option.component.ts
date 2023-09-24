@@ -58,33 +58,26 @@ export class ComicsOptionComponent {
       selected: -1,
       tag: lists.data.orders
     })
-    this.list=list;
+    this.list = list;
   }
 
   init() {
-    // let local = localStorage.getItem('bilibili_comics_query_order');
-    // if (local) {
-    //   let order = parseInt(local)
-    //   this.change(order)
-    // } else {
-    //   this.change(1)
-    // }
+    this.change(0, 0)
   }
 
-  change(c:number,e:number) {
-    this.list[c].selected=this.list[c].tag[e].id;
-    // this.order = order;
-    // window.comics_query_option.order = order;
-    // if(order==4) {
-    //   window.comics_query_option.order=3;
-    //   window.comics_query_option.wait_free=1;
-    // }
-    // else window.comics_query_option.wait_free=0
-    // window.comics_query_option.page_num=1;
-    // localStorage.setItem('bilibili_comics_query_order', order.toString())
-    // window.comics_query();
-    // const node=document.querySelector("#comics_list")
-    // if(node) node.scrollTop=0
+  change(c: number, e: number) {
+    this.list[c].selected = this.list[c].tag[e].id;
+    this.list.forEach(x => {
+      if (x.key == "orders") window.comics_query_option.order = x.selected;
+      if (x.key == "prices") window.comics_query_option.is_free = x.selected;
+      if (x.key == "status") window.comics_query_option.is_finish = x.selected;
+      if (x.key == "areas") window.comics_query_option.area_id = x.selected;
+      if (x.key == "styles") window.comics_query_option.style_id = x.selected;
+    })
+    window.comics_query_option.page_num = 1;
+    window.comics_query();
+    const node = document.querySelector("#comics_list")
+    if (node) node.scrollTop = 0
   }
   ngAfterViewInit() {
     const i_w = 172.8;
