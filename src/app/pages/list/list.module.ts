@@ -11,6 +11,9 @@ import { BookmarksComponent } from './components/bookmarks/bookmarks.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { EditToolbarComponent } from './components/edit-toolbar/edit-toolbar.component';
 import { ComicsOptionComponent } from './components/comics-option/comics-option.component';
+import { ComicsQueryTypeComponent } from './components/comics-query-type/comics-query-type.component';
+import { ComicsFavoritesComponent } from './components/comics-favorites/comics-favorites.component';
+import { ComicsSelectTypeComponent } from './components/comics-select-type/comics-select-type.component';
 
 
 @NgModule({
@@ -22,7 +25,10 @@ import { ComicsOptionComponent } from './components/comics-option/comics-option.
     BookmarksComponent,
     ToolbarComponent,
     EditToolbarComponent,
-    ComicsOptionComponent
+    ComicsOptionComponent,
+    ComicsQueryTypeComponent,
+    ComicsFavoritesComponent,
+    ComicsSelectTypeComponent
   ],
   imports: [
     CommonModule,

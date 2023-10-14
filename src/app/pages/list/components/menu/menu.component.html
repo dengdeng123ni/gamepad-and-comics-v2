@@ -4,19 +4,19 @@
   <!-- <button mat-button class="title" id="collect_first" [attr.content_menu_key]="'application'" [attr.content_menu_value]="'application'">数据源</button> -->
   <button mat-button class="item" [attr.region]="'list_menu_item'">
     <mat-icon class="icon">subject</mat-icon>
-    <div class="name">
+    <div class="name" >
       首页
     </div>
   </button>
-  <button mat-button class="item" [attr.region]="'list_menu_item'">
+  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="on('type')">
     <mat-icon class="icon">subject</mat-icon>
-    <div class="name">
+    <div class="name" >
       分类
     </div>
   </button>
-  <button mat-button class="item" [attr.region]="'list_menu_item'">
+  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="on('update')">
     <mat-icon class="icon">subject</mat-icon>
-    <div class="name">
+    <div class="name" >
       更新
     </div>
   </button>
@@ -26,9 +26,9 @@
       排行榜
     </div>
   </button>
-  <button mat-button class="item" [attr.region]="'list_menu_item'">
+  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="on('favorites')">
     <mat-icon class="icon">subject</mat-icon>
-    <div class="name">
+    <div class="name" >
       我的追漫
     </div>
   </button>

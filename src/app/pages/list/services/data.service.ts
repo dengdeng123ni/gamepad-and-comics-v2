@@ -15,6 +15,7 @@ export class DataService {
 
   is_loading_free=false;
 
+  qurye_page_type="type"
   constructor() {
     window.comics_query_option={
       page_num:0,
