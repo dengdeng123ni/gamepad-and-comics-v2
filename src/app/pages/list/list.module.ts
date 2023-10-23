@@ -14,6 +14,9 @@ import { ComicsOptionComponent } from './components/comics-option/comics-option.
 import { ComicsQueryTypeComponent } from './components/comics-query-type/comics-query-type.component';
 import { ComicsFavoritesComponent } from './components/comics-favorites/comics-favorites.component';
 import { ComicsSelectTypeComponent } from './components/comics-select-type/comics-select-type.component';
+import { ComicsUpdateComponent } from './components/comics-update/comics-update.component';
+import { ComicsRankingComponent } from './components/comics-ranking/comics-ranking.component';
+import { ComicsHomeComponent } from './components/comics-home/comics-home.component';
 
 
 @NgModule({
@@ -28,7 +31,10 @@ import { ComicsSelectTypeComponent } from './components/comics-select-type/comic
     ComicsOptionComponent,
     ComicsQueryTypeComponent,
     ComicsFavoritesComponent,
-    ComicsSelectTypeComponent
+    ComicsSelectTypeComponent,
+    ComicsUpdateComponent,
+    ComicsRankingComponent,
+    ComicsHomeComponent
   ],
   imports: [
     CommonModule,

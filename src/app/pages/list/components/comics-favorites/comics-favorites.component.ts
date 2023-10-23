@@ -30,7 +30,9 @@ export class ComicsFavoritesComponent {
     }
   ]
   constructor() {
-
+    window.comics_query_option={
+      query_type:"favorites"
+    };
   }
 
   init() {

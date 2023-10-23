@@ -1256,7 +1256,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       this._data_images = {};
       this._data_pulg_config = {};
 
-      this._proxy_hostnames = [];
+      this._proxy_hostnames = ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"];
 
       this.image_cache = null;
 
@@ -1502,7 +1502,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         //   return;
         // }
       } else {
-        if (this._proxy_hostnames.includes(req_url.hostname)) {
+        if (this._proxy_hostnames.find(x=>x.host_name==req_url.hostname)) {
           event.respondWith(this.onWebsiteProxyRequestImageCache(event))
           return;
         }
@@ -1553,6 +1553,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       }
 
       if (data && data.type && data.type == "pulg_config") {
+        console.log(data);
         this._data_pulg_config = data.configs;
         this._proxy_hostnames = data.proxy_hostnames;
         return;

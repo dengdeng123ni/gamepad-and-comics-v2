@@ -1,8 +1,36 @@
 <div class="list">
   <!-- <button mat-button class="title" id="collect_first" [attr.content_menu_key]="'application'" [attr.content_menu_value]="'application'">漫画</button> -->
-
+  <div>
+    <button
+    mat-icon-button
+    [attr.select]="true"
+    [attr.region]="'detail_toolabr_item'"
+    [attr._id]="'select_all'"
+    class="icon ml-1"
+  >
+    <mat-icon>done_all</mat-icon>
+  </button>
+  </div>
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <!-- <mat-label>Assignee</mat-label> -->
+      <input type="text" matInput placeholder="搜索" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          <!-- {{option.name}} -->
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
   <!-- <button mat-button class="title" id="collect_first" [attr.content_menu_key]="'application'" [attr.content_menu_value]="'application'">数据源</button> -->
-  <button mat-button class="item" [attr.region]="'list_menu_item'">
+  <button mat-button style="cursor: none;" [disabled]="true" class="item" [attr.region]="'list_menu_item'" (click)="on('home')">
+    <!-- <mat-icon class="icon">subject</mat-icon> -->
+    <div class="name" style="    font-weight: 600;
+    font-size: 16px;" >
+      bilibili
+    </div>
+  </button>
+  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="on('home')">
     <mat-icon class="icon">subject</mat-icon>
     <div class="name" >
       首页
@@ -20,7 +48,7 @@
       更新
     </div>
   </button>
-  <button mat-button class="item" [attr.region]="'list_menu_item'">
+  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="on('ranking')">
     <mat-icon class="icon">subject</mat-icon>
     <div class="name">
       排行榜
