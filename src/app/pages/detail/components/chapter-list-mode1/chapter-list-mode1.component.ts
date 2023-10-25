@@ -77,8 +77,8 @@ export class ChapterListMode1Component {
         }
       },
       menu: [
-        { name: "thumbnail", id: "thumbnail" },
-        { name: "export", id: "export" },
+        { name: "缩略图", id: "thumbnail" },
+        { name: "导出", id: "export" },
         // { name: "delete", id: "delete" },
       ]
     })

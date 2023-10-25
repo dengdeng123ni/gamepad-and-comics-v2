@@ -32,4 +32,21 @@ export class IndexComponent {
   ngAfterViewInit() {
   }
 
+
+  mouseleave($event:MouseEvent){
+console.log($event);
+console.log($event.offsetX+12,window.innerHeight);
+
+    if($event.offsetX>12) return
+    if($event.offsetX+12>window.innerHeight) return
+    if(($event.offsetX+13)>window.innerWidth){
+
+    }else{
+      this.data.is_menu_opened=!this.data.is_menu_opened;
+    }
+    // if($event.offsetX<window.innerWidth){
+
+    // }
+  }
+
 }

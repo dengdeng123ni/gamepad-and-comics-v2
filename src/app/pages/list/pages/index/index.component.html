@@ -1,11 +1,11 @@
-<mat-drawer-container autosize>
-  <div class="container" [attr.edit]="data.is_edit">
+<mat-drawer-container autosize [hasBackdrop]="false">
+  <mat-drawer [opened]="data.is_menu_opened" (mouseleave)="data.is_menu_opened=false" [mode]="data.menu_mode" class="example-sidenav" mode="side">
     <app-menu></app-menu>
+  </mat-drawer>
+  <div class="container" (mouseleave)="mouseleave($event)" [attr.edit]="data.is_edit">
     <div class="content">
-      <!-- <app-comics-option></app-comics-option> -->
       <app-edit-toolbar></app-edit-toolbar>
       <app-comics-list></app-comics-list>
     </div>
-    <!-- <app-toolbar class="toolbar"></app-toolbar> -->
   </div>
 </mat-drawer-container>
