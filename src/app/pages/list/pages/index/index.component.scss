@@ -30,6 +30,11 @@
     }
 
   }
+  .container[is_fixed=true]{
+    .content{
+      margin-left: 0 !important;
+    }
+  }
   app-comics-info {
     transition: all 0.3s;
   }
@@ -72,3 +77,4 @@
 .mat-drawer-side{
   border: 0 !important;
 }
+
