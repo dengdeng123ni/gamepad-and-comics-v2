@@ -150,6 +150,7 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
     NzUploadModule
   ],
   declarations: [
+
   ]
 })
 export class MaterialModule {

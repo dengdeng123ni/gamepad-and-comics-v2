@@ -1,134 +1,79 @@
 <div class="list">
   <!-- <button mat-button class="title" id="collect_first" [attr.content_menu_key]="'application'" [attr.content_menu_value]="'application'">漫画</button> -->
 
-<!-- <app-menu-top-toolbar></app-menu-top-toolbar> -->
+  <!-- <app-menu-top-toolbar></app-menu-top-toolbar> -->
   <form class="example-form">
-    <mat-form-field class="example-full-width">
+    <mat-form-field class="example-full-width" style="width: 100%;">
       <input type="text" matInput placeholder="搜索" [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
   </form>
-  <!-- <button mat-button class="title" id="collect_first" [attr.content_menu_key]="'application'" [attr.content_menu_value]="'application'">数据源</button> -->
-  <button mat-button style="cursor: none;" [disabled]="true" class="item" [attr.region]="'list_menu_item'" (click)="on('home')">
-    <!-- <mat-icon class="icon">subject</mat-icon> -->
-    <div class="name" style="    font-weight: 600;
-    font-size: 16px;" >
-      bilibili
-    </div>
-  </button>
-  <button mat-button class="item" cdkFocusInitial [attr.region]="'list_menu_item'" (click)="on('home')">
-    <mat-icon class="icon">subject</mat-icon>
-    <div class="name" ngc>
-      首页
-    </div>
-  </button>
-  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="on('type')">
-    <mat-icon class="icon">subject</mat-icon>
-    <div class="name" >
-      分类
-    </div>
-  </button>
-  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="on('update')">
-    <mat-icon class="icon">subject</mat-icon>
-    <div class="name" >
-      更新
-    </div>
-  </button>
-  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="on('ranking')">
-    <mat-icon class="icon">subject</mat-icon>
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <button mat-button class="item" cdkFocusInitial [attr.region]="'list_menu_item'">
+            <mat-icon class="icon">home</mat-icon>
+            <div class="name" ngc>
+              bilibili
+            </div>
+          </button>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <button mat-button class="item item1" cdkFocusInitial [attr.region]="'list_menu_item'" (click)="on('home')">
+        <mat-icon class="icon">home</mat-icon>
+        <div class="name" ngc>
+          首页
+        </div>
+      </button>
+      <button mat-button class="item item1" [attr.region]="'list_menu_item'" (click)="on('type')">
+        <mat-icon class="icon">class</mat-icon>
+        <div class="name">
+          分类
+        </div>
+      </button>
+      <button mat-button class="item item1" [attr.region]="'list_menu_item'" (click)="on('update')">
+        <mat-icon class="icon">update</mat-icon>
+        <div class="name">
+          更新
+        </div>
+      </button>
+      <button mat-button class="item item1" [attr.region]="'list_menu_item'" (click)="on('ranking')">
+        <mat-icon class="icon">sort</mat-icon>
+        <div class="name">
+          排行榜
+        </div>
+      </button>
+      <button mat-button class="item item1" [attr.region]="'list_menu_item'" (click)="on('favorites')">
+        <mat-icon class="icon">favorite</mat-icon>
+        <div class="name">
+          我的追漫
+        </div>
+      </button>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <button style="margin-top: 4px;" mat-button class="item" [attr.region]="'list_menu_item'"
+  (click)="on('cache')">
+  <mat-icon class="icon">cached</mat-icon>
+  <div class="name">
+    缓存
+  </div>
+</button>
+  <mat-divider style="margin: 8px 16px;"></mat-divider>
+  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="on('favorites')">
+    <mat-icon class="icon">add</mat-icon>
     <div class="name">
-      排行榜
+      打开文件夹
     </div>
   </button>
   <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="on('favorites')">
     <mat-icon class="icon">subject</mat-icon>
-    <div class="name" >
-      我的追漫
+    <div class="name">
+      打开文件夹
     </div>
   </button>
-
-  <!-- <div class="title" id="collect_first" style="margin-top: 12px;">订阅</div>
-  <button mat-button class="item" [attr.region]="'list_menu_item'" [attr.selected]="'false'" (click)="on($event,'all')">
-    <mat-icon class="icon">add</mat-icon>
-    <div class="name">
-      新建
-    </div>
-  </button> -->
-  <!-- <div *ngFor="let item of config.list_menu_config.server;let index=index">
-    <button mat-button style="margin-top: 12px;" class="title" id="collect_first" [attr.content_menu_key]="'local_server'" [attr.content_menu_value]="index+'_'" (click)="AddLocalServerPath.open()">{{item.name}}</button>
-    <button *ngFor="let n of item.subscriptions" mat-button class="item" [attr.content_menu_key]="'local_server_item'" [attr.content_menu_value]="index+'_'+n.id" [attr.region]="'list_menu_item'" [attr.selected]="current.selected==n.id" (click)="on_local_server($event,item.src,n.id)">
-      <mat-icon class="icon">share</mat-icon>
-      <div class="name">
-        {{n.name}}
-      </div>
-    </button>
-  </div>
-  <div>
-    <button mat-button style="margin-top: 12px;" class="title" id="collect_first" [attr.content_menu_key]="'temporary_file'" [attr.content_menu_value]="0+'_'" (click)="openTemporaryFile()">临时性文件夹</button>
-    <button *ngFor="let n of config.temporary.list;let index=index" mat-button class="item" [attr.content_menu_key]="'temporary_file_item'" [attr.content_menu_value]="index+'_'+n.id" [attr.region]="'list_menu_item'" [attr.selected]="current.selected==n.id" (click)="on_temporary_file($event,n.id)">
-      <mat-icon class="icon">share</mat-icon>
-      <div class="name">
-        {{n.name}}
-      </div>
-    </button>
-  </div> -->
-  <!-- <button mat-button class="title" id="collect_first" (click)="openServer($event)" [attr.content_menu_key]="'application'" [attr.content_menu_value]="'application'">哔哩哔哩漫画</button>
-  <button mat-button class="item" [attr.region]="'list_menu_item'"  [attr.selected]="current.selected=='all'" (click)="on($event,'all')">
-    <mat-icon class="icon">photo_library</mat-icon>
-    <div class="name">
-      追漫顺序
-    </div>
-  </button>
-
-  <button mat-button class="item" [attr.region]="'list_menu_item'" [attr.selected]="current.selected=='local'" (click)="on($event,'local')">
-    <mat-icon class="icon">subject</mat-icon>
-    <div class="name">
-      更新时间
-    </div>
-  </button>
-
-  <button mat-button class="item" [attr.region]="'list_menu_item'" [attr.selected]="current.selected=='local'" (click)="on($event,'local')">
-    <mat-icon class="icon">subject</mat-icon>
-    <div class="name">
-      完成等免
-    </div>
-  </button> -->
-
-  <!-- <button mat-button class="item" [attr.region]="'comics_item'"  (click)="on($event,'all')">
-    <mat-icon class="icon">menu_book</mat-icon>
-    <div class="name">
-      阅读中
-    </div>
-  </button>
-  <button mat-button class="item" [attr.region]="'comics_item'" (click)="on($event,'all')">
-    <mat-icon class="icon">check_circle</mat-icon>
-    <div class="name">
-      已读完
-    </div>
-  </button>
-  <button mat-button class="item" [attr.region]="'comics_item'" (click)="on($event,'all')">
-    <mat-icon class="icon">picture_as_pdf</mat-icon>
-    <div class="name">
-      PDF
-    </div>
-  </button> -->
-  <!-- <div class="title">
-    我的收藏
-  </div> -->
-  <!-- <div class="item"
-
-    tabIndex="1"
-    *ngFor="let n of collect.list;let index=index;"
-    (click)="onChange(n)">
-    <mat-icon class="icon">subject</mat-icon>
-    <div class="name truncate" *ngIf="!n.edit">
-        {{n.name}}
-    </div>
-    <div style="margin-left: 8px;" *ngIf="n.edit">
-        <input [(ngModel)]="n.name" (blur)="save()" [id]="'input_'+n.id" class="input" matInput>
-    </div>
-</div> -->
 </div>

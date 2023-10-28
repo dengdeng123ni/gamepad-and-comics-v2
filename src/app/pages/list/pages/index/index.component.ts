@@ -34,19 +34,21 @@ export class IndexComponent {
 
 
   mouseleave($event:MouseEvent){
-console.log($event);
-console.log($event.offsetX+12,window.innerHeight);
-
-    if($event.offsetX>12) return
-    if($event.offsetX+12>window.innerHeight) return
+    if($event.offsetX>24) return
+    if($event.offsetX+24>window.innerHeight) return
     if(($event.offsetX+13)>window.innerWidth){
 
     }else{
-      this.data.is_menu_opened=!this.data.is_menu_opened;
+      this.data.is_left_drawer_opened=true;
     }
     // if($event.offsetX<window.innerWidth){
 
     // }
+  }
+  drawer_mouseleave($event:MouseEvent){
+    if($event.offsetX>240) {
+      this.data.is_left_drawer_opened=false;
+    }
   }
 
 }

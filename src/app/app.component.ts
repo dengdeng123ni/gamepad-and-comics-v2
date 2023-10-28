@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ContextMenuControllerService, DbControllerService, MessageControllerService, MessageEventService } from './library/public-api';
+import { ContextMenuControllerService, DbControllerService, MessageControllerService, MessageEventService, SelectDataSourceService } from './library/public-api';
 
 
 @Component({
@@ -9,7 +9,7 @@ import { ContextMenuControllerService, DbControllerService, MessageControllerSer
 })
 export class AppComponent {
   is_loading_page = false;
-
+  is_data_source = false;
 
 
 
@@ -17,7 +17,8 @@ export class AppComponent {
     public MessageController: MessageControllerService,
     public MessageEvent: MessageEventService,
     public DbController: DbControllerService,
-    public ContextMenuController: ContextMenuControllerService
+    public ContextMenuController: ContextMenuControllerService,
+    public SelectDataSource:SelectDataSourceService
   ) {
     MessageEvent.service_worker_register('local_image', async (event: any) => {
       const data = event.data;
@@ -28,17 +29,29 @@ export class AppComponent {
 
   }
   init() {
+    this.getDataSource();
     this.getPulgLoadingFree();
+
   }
 
   getPulgLoadingFree() {
-    setTimeout(() => {
-      if (document.body.getAttribute("pulg")) {
-        this.is_loading_page = true;
-      } else {
+    if (document.body.getAttribute("pulg")) {
+      this.is_loading_page = true;
+    } else {
+      setTimeout(() => {
         this.getPulgLoadingFree();
-      }
-    })
+      })
+    }
+  }
+
+  getDataSource() {
+    const data = localStorage.getItem("data_source");
+    if (data) {
+      document.body.setAttribute("data_source",data);
+      this.is_data_source=true;
+    }else{
+      // this.SelectDataSource.open();
+    }
   }
 
 }

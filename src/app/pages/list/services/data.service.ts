@@ -17,8 +17,9 @@ export class DataService {
 
   qurye_page_type="home"
 
-  is_menu_opened=false;
-  menu_mode:any="over";
+  is_left_drawer_opened=false;
+
+  left_drawer_mode:any='over';
   constructor() {
     window.comics_query_option={
       page_num:0,

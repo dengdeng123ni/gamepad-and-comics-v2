@@ -32,7 +32,10 @@
   height: 30px;
   // color: rgba(255, 255, 255, .87);
 }
-
+.item1{
+  margin-left: 20px;
+  width: calc(100% - 30px);
+}
 // .icon {
 //   width: 18px;
 //   height: 18px;
@@ -159,5 +162,33 @@
   }
   .mat-mdc-form-field-bottom-align{
     display: none;
+  }
+
+  .mat-expansion-panel-header{
+    background: transparent !important;
+    padding: 0 !important;
+    height: fit-content;
+
+  }
+  .mat-expansion-indicator{
+    display: none;
+  }
+  .mat-accordion{
+
+  }
+  .mat-expansion-panel{
+    box-shadow: none !important;
+  }
+  .mat-expansion-panel-header-title{
+    margin-right: 0;
+  }
+  .mat-expansion-panel-body{
+    padding: 0 !important;
+  }
+  .mat-expansion-panel-header.mat-expanded{
+    height: fit-content;
+  }
+  .mat-expansion-panel-spacing{
+    margin: 0 !important;
   }
 }

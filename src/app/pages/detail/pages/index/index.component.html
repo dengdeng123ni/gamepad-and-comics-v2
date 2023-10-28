@@ -1,5 +1,13 @@
-<mat-drawer-container autosize>
-  <div class="container" *ngIf="data.is_init_free" [attr.edit]="data.is_edit">
+<mat-drawer-container autosize [hasBackdrop]="false">
+  <!-- <mat-drawer style="
+  border: 1px solid;
+  border-radius: 4px;
+  border-color: #ffffff1f;
+  margin: 4px;
+  " [opened]="data.is_left_drawer_opened" (mouseleave)="drawer_mouseleave($event)" [mode]="data.left_drawer_mode" class="example-sidenav" mode="side">
+   <app-comics-info [info]="data.comics_info" (on_back)="back()" (on_continue)="continue()"></app-comics-info>
+</mat-drawer> -->
+  <div class="container" (mouseleave)="mouseleave($event)" *ngIf="data.is_init_free" [attr.edit]="data.is_edit">
     <app-comics-info [info]="data.comics_info" (on_back)="back()" (on_continue)="continue()"></app-comics-info>
     <div class="content" >
       <app-edit-toolbar *ngIf="data.is_edit"></app-edit-toolbar>
@@ -8,6 +16,6 @@
       <!-- <app-chapter-list-mode2 (on_list)="on_list($event)"
       (on_item)="on_item($event)" class="chapter_list_mode1" [list]="data.chapters"></app-chapter-list-mode2> -->
     </div>
-    <detail-toolbar></detail-toolbar>
+    <!-- <app-toolbar></app-toolbar> -->
   </div>
 </mat-drawer-container>

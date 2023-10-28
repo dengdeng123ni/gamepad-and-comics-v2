@@ -29,6 +29,8 @@ export * from './utils/utils.service'
 export * from './window/window-controller.service'
 export * from './window/window-event.service'
 
+export * from './select-data-source/select-data-source.service'
+
 export interface PagesItem { id: string, src: string, width: number, height: number }
 export interface ComicsInfo {
   cover: string,

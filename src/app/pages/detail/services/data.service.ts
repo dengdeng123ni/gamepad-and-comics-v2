@@ -35,6 +35,9 @@ export class DataService {
 
   is_init_free = false;
 
+  is_left_drawer_opened=false;
+
+  left_drawer_mode:any='over';
 
   constructor() { }
 }

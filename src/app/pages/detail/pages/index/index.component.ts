@@ -20,6 +20,7 @@ export class IndexComponent {
     id$.subscribe(x => this.current.init(x as string))
   }
   ngOnDestroy() {
+    this.data.is_left_drawer_opened=false;
     this.current.close();
   }
   back() {
@@ -37,5 +38,22 @@ export class IndexComponent {
     const $event = e.$event;
     const data = e.data;
     this.router.navigate(['/', this.data.comics_id,data.id,])
+  }
+  mouseleave($event:MouseEvent){
+    if($event.offsetX>24) return
+    if($event.offsetX+24>window.innerHeight) return
+    if(($event.offsetX+13)>window.innerWidth){
+
+    }else{
+      this.data.is_left_drawer_opened=true;
+    }
+    // if($event.offsetX<window.innerWidth){
+
+    // }
+  }
+  drawer_mouseleave($event:MouseEvent){
+    if($event.offsetX>240) {
+      this.data.is_left_drawer_opened=false;
+    }
   }
 }

@@ -19,6 +19,7 @@ export class MenuComponent {
   myControl = new FormControl('');
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
+  panelOpenState=true
   constructor(public data: DataService) {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),

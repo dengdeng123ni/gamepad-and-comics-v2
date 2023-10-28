@@ -13,6 +13,7 @@ import { DetailModule } from './pages/detail/detail.module';
 import { ReaderModule } from './pages/reader/reader.module';
 import { ContextMenuComponent } from './library/public-api';
 import { MaterialModule } from './library/material.module';
+import { SelectDataSourceComponent } from './library/select-data-source/select-data-source.component';
 
 const dbConfig: DBConfig = {
   name: 'db',
@@ -108,7 +109,8 @@ const dbConfig: DBConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    ContextMenuComponent
+    ContextMenuComponent,
+    SelectDataSourceComponent
   ],
   imports: [
     BrowserModule,

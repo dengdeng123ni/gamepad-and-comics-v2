@@ -18,6 +18,7 @@ import { ComicsUpdateComponent } from './components/comics-update/comics-update.
 import { ComicsRankingComponent } from './components/comics-ranking/comics-ranking.component';
 import { ComicsHomeComponent } from './components/comics-home/comics-home.component';
 import { MenuTopToolbarComponent } from './components/menu-top-toolbar/menu-top-toolbar.component';
+import { ComicsCacheComponent } from './components/comics-cache/comics-cache.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { MenuTopToolbarComponent } from './components/menu-top-toolbar/menu-top-
     ComicsUpdateComponent,
     ComicsRankingComponent,
     ComicsHomeComponent,
-    MenuTopToolbarComponent
+    MenuTopToolbarComponent,
+    ComicsCacheComponent
   ],
   imports: [
     CommonModule,

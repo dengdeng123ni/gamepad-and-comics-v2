@@ -4,6 +4,7 @@
 <app-comics-update *ngIf="data.qurye_page_type=='update'"></app-comics-update>
 <app-comics-ranking *ngIf="data.qurye_page_type=='ranking'"></app-comics-ranking>
 <app-comics-home *ngIf="data.qurye_page_type=='home'"></app-comics-home>
+<app-comics-cache *ngIf="data.qurye_page_type=='cache'"></app-comics-cache>
 <div class="warp" (click)="on($event)">
   <div class="grid" id="comics_list" [attr.size]="'middle'" [attr.type]="'list'" [attr.section]="'comics_list'">
     <button
