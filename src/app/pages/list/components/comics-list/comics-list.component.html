@@ -21,7 +21,9 @@
       [attr.content_menu_value]="n.id"
       [attr.multiple]="n.selected">
       <div class="img">
-        <img class="w-full" [src]="n.cover">
+        <!-- <img class="w-full" [src]="n.cover"> -->
+        <!-- {{n.cover}} -->
+        <app-image class="w-full" [src]="n.cover" />
         <div class="mezzanine"></div>
       </div>
       <div class="name">{{n.title}}</div>

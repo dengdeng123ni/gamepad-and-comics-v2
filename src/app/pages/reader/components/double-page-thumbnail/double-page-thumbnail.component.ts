@@ -48,11 +48,11 @@ export class DoublePageThumbnailComponent {
   }
 
   async getDoublePages(pages: { id: string; width: number; height: number; src: string; }[], page_index: number) {
-    const list = pages.map((x: { id: string; width: number; height: number; src: string; }) => ({
+    const list = pages.map((x: any) => ({
       id: x.id,
       width: x.width,
       height: x.height,
-      src: x.src
+      src: x.small
     }))
     const is_first_page_cover= await this.current._getChapter_IsFirstPageCover(this.data.chapter_id);
     const double_list = await this.utils.Images.getPageDouble(list, { isFirstPageCover: is_first_page_cover, pageOrder: this.data.comics_config.is_page_order });

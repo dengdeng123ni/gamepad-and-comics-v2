@@ -13,11 +13,11 @@
     [class]="index == page_index ? 'select' : ''"
   >
     <div class="img">
-      <img
+      <app-image
         loading="lazy"
         [width]="n.width"
         [height]="n.height"
-        [src]="n.src"
+        [src]="n.small"
         [alt]="index"
       />
     </div>

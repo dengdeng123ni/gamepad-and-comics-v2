@@ -13,7 +13,7 @@ import SwiperCore, {
 import { SwiperComponent } from 'swiper/angular';
 import { CurrentService } from '../../services/current.service';
 import { DataService } from '../../services/data.service';
-import { PagesItem } from 'src/app/library/public-api';
+import { ImageService, PagesItem } from 'src/app/library/public-api';
 SwiperCore.use([Manipulation, Navigation, Pagination, Mousewheel, Keyboard, Autoplay]);
 @Component({
   selector: 'app-double-page-reader',
@@ -27,6 +27,8 @@ export class DoublePageReaderComponent {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key == "ArrowRight") this.current._pageNext();
+    if (event.key == "ArrowLeft") this.current._pagePrevious();
     if (event.key == "c") this.pageToggle();
     if (event.key == "v") this.firstPageToggle();
   }
@@ -53,7 +55,8 @@ export class DoublePageReaderComponent {
 
   constructor(
     public current: CurrentService,
-    public data: DataService
+    public data: DataService,
+    public image:ImageService
   ) {
 
     this.list = this.data.pages as any;
@@ -353,6 +356,9 @@ export class DoublePageReaderComponent {
   }
 
   isWideImage = async (primary: any, secondary: any) => {
+    if(primary) primary.src=await this.image.getLocalImagebase64(primary.src)
+    if(secondary) secondary.src=await this.image.getLocalImagebase64(secondary.src)
+
     try {
       const [imgPrimary, imgSecondary] = await Promise.all([this.loadImage(primary?.src), this.loadImage(secondary?.src)]);
       if (imgPrimary.width > imgPrimary.height || imgSecondary.width > imgSecondary.height) {

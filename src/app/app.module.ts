@@ -103,6 +103,13 @@ const dbConfig: DBConfig = {
         { name: 'chapter_id', keypath: 'chapter_id', options: { unique: false } },
       ]
     },
+    {
+      store: 'image',
+      storeConfig: { keyPath: 'image_id', autoIncrement: false },
+      storeSchema: [
+        { name: 'image_id', keypath: 'image_id', options: { unique: false } },
+      ]
+    }
   ]
 };
 
@@ -110,7 +117,7 @@ const dbConfig: DBConfig = {
   declarations: [
     AppComponent,
     ContextMenuComponent,
-    SelectDataSourceComponent
+    SelectDataSourceComponent,
   ],
   imports: [
     BrowserModule,

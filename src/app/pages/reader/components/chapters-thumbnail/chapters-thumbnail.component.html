@@ -8,7 +8,7 @@
           : null
       " (click)="on(n.id)">
       <div class="img">
-        <img loading="lazy" class="w-full" [src]="n.cover" />
+        <app-image [objectFit]="'cover'" loading="lazy" class="w-full" [src]="n.cover" />
         <div class="lock" *ngIf="data.is_locked">
           <mat-icon class="lock_icon" *ngIf="n.is_locked">lock</mat-icon>
           <mat-icon class="lock_icon" *ngIf="!n.is_locked">lock_open</mat-icon>

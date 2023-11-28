@@ -19,6 +19,7 @@ import { ComicsRankingComponent } from './components/comics-ranking/comics-ranki
 import { ComicsHomeComponent } from './components/comics-home/comics-home.component';
 import { MenuTopToolbarComponent } from './components/menu-top-toolbar/menu-top-toolbar.component';
 import { ComicsCacheComponent } from './components/comics-cache/comics-cache.component';
+// import { ImageComponent } from 'src/app/library/public-api';
 
 
 @NgModule({

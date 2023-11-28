@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { MessageEventService } from './message-event.service';
+import { MessageFetchService } from './message-fetch.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageControllerService {
 
-  constructor(public MessageEvent: MessageEventService) {
+  constructor(public MessageEvent: MessageEventService, public http:MessageFetchService) {
 
     MessageEvent.service_worker_register('proxy_request', (event:any) => {
       const data = event.data;
@@ -28,6 +29,7 @@ export class MessageControllerService {
 
     window.addEventListener("message", function (event) {
       if (event.data.type == "proxy_response") {
+        http._data_proxy_response[event.data.id]=event.data;
         if (navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage(event.data)
       }
     }, false);

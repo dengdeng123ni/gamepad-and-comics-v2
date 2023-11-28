@@ -154,7 +154,7 @@
       }
     }
 
-    img {
+    .image {
       width: 120px;
       min-width: 120px;
       height: 70px;
@@ -163,7 +163,7 @@
       border-radius: 2px;
     }
 
-    img::before {
+    .image::before {
       position: absolute;
       top: 0;
       left: 0;

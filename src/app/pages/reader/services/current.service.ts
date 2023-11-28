@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
-import { DbControllerService, PagesItem } from 'src/app/library/public-api';
+import { DbControllerService, ImageService, MessageFetchService, PagesItem } from 'src/app/library/public-api';
 import { Subject, firstValueFrom } from 'rxjs';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 
@@ -18,7 +18,9 @@ export class CurrentService {
   constructor(
     public DbController: DbControllerService,
     public data: DataService,
-    public webDb: NgxIndexedDBService
+    public webDb: NgxIndexedDBService,
+    public image:ImageService,
+    public _http:MessageFetchService
   ) {
     this.reader_mode_change$.subscribe(x => {
       if (this.reader_modes.includes(x)) this.data.comics_config.reader_mode = x;
@@ -331,7 +333,7 @@ export class CurrentService {
     try {
       const getImagePixel = async (url: string) => {
         const loadImage = async (url: string) => {
-          return await createImageBitmap(await fetch(url).then((r) => r.blob()))
+          return await createImageBitmap(await this.image.getLocalImageBlob(url))
         }
         const img = await loadImage(url);
         let canvas = document.createElement('canvas');
@@ -397,7 +399,7 @@ export class CurrentService {
     try {
       const getImagePixel = async (url: string) => {
         const loadImage = async (url: string) => {
-          return await createImageBitmap(await fetch(url).then((r) => r.blob()))
+          return await createImageBitmap(await this.image.getLocalImageBlob(url))
         }
         const img = await loadImage(url);
         let canvas = document.createElement('canvas');

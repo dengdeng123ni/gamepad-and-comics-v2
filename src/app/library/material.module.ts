@@ -48,6 +48,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { FormsModule } from '@angular/forms';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { ImageComponent } from './image/image.component';
 @NgModule({
   imports: [
     FormsModule,
@@ -96,8 +97,7 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
     OverlayModule,
     PortalModule,
     ScrollingModule,
-
-    NzUploadModule
+    NzUploadModule,
   ],
   exports: [
     FormsModule,
@@ -146,11 +146,11 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
     OverlayModule,
     PortalModule,
     ScrollingModule,
-
+    ImageComponent,
     NzUploadModule
   ],
   declarations: [
-
+    ImageComponent,
   ]
 })
 export class MaterialModule {
