@@ -8,6 +8,7 @@ export class TemporaryFileService {
   files: any = [];
   data: any = [];
   chapters: any = [];
+  menu:any=[];
   constructor(public MessageEvent: MessageEventService,
     public DbEvent: DbEventService
   ) {
@@ -58,8 +59,6 @@ export class TemporaryFileService {
         let data = [];
         for (let index = 0; index < obj1.pages.length; index++) {
           const x = obj1.pages[index];
-console.log(x);
-
           let obj = {
             id: "",
             src: "",

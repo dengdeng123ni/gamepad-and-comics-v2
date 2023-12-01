@@ -23,7 +23,6 @@ export class MenuComponent {
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
   panelOpenState = true;
-  temporaryFileMenu:any=[];
   constructor(public data: DataService,
     public upload:UploadService,
     public temporaryFile:TemporaryFileService,
@@ -38,8 +37,10 @@ export class MenuComponent {
   on(type: string) {
     this.data.qurye_page_type = type;
     this.data.list = [];
+    this.AppData.origin="bilibili";
   }
   on2(id:string){
+    this.data.list=[];
     this.AppData.origin="temporary_file";
     this.data.qurye_page_type ="temporary_file"
   }
@@ -71,7 +72,7 @@ export class MenuComponent {
     await handleDirectoryEntry(dirHandle, out, dirHandle["name"]);
     this.temporaryFile.data=await this.upload.subscribe_to_temporary_file_directory(files_arr, id)
     let chapters: any[]=[];
-    this.temporaryFileMenu.push({id,name:dirHandle["name"]})
+    this.temporaryFile.menu.push({id,name:dirHandle["name"]})
     for (let index = 0; index < this.temporaryFile.data.length; index++) {
       const x = this.temporaryFile.data[index];
       chapters=[...chapters,...x.comics.chapters];

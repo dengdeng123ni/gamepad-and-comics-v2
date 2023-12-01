@@ -17,6 +17,7 @@ export class ComicsHomeComponent {
       color: '',
       data_type: 1,
       strategy_id: [],
+
     },
     {
       type: 3,

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DataService } from '../../services/data.service';
 declare const window: any;
 @Component({
   selector: 'app-temporary-file',
@@ -6,7 +7,7 @@ declare const window: any;
   styleUrls: ['./temporary-file.component.scss']
 })
 export class TemporaryFileComponent {
-  constructor() {
+  constructor(public data:DataService) {
   }
 
   init() {
@@ -14,6 +15,8 @@ export class TemporaryFileComponent {
   }
 
   change(c: number, e: number) {
+    this.data.list=[];
+    window.comics_query_option.temporary_file_id="123";
     window.comics_query_option.page_num = 1;
     window.comics_query();
     const node = document.querySelector("#comics_list")
