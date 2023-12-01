@@ -23,10 +23,14 @@ export class CurrentService {
     this.data.comics_id = comic_id;
     const _res = await Promise.all([this.DbController.getDetail(comic_id), this._getWebDbComicsConfig(comic_id)])
     const res = _res[0];
+console.log(_res);
+
+
 
     this.data.comics_config = _res[1];
     if (this.data.is_local_record) {
       this.data.chapters = res.chapters;
+      console.log( this.data.chapters);
       const chapters = await this._getChapterRead(this.data.comics_id);
       const comics = await this._getComicsRead(this.data.comics_id);
       for (let index = 0; index < this.data.chapters.length; index++) {

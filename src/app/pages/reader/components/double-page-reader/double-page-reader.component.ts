@@ -342,7 +342,8 @@ export class DoublePageReaderComponent {
     }
     return res.previous
   }
-  loadImage = (url: string) => {
+   loadImage = async (url: string) => {
+    url=await this.image.getLocalImagebase64(url)
     return new Promise<any>((resolve, reject) => {
       if (url) {
         const img = new Image();
@@ -426,7 +427,7 @@ export class DoublePageReaderComponent {
         steps = 1;
       }
       if (index == 0 && this.isSwitch && this.is_first_page_cover == false) {
-        obj.secondary.image = "";
+        obj.secondary.image = ""
         steps = 1;
       }
     }

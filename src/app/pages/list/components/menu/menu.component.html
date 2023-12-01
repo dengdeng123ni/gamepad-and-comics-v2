@@ -64,16 +64,16 @@
   </div>
 </button>
   <mat-divider style="margin: 8px 16px;"></mat-divider>
-  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="on('favorites')">
+  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="openTemporaryFile()">
     <mat-icon class="icon">add</mat-icon>
     <div class="name">
       打开文件夹
     </div>
   </button>
-  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="on('favorites')">
+  <button mat-button class="item" [attr.region]="'list_menu_item'"  *ngFor="let n of temporaryFileMenu;let index=index" (click)="on2(n.id)">
     <mat-icon class="icon">subject</mat-icon>
     <div class="name">
-      打开文件夹
+      {{n.name}}
     </div>
   </button>
 </div>

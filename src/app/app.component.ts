@@ -8,8 +8,8 @@ import { ContextMenuControllerService, DbControllerService, MessageControllerSer
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  is_loading_page = false;
-  is_data_source = false;
+  is_loading_page = true;
+  is_data_source = true;
 
 
 

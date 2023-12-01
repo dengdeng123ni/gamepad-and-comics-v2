@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { DataService } from '../../services/data.service';
 import { Observable, map, startWith } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { UploadService } from './upload.service';
+import { TemporaryFileService } from './temporary-file.service';
+import { AppDataService } from 'src/app/library/public-api';
 declare const window: any;
 @Component({
   selector: 'app-menu',
@@ -19,21 +22,71 @@ export class MenuComponent {
   myControl = new FormControl('');
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
-  panelOpenState=true
-  constructor(public data: DataService) {
+  panelOpenState = true;
+  temporaryFileMenu:any=[];
+  constructor(public data: DataService,
+    public upload:UploadService,
+    public temporaryFile:TemporaryFileService,
+    public AppData:AppDataService,
+    private zone: NgZone
+    ) {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => this._filter(value || '')),
     );
-   }
+  }
   on(type: string) {
     this.data.qurye_page_type = type;
-    this.data.list=[];
+    this.data.list = [];
+  }
+  on2(id:string){
+    this.AppData.origin="temporary_file";
+    this.data.qurye_page_type ="temporary_file"
   }
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
     return this.options.filter((option: string) => option.toLowerCase().includes(filterValue));
+  }
+  async openTemporaryFile() {
+    const dirHandle = await (window as any).showDirectoryPicker({ mode: "readwrite" });
+    let files_arr: { id: number; blob: any; path: string; name: any; }[] = []
+    let date = new Date().getTime();
+    const handleDirectoryEntry = async (dirHandle: any[], out: { [x: string]: {}; }, path: any) => {
+      for await (const entry of dirHandle.values()) {
+        if (entry.kind === "file") {
+          out[entry.name] = { id: date, blob: entry, path: `${path}/${entry.name}`.substring(1) };
+          files_arr.push({ id: date, blob: entry, path: `${path}/${entry.name}`.substring(1), name: entry.name })
+          date++;
+        }
+        if (entry.kind === "directory") {
+          const newOut = out[entry.name] = {};
+          await handleDirectoryEntry(entry, newOut, `${path}/${entry.name}`);
+        }
+      }
+    }
+    const out = {};
+    const id = window.btoa(encodeURI(dirHandle["name"]))
+    await handleDirectoryEntry(dirHandle, out, dirHandle["name"]);
+    this.temporaryFile.data=await this.upload.subscribe_to_temporary_file_directory(files_arr, id)
+    let chapters: any[]=[];
+    this.temporaryFileMenu.push({id,name:dirHandle["name"]})
+    for (let index = 0; index < this.temporaryFile.data.length; index++) {
+      const x = this.temporaryFile.data[index];
+      chapters=[...chapters,...x.comics.chapters];
+    }
+    this.temporaryFile.chapters=chapters;
+    this.temporaryFile.files = [...this.temporaryFile.files, ...files_arr];
+    this.data.list=[];
+    this.zone.run(() => {
+      this.AppData.origin="temporary_file";
+      this.data.qurye_page_type ="temporary_file"
+    })
+
+
+    // this.config.temporary.list.push({ id, name: dirHandle["name"] })
+    // this.current.temporary_file_ids.push(id);
+    // await this.current.getComicsInfoAll();
   }
 }

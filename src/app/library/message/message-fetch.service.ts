@@ -5,7 +5,10 @@ import { Injectable } from '@angular/core';
 })
 export class MessageFetchService {
   _data_proxy_response: any = {};
-  constructor() { }
+  constructor() {
+
+
+  }
 
 
   async fetch(url: RequestInfo | URL, init: RequestInit): Promise<Response> {
@@ -17,6 +20,8 @@ export class MessageFetchService {
     }
     const id = Math.round(Math.random() * 1000000000000);
     let bool = true;
+    console.log(url);
+
     window.postMessage({
       id: id,
       type: "website_proxy_request",

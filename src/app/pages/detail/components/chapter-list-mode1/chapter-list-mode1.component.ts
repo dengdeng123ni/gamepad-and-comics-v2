@@ -59,6 +59,8 @@ export class ChapterListMode1Component {
             page_index: index
           })
 
+        }else if(e.id=="ccccc"){
+
         }
         else if (e.id == "export") {
           const node = document.getElementById("menu_content");
@@ -78,6 +80,7 @@ export class ChapterListMode1Component {
       },
       menu: [
         { name: "缩略图", id: "thumbnail" },
+         { name: "缓存", id: "ccccc" },
         { name: "导出", id: "export" },
         // { name: "delete", id: "delete" },
       ]

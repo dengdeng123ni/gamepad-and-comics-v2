@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MessageFetchService } from '../public-api';
-import { ImageService } from '../image/image.service';
 interface Events {
   List: Function;
   Detail: Function;
@@ -29,69 +28,24 @@ export class DbEventService {
   public Events: { [key: string]: Events } = {};
   public Configs: { [key: string]: Config } = {};
   constructor(public http: HttpClient,
-    public _http:MessageFetchService,
-    public image:ImageService
-    ) {
+    public _http: MessageFetchService,
+  ) {
     this.register('bilibili', {
       List: async (obj: any) => {
-          let list = [];
-          if (obj.query_type == "type") {
-            const res = await
-              this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/ClassPage?device=pc&platform=web", {
-                "headers": {
-                  "accept": "application/json, text/plain, */*",
-                  "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-                  "content-type": "application/json;charset=UTF-8"
-                },
-                "body": JSON.stringify(obj),
-                "method": "POST"
-              });
-            const json = await res.json();
-            list = json.data.map((x: any) => {
-              const httpUrlToHttps = (str: string) => {
-                const url = new URL(str);
-                if (url.protocol == "http:") {
-                  return `https://${url.host}${url.pathname}`
-                } else {
-                  return str
-                }
-              }
-              return { id: x.season_id, cover: httpUrlToHttps(x.vertical_cover), title: x.title, subTitle: x.bottom_info }
-            });
-          } else if (obj.query_type == "favorites") {
-            const res = await
-              this._http.fetch("https://manga.bilibili.com/twirp/bookshelf.v1.Bookshelf/ListFavorite?device=pc&platform=web", {
-                "headers": {
-                  "accept": "application/json, text/plain, */*",
-                  "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-                  "content-type": "application/json;charset=UTF-8"
-                },
-                "body": `{\"page_num\":${obj.page_num},\"page_size\":${obj.page_size},\"order\":${obj.order},\"wait_free\":${obj.wait_free}}`,
-                "method": "POST"
-              });
-            const json = await res.json();
-            const httpUrlToHttps = (str: string) => {
-              const url = new URL(str);
-              if (url.protocol == "http:") {
-                return `https://${url.host}${url.pathname}`
-              } else {
-                return str
-              }
-            }
-            list = json.data.map((x: any) => {
-              return { id: x.comic_id, cover: httpUrlToHttps(x.vcover), title: x.title, subTitle: `看到 ${x.last_ep_short_title} 话 / 共 ${x.latest_ep_short_title} 话` }
-            });
-          } else if (obj.query_type == "update") {
-            const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/GetDailyPush?device=pc&platform=web", {
+        let list = [];
+        if (obj.query_type == "type") {
+          const res = await
+            this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/ClassPage?device=pc&platform=web", {
               "headers": {
                 "accept": "application/json, text/plain, */*",
                 "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
                 "content-type": "application/json;charset=UTF-8"
               },
-              "body": `{\"date\":\"${obj.date}\",\"page_num\":1,\"page_size\":50}`,
+              "body": JSON.stringify(obj),
               "method": "POST"
             });
-            const json = await res.json();
+          const json = await res.json();
+          list = json.data.map((x: any) => {
             const httpUrlToHttps = (str: string) => {
               const url = new URL(str);
               if (url.protocol == "http:") {
@@ -100,56 +54,100 @@ export class DbEventService {
                 return str
               }
             }
-            list = json.data.list.map((x: any) => {
-              return { id: x.comic_id, cover: httpUrlToHttps(x.vertical_cover), title: x.title, subTitle: `更新 ${x.short_title} 话` }
-            });
-
-          } else if (obj.query_type == "ranking") {
-            const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/GetRankInfo?device=pc&platform=web", {
+            return { id: x.season_id, cover: httpUrlToHttps(x.vertical_cover), title: x.title, subTitle: x.bottom_info }
+          });
+        } else if (obj.query_type == "favorites") {
+          const res = await
+            this._http.fetch("https://manga.bilibili.com/twirp/bookshelf.v1.Bookshelf/ListFavorite?device=pc&platform=web", {
               "headers": {
                 "accept": "application/json, text/plain, */*",
                 "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
                 "content-type": "application/json;charset=UTF-8"
               },
-              "body": `{\"id\":${obj.id}}`,
+              "body": `{\"page_num\":${obj.page_num},\"page_size\":${obj.page_size},\"order\":${obj.order},\"wait_free\":${obj.wait_free}}`,
               "method": "POST"
             });
-            const json = await res.json();
-            const httpUrlToHttps = (str: string) => {
-              const url = new URL(str);
-              if (url.protocol == "http:") {
-                return `https://${url.host}${url.pathname}`
-              } else {
-                return str
-              }
+          const json = await res.json();
+          const httpUrlToHttps = (str: string) => {
+            const url = new URL(str);
+            if (url.protocol == "http:") {
+              return `https://${url.host}${url.pathname}`
+            } else {
+              return str
             }
-            list = json.data.list.map((x: any) => {
-              return { id: x.comic_id, cover: httpUrlToHttps(x.vertical_cover), title: x.title, subTitle: `更新 ${x.total} 话` }
-            });
-          } else if (obj.query_type == "home") {
-            const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/GetClassPageSixComics?device=pc&platform=web", {
-              "headers": {
-                "accept": "application/json, text/plain, */*",
-                "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-                "content-type": "application/json;charset=UTF-8"
-              },
-              "body": `{\"id\":${obj.id},\"isAll\":0,\"page_num\":${obj.page_num},\"page_size\":${obj.page_size}}`,
-              "method": "POST"
-            });
-            const json = await res.json();
-            const httpUrlToHttps = (str: string) => {
-              const url = new URL(str);
-              if (url.protocol == "http:") {
-                return `https://${url.host}${url.pathname}`
-              } else {
-                return str
-              }
-            }
-            list = json.data.roll_six_comics.map((x: any) => {
-              return { id: x.comic_id, cover: httpUrlToHttps(x.vertical_cover), title: x.title, subTitle: `${x.recommendation}` }
-            });
           }
-          return list
+          list = json.data.map((x: any) => {
+            return { id: x.comic_id, cover: httpUrlToHttps(x.vcover), title: x.title, subTitle: `看到 ${x.last_ep_short_title} 话 / 共 ${x.latest_ep_short_title} 话` }
+          });
+        } else if (obj.query_type == "update") {
+          const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/GetDailyPush?device=pc&platform=web", {
+            "headers": {
+              "accept": "application/json, text/plain, */*",
+              "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+              "content-type": "application/json;charset=UTF-8"
+            },
+            "body": `{\"date\":\"${obj.date}\",\"page_num\":1,\"page_size\":50}`,
+            "method": "POST"
+          });
+          const json = await res.json();
+          const httpUrlToHttps = (str: string) => {
+            const url = new URL(str);
+            if (url.protocol == "http:") {
+              return `https://${url.host}${url.pathname}`
+            } else {
+              return str
+            }
+          }
+          list = json.data.list.map((x: any) => {
+            return { id: x.comic_id, cover: httpUrlToHttps(x.vertical_cover), title: x.title, subTitle: `更新 ${x.short_title} 话` }
+          });
+
+        } else if (obj.query_type == "ranking") {
+          const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/GetRankInfo?device=pc&platform=web", {
+            "headers": {
+              "accept": "application/json, text/plain, */*",
+              "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+              "content-type": "application/json;charset=UTF-8"
+            },
+            "body": `{\"id\":${obj.id}}`,
+            "method": "POST"
+          });
+          const json = await res.json();
+          const httpUrlToHttps = (str: string) => {
+            const url = new URL(str);
+            if (url.protocol == "http:") {
+              return `https://${url.host}${url.pathname}`
+            } else {
+              return str
+            }
+          }
+          list = json.data.list.map((x: any) => {
+            return { id: x.comic_id, cover: httpUrlToHttps(x.vertical_cover), title: x.title, subTitle: `更新 ${x.total} 话` }
+          });
+        } else if (obj.query_type == "home") {
+          const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/GetClassPageSixComics?device=pc&platform=web", {
+            "headers": {
+              "accept": "application/json, text/plain, */*",
+              "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+              "content-type": "application/json;charset=UTF-8"
+            },
+            "body": `{\"id\":${obj.id},\"isAll\":0,\"page_num\":${obj.page_num},\"page_size\":${obj.page_size}}`,
+            "method": "POST"
+          });
+          const json = await res.json();
+          const httpUrlToHttps = (str: string) => {
+            const url = new URL(str);
+            if (url.protocol == "http:") {
+              return `https://${url.host}${url.pathname}`
+            } else {
+              return str
+            }
+          }
+          list = json.data.roll_six_comics.map((x: any) => {
+            return { id: x.comic_id, cover: httpUrlToHttps(x.vertical_cover), title: x.title, subTitle: `${x.recommendation}` }
+          });
+        }
+        return list
 
       },
       Detail: async (id: string) => {
@@ -205,7 +203,7 @@ export class DbEventService {
           let obj = {
             id: "",
             src: "",
-            small:"",
+            small: "",
             width: 0,
             height: 0
           };
@@ -214,8 +212,8 @@ export class DbEventService {
           }
 
           obj["id"] = `${id}_${index}`;
-          obj["src"] = `${window.location.origin}/image/bilibili/${id}_${index}/${utf8_to_b64(x.path)}`
-          obj["small"] = `${window.location.origin}/small/bilibili/${id}_${index}/${utf8_to_b64(x.path)}`
+          obj["src"] = `${window.location.origin}/bilibili/image/${id}_${index}/${utf8_to_b64(x.path)}`
+          obj["small"] = `${window.location.origin}/bilibili/small/${id}_${index}/${utf8_to_b64(x.path)}`
           obj["width"] = x.x;
           obj["height"] = x.y;
           data.push(obj)
@@ -227,6 +225,7 @@ export class DbEventService {
           return decodeURIComponent(window.atob(str));
         }
         const _id = b64_to_utf8(id);
+
         const getImageUrl = async (id: string) => {
           const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web", {
             "headers": {
@@ -240,22 +239,10 @@ export class DbEventService {
           const json = await res.json();
           return `${json.data[0].url}?token=${json.data[0].token}`
         }
-        const readStreamToString = async (stream: any) => {
-          const reader = stream.getReader();
-          let result = [];
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            result.push(Array.from(value));
-          }
-          return result;
-        }
         const url = await getImageUrl(_id);
-        const rsponse = await this._http.get(url);
-        const data = await readStreamToString(rsponse.body)
-        let headers: any = [];
-        rsponse.headers.forEach(function (value: any, name: any) { headers.push({ value, name }) });
-        return { body: data, init: { bodyUsed: rsponse.bodyUsed, headers: headers, ok: rsponse.ok, redirected: rsponse.redirected, status: rsponse.status, statusText: rsponse.statusText, type: rsponse.type, url: rsponse.url } }
+        const res = await this._http.get(url);
+        const blob = await res.blob();
+        return blob
       }
     }, {
       name: "bilibili",
@@ -268,6 +255,7 @@ export class DbEventService {
       is_cache: true,
       is_tab: true
     });
+    window._register = this.register;
   }
 
   register = (key: string, events: Events, config: Config) => {
