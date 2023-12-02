@@ -24,11 +24,11 @@ export class MenuComponent {
   filteredOptions: Observable<string[]>;
   panelOpenState = true;
   constructor(public data: DataService,
-    public upload:UploadService,
-    public temporaryFile:TemporaryFileService,
-    public AppData:AppDataService,
+    public upload: UploadService,
+    public temporaryFile: TemporaryFileService,
+    public AppData: AppDataService,
     private zone: NgZone
-    ) {
+  ) {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => this._filter(value || '')),
@@ -37,12 +37,13 @@ export class MenuComponent {
   on(type: string) {
     this.data.qurye_page_type = type;
     this.data.list = [];
-    this.AppData.origin="bilibili";
+    this.AppData.setOrigin('bilibili')
   }
-  on2(id:string){
-    this.data.list=[];
-    this.AppData.origin="temporary_file";
-    this.data.qurye_page_type ="temporary_file"
+  on2(id: string) {
+    this.data.list = [];
+    this.AppData.setOrigin('temporary_file')
+    this.data.qurye_page_type = "temporary_file"
+    window.comics_query_option.temporary_file_type=id;
   }
 
   private _filter(value: string): string[] {
@@ -51,38 +52,51 @@ export class MenuComponent {
     return this.options.filter((option: string) => option.toLowerCase().includes(filterValue));
   }
   async openTemporaryFile() {
-    const dirHandle = await (window as any).showDirectoryPicker({ mode: "readwrite" });
+    const dirHandle = await (window as any).showDirectoryPicker({ mode: "read" });
     let files_arr: { id: number; blob: any; path: string; name: any; }[] = []
     let date = new Date().getTime();
-    const handleDirectoryEntry = async (dirHandle: any[], out: { [x: string]: {}; }, path: any) => {
-      for await (const entry of dirHandle.values()) {
-        if (entry.kind === "file") {
-          out[entry.name] = { id: date, blob: entry, path: `${path}/${entry.name}`.substring(1) };
-          files_arr.push({ id: date, blob: entry, path: `${path}/${entry.name}`.substring(1), name: entry.name })
-          date++;
+    const handleDirectoryEntry = async (dirHandle: any, out: { [x: string]: {}; }, path: any) => {
+      if (dirHandle.kind === "directory") {
+        for await (const entry of dirHandle.values()) {
+          if (entry.kind === "file") {
+            if (["jpg", "png", "bmp", "jpeg", "psd", "webp"].includes(entry.name.split(".")[1])) {
+              out[entry.name] = { id: date, blob: entry, path: `${path}/${entry.name}`.substring(1) };
+              files_arr.push({ id: date, blob: entry, path: `${path}/${entry.name}`.substring(1), name: entry.name })
+              date++;
+            }
+          }
+          if (entry.kind === "directory") {
+            const newOut = out[entry.name] = {};
+            await handleDirectoryEntry(entry, newOut, `${path}/${entry.name}`);
+          }
         }
-        if (entry.kind === "directory") {
-          const newOut = out[entry.name] = {};
-          await handleDirectoryEntry(entry, newOut, `${path}/${entry.name}`);
-        }
+      }
+      if (dirHandle.kind === "file") {
+        const entry = dirHandle;
+        if (!["jpg", "png", "bmp", "jpeg", "psd", "webp"].includes(entry.name.split(".")[1])) return
+        out[entry.name] = { id: date, blob: entry, path: `${path}/${entry.name}`.substring(1) };
+        files_arr.push({ id: date, blob: entry, path: `${path}/${entry.name}`.substring(1), name: entry.name })
+        date++;
       }
     }
     const out = {};
     const id = window.btoa(encodeURI(dirHandle["name"]))
     await handleDirectoryEntry(dirHandle, out, dirHandle["name"]);
-    this.temporaryFile.data=await this.upload.subscribe_to_temporary_file_directory(files_arr, id)
-    let chapters: any[]=[];
-    this.temporaryFile.menu.push({id,name:dirHandle["name"]})
+    let list = await this.upload.subscribe_to_temporary_file_directory(files_arr, id)
+    list.forEach(x => x.temporary_file_type = id);
+    this.temporaryFile.data = [...this.temporaryFile.data, ...list]
+    let chapters: any[] = [];
+    this.temporaryFile.menu.push({ id, name: dirHandle["name"] })
     for (let index = 0; index < this.temporaryFile.data.length; index++) {
       const x = this.temporaryFile.data[index];
-      chapters=[...chapters,...x.comics.chapters];
+      chapters = [...chapters, ...x.chapters];
     }
-    this.temporaryFile.chapters=chapters;
+    this.temporaryFile.chapters = chapters;
     this.temporaryFile.files = [...this.temporaryFile.files, ...files_arr];
-    this.data.list=[];
     this.zone.run(() => {
-      this.AppData.origin="temporary_file";
-      this.data.qurye_page_type ="temporary_file"
+      window.comics_query_option.temporary_file_type=id;
+      this.AppData.origin = "temporary_file";
+      this.data.qurye_page_type = "temporary_file"
     })
 
 

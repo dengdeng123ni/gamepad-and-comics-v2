@@ -24,7 +24,6 @@ export class DbControllerService {
   }
 
   async getList(id:string): Promise<Array<Item>> {
-
     if (this.DbEvent.Events[this.AppData.origin] && this.DbEvent.Events[this.AppData.origin]["List"]) {
       if (this.lists[id]) {
         return JSON.parse(JSON.stringify(this.lists[id]))

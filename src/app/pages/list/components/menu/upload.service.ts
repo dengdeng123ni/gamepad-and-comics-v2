@@ -91,8 +91,15 @@ export class UploadService {
 
     const time = new Date().getTime();
     let j = 0;
-
-    return this.list
+    this.list.forEach(x => {
+      x.createTime = undefined;
+      x.origin = undefined;
+      x.size = undefined;
+      x.createTime = undefined;
+    })
+    return this.list.map(x => ({
+      ...x.comics
+    }))
   }
   async subscribe_to_file_directory(files, api, id) {
 
@@ -175,8 +182,8 @@ export class UploadService {
       const obj = comicsAll.find(x => x.title == comics.title);
       if (!obj) {
         for (let index = 0; index < comics.chapters.length; index++) {
-          comics.id=time + j;
-          state.id=time + j;
+          comics.id = time + j;
+          state.id = time + j;
           comics.chapters[index].id = time + j;
           comics.chapters[index].date = time + j;
           comics.chapters[index].pages = comics.chapters[index].pages.map(x => {
@@ -193,11 +200,11 @@ export class UploadService {
         state.pageOrder = false;
         await firstValueFrom(forkJoin([this.db.update('comics', comics), this.db.update('state', state)]))
       } else {
-        const newState=stateAll.find(x=>x.id==obj.id);
-        const index=obj.chapters.findIndex(c=>c.id==newState.chapter.id)
+        const newState = stateAll.find(x => x.id == obj.id);
+        const index = obj.chapters.findIndex(c => c.id == newState.chapter.id)
         for (let index = 0; index < comics.chapters.length; index++) {
-          comics.id=time + j;
-          state.id=time + j;
+          comics.id = time + j;
+          state.id = time + j;
           comics.chapters[index].id = time + j;
           comics.chapters[index].date = time + j;
           comics.chapters[index].pages = comics.chapters[index].pages.map(x => {
@@ -216,11 +223,11 @@ export class UploadService {
         delete comics.origin;
 
         const newComics = deepMerge(obj, comics);
-        state.id=newComics.id;
+        state.id = newComics.id;
         await firstValueFrom(forkJoin([this.db.update('comics', newComics), this.db.update('state', state)]))
       }
     }
-    this.list=[];
+    this.list = [];
     return
   }
 
@@ -280,21 +287,22 @@ export class UploadService {
       const size = files.map(x => x.size).reduce((acr, cur) => acr + cur);
       const id = new Date().getTime();
       let comics = {
-        id: new Date().getTime(),
+        id:this.chaptersId,
         origin: "local",
         title: name,
         size: size,
-        createTime: new Date().getTime(),
+        createTime: this.chaptersId,
         cover: pages[0],
         chapters: [
           {
-            id: new Date().getTime(),
+            id: this.chaptersId,
             title: "单行本",
-            date: new Date().getTime(),
+            date: this.chaptersId,
             pages: pages
           },
         ]
       };
+      this.chaptersId++;
       const state = {
         id: comics.id,
         mode: 1,
@@ -322,21 +330,22 @@ export class UploadService {
       const size = files.map(x => x.size).reduce((acr, cur) => acr + cur);
       const id = new Date().getTime();
       let comics = {
-        id: new Date().getTime(),
+        id: this.chaptersId,
         origin: "local",
         title: name,
         size: size,
-        createTime: new Date().getTime(),
+        createTime:this.chaptersId,
         cover: pages[0],
         chapters: [
           {
-            id: new Date().getTime(),
+            id: this.chaptersId,
             title: "单行本",
-            date: new Date().getTime(),
+            date: this.chaptersId,
             pages: pages
           },
         ]
       };
+      this.chaptersId++;
       const state = {
         id: comics.id,
         mode: 1,
@@ -362,14 +371,15 @@ export class UploadService {
       const id = new Date().getTime();
       const size = files.map(x => x.size).reduce((acr, cur) => acr + cur);
       let comics = {
-        id: id,
+        id: this.chaptersId,
         origin: "local",
         size: size,
         title: name,
-        createTime: id,
+        createTime: this.chaptersId,
         cover: "",
         chapters: []
       };
+      this.chaptersId++;
       const obj = this.getRepeatNum(files.map(x => x.relativePath.split("/")[2]));
       let names = [];
       let objFiles = {};
@@ -389,22 +399,11 @@ export class UploadService {
         comics.chapters.push({
           id: this.chaptersId,
           title: x,
-          date:  this.chaptersId,
           pages: pages
         })
         this.chaptersId++;
       }
-      const state = {
-        id: comics.id,
-        mode: 1,
-        chapter: {
-          id: comics.chapters[0].id,
-          title: comics.chapters[0].title,
-          index: 0,
-          total: comics.chapters[0].pages.length
-        }
-      };
-      return { comics, state }
+      return { comics }
     }
     const list = this.getRepeatNum2(files, files.map(x => x['relativePath'].split("/")[1]));
     for (let i = 0; i < Object.keys(list).length; i++) {
@@ -415,17 +414,17 @@ export class UploadService {
   }
   async addRollExtraEpisode(files) {
     const addComics = async (name, files) => {
-      const id = new Date().getTime();
       const size = files.map(x => x.size).reduce((acr, cur) => acr + cur);
       let comics = {
-        id: id,
+        id: this.chaptersId,
         origin: "local",
         title: name,
         size: size,
-        createTime: id,
+        createTime: this.chaptersId,
         cover: "",
         chapters: []
       };
+      this.chaptersId++;
       const obj = this.getRepeatNum(files.map(x => x.relativePath.split("/")[3]));
       let names = [];
       let objFiles = {};
@@ -445,7 +444,7 @@ export class UploadService {
         comics.chapters.push({
           id: this.chaptersId,
           title: x,
-          date:  this.chaptersId,
+          date: this.chaptersId,
           pages: pages
         })
         this.chaptersId++;

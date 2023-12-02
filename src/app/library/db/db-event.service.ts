@@ -6,14 +6,15 @@ interface Events {
   Detail: Function;
   Pages: Function;
   Image: Function
+  Unlock?: Function
 }
 interface Config {
   name: string,
   tab: Tab,
-  is_edit: Boolean;
-  is_locked: Boolean;
-  is_cache: Boolean;
-  is_tab: Boolean;
+  is_edit: boolean;
+  is_locked: boolean;
+  is_cache: boolean;
+  is_tab: boolean;
 }
 interface Tab {
   url: string,
@@ -30,7 +31,17 @@ export class DbEventService {
   constructor(public http: HttpClient,
     public _http: MessageFetchService,
   ) {
-    this.register('bilibili', {
+    this.register({
+      name: "bilibili",
+      tab: {
+        url: "https://manga.bilibili.com/",
+        host_names: ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"],
+      },
+      is_edit: false,
+      is_locked: true,
+      is_cache: true,
+      is_tab: true
+    },{
       List: async (obj: any) => {
         let list = [];
         if (obj.query_type == "type") {
@@ -148,7 +159,6 @@ export class DbEventService {
           });
         }
         return list
-
       },
       Detail: async (id: string) => {
         const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/ComicDetail?device=pc&platform=web", {
@@ -185,6 +195,9 @@ export class DbEventService {
           )).reverse(),
           chapter_id: x.read_epid
         }
+      },
+      Unlock: async (id: string) => {
+
       },
       Pages: async (id: string) => {
         const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web", {
@@ -244,21 +257,12 @@ export class DbEventService {
         const blob = await res.blob();
         return blob
       }
-    }, {
-      name: "bilibili",
-      tab: {
-        url: "https://manga.bilibili.com/",
-        host_names: ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"],
-      },
-      is_edit: false,
-      is_locked: true,
-      is_cache: true,
-      is_tab: true
     });
     window._register = this.register;
   }
 
-  register = (key: string, events: Events, config: Config) => {
+  register = ( config: Config,events: Events) => {
+    const key=config.name;
     if (this.Events[key]) this.Events[key] = { ...this.Events[key], ...events };
     else this.Events[key] = events;
     if (this.Events[key]) this.Configs[key] = { ...this.Configs[key], ...config };

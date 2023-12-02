@@ -109,6 +109,9 @@ export class CurrentService {
     this.data.chapter_id = chapter_id;
     this.data.comics_id = comic_id;
     const _res = await Promise.all([this.DbController.getPages(chapter_id), this.DbController.getDetail(comic_id), this._getChapterIndex(chapter_id), this._getWebDbComicsConfig(comic_id)])
+    if(_res[0]&&_res[1]){
+
+    }
     const list = _res[0];
     const res = _res[1];
     this.data.page_index = _res[2];

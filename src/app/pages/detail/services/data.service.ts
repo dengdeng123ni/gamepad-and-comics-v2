@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ChaptersItem, ComicsInfo, PagesItem } from 'src/app/library/public-api';
+import { AppDataService, ChaptersItem, ComicsInfo, PagesItem } from 'src/app/library/public-api';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,8 +17,10 @@ export class DataService {
   page_id: string = "";
 
   is_edit = false;
+  edit=false
   is_locked = true;
   is_cache = false;
+  // is_local_record 是否开启 本地阅读记录
   is_local_record = true;
   is_download = false;
 
@@ -35,9 +37,19 @@ export class DataService {
 
   is_init_free = false;
 
-  is_left_drawer_opened=false;
+  is_left_drawer_opened = false;
 
-  left_drawer_mode:any='over';
+  left_drawer_mode: any = 'over';
 
-  constructor() { }
+  constructor(public AppData: AppDataService) {
+
+
+  }
+
+  init() {
+    const obj = this.AppData.getOption();
+    this.edit = obj.is_edit;
+    this.is_locked = obj.is_locked;
+    this.is_cache = obj.is_cache;
+  }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PagesItem, ChaptersItem, ComicsInfo } from 'src/app/library/public-api';
+import { PagesItem, ChaptersItem, ComicsInfo, AppDataService } from 'src/app/library/public-api';
 
 @Injectable({
   providedIn: 'root'
@@ -33,5 +33,12 @@ export class DataService {
   is_init_free = false;
 
 
-  constructor() { }
+  constructor(public AppData:AppDataService) { }
+
+  init() {
+    const obj = this.AppData.getOption();
+    this.is_edit = obj.is_edit;
+    this.is_locked = obj.is_locked;
+    this.is_cache = obj.is_cache;
+  }
 }

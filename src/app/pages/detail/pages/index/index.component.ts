@@ -17,7 +17,10 @@ export class IndexComponent {
     public route: ActivatedRoute
   ) {
     let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params.get('id')));
-    id$.subscribe(x => this.current.init(x as string))
+    id$.subscribe(x => {
+      this.data.init();
+      this.current.init(x as string)
+    })
   }
   ngOnDestroy() {
     this.data.is_left_drawer_opened=false;

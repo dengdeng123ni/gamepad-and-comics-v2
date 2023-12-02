@@ -27,7 +27,10 @@ export class IndexComponent {
     public CustomGrid:CustomGridService
   ) {
     let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params));
-    id$.subscribe(params => this.current._init(params.get('id') as string, params.get('sid') as string))
+    id$.subscribe(params => {
+      this.data.init();
+      this.current._init(params.get('id') as string, params.get('sid') as string)
+    })
   //  setTimeout(()=>{ this.CustomGrid.open();},1000)
   //  setTimeout(()=>{ this.ToolbarOption.open();},1000)
   }
