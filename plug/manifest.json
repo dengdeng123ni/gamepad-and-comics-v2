@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "name": "Gamepad and Comic Plugins",
+    "version": "1.0.0",
+    "description": "Gamepad and Comic Plugins",
+    "icons": {
+        "96": "icons/icon-96x96.png"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "permissions": [
+        "tabs",
+        "runtime",
+        "activeTab",   
+        "contextMenus",
+        "webRequest",
+		"webRequestBlocking",
+        "declarativeNetRequest"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": [
+                "content.js"
+            ]
+        }
+    ]
+}
