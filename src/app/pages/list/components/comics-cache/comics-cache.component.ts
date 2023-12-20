@@ -27,9 +27,12 @@ export class ComicsCacheComponent {
 ]
 
   constructor() {
+    console.log(123);
+
     window.comics_query_option = {
       query_type:"home"
     };
+
   }
 
   init() {
@@ -47,20 +50,11 @@ export class ComicsCacheComponent {
     window.comics_query_option.id = order;
     window.comics_query_option.page_num = 1;
     localStorage.setItem('bilibili_comics_query_home', order.toString())
-    window.comics_query();
+
     const node = document.querySelector("#comics_list")
     if (node) node.scrollTop = 0
   }
   ngAfterViewInit() {
-    const i_w = 172.8;
-    const i_h = 276.8;
-    const node: any = document.querySelector("#comics_list");
-    let w2 = ((node.clientWidth - 32) / i_w);
-    let h2 = (node.clientHeight / i_h);
-    if (h2 < 1) h2 = 1;
-    else h2 = h2 + 1;
-    window.comics_query_option.page_size = Math.trunc(h2) * Math.trunc(w2);
-    window.comics_query_option.page_num = 1;
-    this.init();
+    window.comics_query();
   }
 }

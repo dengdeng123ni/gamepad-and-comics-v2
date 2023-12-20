@@ -5,6 +5,7 @@ import { FormControl } from '@angular/forms';
 import { UploadService } from './upload.service';
 import { TemporaryFileService } from './temporary-file.service';
 import { AppDataService } from 'src/app/library/public-api';
+import { LocalCachService } from './local-cach.service';
 declare const window: any;
 @Component({
   selector: 'app-menu',
@@ -27,6 +28,7 @@ export class MenuComponent {
     public upload: UploadService,
     public temporaryFile: TemporaryFileService,
     public AppData: AppDataService,
+    public LocalCach:LocalCachService,
     private zone: NgZone
   ) {
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -44,6 +46,13 @@ export class MenuComponent {
     this.AppData.setOrigin('temporary_file')
     this.data.qurye_page_type = "temporary_file"
     window.comics_query_option.temporary_file_type=id;
+  }
+  onLocalMenu(id: string) {
+    this.data.list = [];
+    this.AppData.setOrigin('local_cache')
+    this.data.qurye_page_type = "local_cache";
+    console.log(this.AppData.origin);
+
   }
 
   private _filter(value: string): string[] {

@@ -14,10 +14,11 @@ import { ReaderModule } from './pages/reader/reader.module';
 import { ContextMenuComponent } from './library/public-api';
 import { MaterialModule } from './library/material.module';
 import { SelectDataSourceComponent } from './library/select-data-source/select-data-source.component';
+import { GamepadLeftCircleToolbarComponent } from './library/event/gamepad-left-circle-toolbar/gamepad-left-circle-toolbar.component';
 
 const dbConfig: DBConfig = {
   name: 'db',
-  version: 13,
+  version: 14,
   objectStoresMeta: [
     {
       store: 'local_comics',
@@ -35,27 +36,6 @@ const dbConfig: DBConfig = {
     },
     {
       store: 'local_pages',
-      storeConfig: { keyPath: 'id', autoIncrement: false },
-      storeSchema: [
-        { name: 'id', keypath: 'id', options: { unique: false } },
-      ]
-    },
-    {
-      store: 'cache_pages',
-      storeConfig: { keyPath: 'id', autoIncrement: false },
-      storeSchema: [
-        { name: 'id', keypath: 'id', options: { unique: false } },
-      ]
-    },
-    {
-      store: 'cache_chapter',
-      storeConfig: { keyPath: 'id', autoIncrement: false },
-      storeSchema: [
-        { name: 'id', keypath: 'id', options: { unique: false } },
-      ]
-    },
-    {
-      store: 'cache_comics',
       storeConfig: { keyPath: 'id', autoIncrement: false },
       storeSchema: [
         { name: 'id', keypath: 'id', options: { unique: false } },
@@ -118,6 +98,7 @@ const dbConfig: DBConfig = {
     AppComponent,
     ContextMenuComponent,
     SelectDataSourceComponent,
+    GamepadLeftCircleToolbarComponent
   ],
   imports: [
     BrowserModule,

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Injectable } from '@angular/core';
 import { GamepadEventService } from './gamepad-event.service';
 import { GamepadInputService } from './gamepad-input.service';

@@ -29,7 +29,8 @@ export class CurrentService {
       const chapters = await this._getChapterRead(this.data.comics_id);
       const comics = await this._getComicsRead(this.data.comics_id);
       for (let index = 0; index < this.data.chapters.length; index++) {
-        this.data.chapters[index].read = chapters[index].read;
+        if(chapters[index]) this.data.chapters[index].read = chapters[index].read;
+        else this.data.chapters[index].read =0;
       }
       this.data.chapter_id = comics.chapter_id;
     } else {

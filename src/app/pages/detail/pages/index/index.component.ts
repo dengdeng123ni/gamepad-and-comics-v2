@@ -3,6 +3,7 @@ import { CurrentService } from '../../services/current.service';
 import { DataService } from '../../services/data.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { map } from 'rxjs';
+import { IndexService } from './index.service';
 
 @Component({
   selector: 'app-index',
@@ -14,6 +15,7 @@ export class IndexComponent {
     public current: CurrentService,
     public data: DataService,
     public router: Router,
+    public index:IndexService,
     public route: ActivatedRoute
   ) {
     let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params.get('id')));
@@ -21,6 +23,8 @@ export class IndexComponent {
       this.data.init();
       this.current.init(x as string)
     })
+    document.body.setAttribute("router", "detail")
+    document.body.setAttribute("locked_region", "detail")
   }
   ngOnDestroy() {
     this.data.is_left_drawer_opened=false;

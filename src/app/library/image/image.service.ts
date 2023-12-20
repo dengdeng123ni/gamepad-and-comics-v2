@@ -9,7 +9,7 @@ import { compressAccurately } from 'image-conversion';
 export class ImageService {
   caches!: Cache;
   _data: any = {};
-  constructor(public _http: MessageFetchService,public DbController:DbControllerService, private sanitizer: DomSanitizer) {
+  constructor(public _http: MessageFetchService, public DbController: DbControllerService, private sanitizer: DomSanitizer) {
     this.init();
   }
 
@@ -18,6 +18,21 @@ export class ImageService {
   }
 
   async getImage(src: string) {
+    const getImageBlobUrl=async (src1)=>{
+      const res = await this._http.get(src1);
+      const blob = await res.blob();
+      const request = new Request(src1);
+      const response = new Response(blob);
+      await this.caches.put(request, response);
+      const res2 = await caches.match(src1);
+      if (res2) {
+        const blob2 = await res2.blob()
+        return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob2));
+      } else {
+        return  this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
+      }
+
+    }
     let url;
     const id = this.utf8_to_b64(src);
     if (this._data[id]) {
@@ -27,21 +42,15 @@ export class ImageService {
     const res = await caches.match(src);
     if (res) {
       const blob = await res.blob()
-      url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
-    } else {
-      const res = await this._http.get(src);
-      const blob = await res.blob();
-      const request = new Request(src);
-      const response = new Response(blob);
-      await this.caches.put(request, response);
-      const res2 = await caches.match(src);
-      if (res2) {
-        const blob2 = await res2.blob()
-        url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob2));
-      } else {
+      if (blob.size == 0) {
+        url = await getImageBlobUrl(src)
+      }else{
         url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
       }
+    } else {
+      url = await getImageBlobUrl(src)
     }
+
     this._data[id] = url;
     return url
   }
@@ -86,10 +95,10 @@ export class ImageService {
     if (src.substring(0, 1) !== "h") {
       return src
     }
-    let blob:any;
-    if(src.includes("temporary_file_image")){
+    let blob: any;
+    if (src.includes("temporary_file_image")) {
       return await this.getTemporary_file_image(src) as string;
-    }else{
+    } else {
       blob = await this.getLocalImageBlob(src);
     }
     return new Promise((r, j) => {

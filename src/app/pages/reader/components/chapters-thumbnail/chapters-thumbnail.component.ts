@@ -17,11 +17,12 @@ export class ChaptersThumbnailComponent {
 
   }
   on(id:string) {
-    this.current._chapterChange(id);
     this.chaptersThumbnail.close();
+    this.current._chapterChange(id);
+
   }
   change() {
-    let node = document.querySelector(`[_id=section_${this.data.chapter_id}]`);
+    let node = document.querySelector(`[_id=chapter_item_${this.data.chapter_id}]`);
     node!.scrollIntoView({ block: "center", inline: "center" })
   }
   ngOnDestroy() {

@@ -1,5 +1,5 @@
 
-<div id="double_page_reader" class="overflow-hidden" [attr.region]="'double_page_reader'">
+<div id="double_page_reader" class="overflow-hidden" [attr.region]="'double_page_reader'" [attr.select]="true">
   <div class="warp">
     <swiper  #swiper [config]="swiperConfig"  (slidePrevTransitionEnd)="slidePrevTransitionEnd($event)" (slideNextTransitionEnd)="slideNextTransitionEnd($event)" (slideChange)="slideChange($event)">
     </swiper>

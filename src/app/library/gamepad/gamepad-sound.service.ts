@@ -26,13 +26,13 @@ export class GamepadSoundService {
   }
   opened = true;
   constructor() {
-    window.addEventListener('click', e => {
-      var sound = this.loadSound("assets/sound/nintendo_switch/tick.wav");
-    })
-    window.addEventListener('contextmenu', e => {
-      var sound = this.loadSound("assets/sound/nintendo_switch/select.wav");
-    })
-    if (localStorage.getItem('sound') == "close") this.opened = false;
+    // window.addEventListener('click', e => {
+    //   var sound = this.loadSound("assets/sound/nintendo_switch/tick.wav");
+    // })
+    // window.addEventListener('contextmenu', e => {
+    //   var sound = this.loadSound("assets/sound/nintendo_switch/select.wav");
+    // })
+    // if (localStorage.getItem('sound') == "close") this.opened = false;
   }
   obj = {
     UP: () => this.loadSound("assets/sound/nintendo_switch/klick.wav"),
@@ -56,20 +56,20 @@ export class GamepadSoundService {
   index = -1;
   input = "";
   device(input: string, node: HTMLElement, region: string, index: number) {
-    if (index == this.index && (input == "UP" || input == "RIGHT" || input == "DOWN" || input == "LEFT")) {
-      if ("reader_mode_1" == region) this.obj[input]();
-      if ("reader_mode_2" == region) this.obj[input]();
-      if ("reader_mode_3" == region) this.obj[input]();
-      if ("reader_mode_4" == region) this.obj[input]();
-    } else {
-      if ((input == "RIGHT_BUMPER" || input == "LEFT_BUMPER")) {
-        this.obj[input]();
-      } else {
-        this.obj[input]();
-      }
-      this.input = input;
-      this.index = index;
-    }
+    // if (index == this.index && (input == "UP" || input == "RIGHT" || input == "DOWN" || input == "LEFT")) {
+    //   if ("reader_mode_1" == region) this.obj[input]();
+    //   if ("reader_mode_2" == region) this.obj[input]();
+    //   if ("reader_mode_3" == region) this.obj[input]();
+    //   if ("reader_mode_4" == region) this.obj[input]();
+    // } else {
+    //   if ((input == "RIGHT_BUMPER" || input == "LEFT_BUMPER")) {
+    //     this.obj[input]();
+    //   } else {
+    //     this.obj[input]();
+    //   }
+    //   this.input = input;
+    //   this.index = index;
+    // }
   }
 
 

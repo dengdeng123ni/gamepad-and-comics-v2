@@ -4,10 +4,10 @@
       mat-button
       *ngFor="let n of double_pages; let index = index"
       class="item"
-      [attr.region]="'double_page_thumbnail'"
+      [attr.region]="'double_page_thumbnail_item'"
       [attr.select]="n.select"
       (click)="on(n)"
-      [attr.content_menu_key]="'double_page_thumbnail'"
+      [attr.content_menu_key]="'double_page_thumbnail_item'"
       [attr.content_menu_value]="index"
     >
       <div *ngIf="n.images.length == 2" class="double">

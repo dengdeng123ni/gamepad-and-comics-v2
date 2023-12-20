@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ChaptersThumbnailComponent } from './chapters-thumbnail.component';
+import { GamepadEventService } from 'src/app/library/gamepad/gamepad-event.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,12 @@ export class ChaptersThumbnailService {
   opened: boolean = false;
   constructor(
     public _sheet: MatBottomSheet,
+    public GamepadEvent:GamepadEventService,
+    private zone: NgZone,
   ) {
+    GamepadEvent.registerAreaEvent('chapter_item',{
+      B:()=>setTimeout(()=>this.close())
+    })
   }
   open() {
     if (this.opened == false) {
@@ -25,6 +31,7 @@ export class ChaptersThumbnailService {
           if (document.body.getAttribute("locked_region") == "chapters_thumbnail" && this.opened) document.body.setAttribute("locked_region", "reader")
           this.opened = false;
         });
+
       }
       this.opened = true;
     }
@@ -35,7 +42,7 @@ export class ChaptersThumbnailService {
     else this.open();
   }
 
-  close() {
+  close = () => {
     this._sheet.dismiss();
   }
 }

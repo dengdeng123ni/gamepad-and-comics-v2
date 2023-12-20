@@ -12,9 +12,9 @@ export class ChaptersListService {
   open(config?:MatDialogConfig) {
     if (this.opened == false) {
       const dialogRef = this._dialog.open(ChaptersListComponent,config);
-      document.body.setAttribute("locked_region","mode")
+      document.body.setAttribute("locked_region","chapters_list")
       dialogRef.afterClosed().subscribe(() => {
-        if(document.body.getAttribute("locked_region")=="mode"&&this.opened) document.body.setAttribute("locked_region","reader")
+        if(document.body.getAttribute("locked_region")=="chapters_list"&&this.opened) document.body.setAttribute("locked_region","reader")
         this.opened = false;
       });
       this.opened=true;

@@ -5,8 +5,7 @@ interface Events {
   List: Function;
   Detail: Function;
   Pages: Function;
-  Image: Function
-  Unlock?: Function
+  Image: Function;
 }
 interface Config {
   name: string,
@@ -195,9 +194,6 @@ export class DbEventService {
           )).reverse(),
           chapter_id: x.read_epid
         }
-      },
-      Unlock: async (id: string) => {
-
       },
       Pages: async (id: string) => {
         const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web", {

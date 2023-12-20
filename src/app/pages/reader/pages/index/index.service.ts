@@ -6,9 +6,10 @@ import { DoublePageThumbnailService } from '../../components/double-page-thumbna
 import { OnePageThumbnailMode3Service } from '../../components/one-page-thumbnail-mode3/one-page-thumbnail-mode3.service';
 import { OnePageThumbnailMode1Service } from '../../components/one-page-thumbnail-mode1/one-page-thumbnail-mode1.service';
 import { OnePageThumbnailMode2Service } from '../../components/one-page-thumbnail-mode2/one-page-thumbnail-mode2.service';
-import { EventService } from '../../services/event.service';
 import { ReaderChangeService } from '../../components/reader-change/reader-change.service';
 import { SetChapterFirstPageCoverService } from '../../components/set-chapter-first-page-cover/set-chapter-first-page-cover.service';
+import { GamepadEventService } from 'src/app/library/gamepad/gamepad-event.service';
+import { EventService } from 'src/app/library/public-api';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +24,16 @@ export class IndexService {
     public onePageThumbnailMode1: OnePageThumbnailMode1Service,
     public onePageThumbnailMode2: OnePageThumbnailMode2Service,
     public onePageThumbnailMode3: OnePageThumbnailMode3Service,
-    public event: EventService,
     public ReaderChange: ReaderChangeService,
-    public SetChapterFirstPageCover:SetChapterFirstPageCoverService,
+    public SetChapterFirstPageCover: SetChapterFirstPageCoverService,
+    public GamepadEvent: GamepadEventService,
+    public Event: EventService
+
   ) {
+    GamepadEvent.registerConfig("reader", { region: ["double_page_reader"] })
+    GamepadEvent.registerConfig("chapters_thumbnail", { region: ["chapter_item"] })
+    GamepadEvent.registerConfig("double_page_thumbnail", { region: ["double_page_thumbnail_item"] })
+
     this.current.on$.subscribe(event$ => {
       const { x, y } = event$;
       const { innerWidth, innerHeight } = window;
@@ -45,104 +52,116 @@ export class IndexService {
           this.current._change("previousPage", {
             pages: this.data.pages,
             page_index: this.data.page_index,
-            chapter_id:this.data.chapter_id
+            chapter_id: this.data.chapter_id
           })
         }
         else {
           this.current._change("nextPage", {
             pages: this.data.pages,
             page_index: this.data.page_index,
-            chapter_id:this.data.chapter_id
+            chapter_id: this.data.chapter_id
           })
         }
       }
     })
-    event.register('double_page_thumbnail', {
-      icon:"grid_view",
+    Event.register('double_page_thumbnail', {
+      icon: "grid_view",
       name: "双页缩略图",
-      fun: () => doublePageThumbnail.isToggle
+      event: () => doublePageThumbnail.isToggle(),
+      shortcut_key:{
+        gamepad:{
+          position:"center",
+          index:2
+        }
+      }
     })
-    event.register('one_page_thumbnail_list', {
+    Event.register('one_page_thumbnail_list', {
       name: "单页列表缩略图",
-      icon:"view_comfy",
-      fun: () => onePageThumbnailMode1.isToggle
+      icon: "view_comfy",
+      event: () => onePageThumbnailMode1.isToggle
     })
-    event.register('one_page_thumbnail_left', {
+    Event.register('one_page_thumbnail_left', {
       name: "单页左侧缩略图",
-      icon:"view_sidebar",
-      fun: () => onePageThumbnailMode2.isToggle
+      icon: "view_sidebar",
+      event: () => onePageThumbnailMode2.isToggle
     })
-    event.register('double_page_thumbnail_bottom', {
+    Event.register('double_page_thumbnail_bottom', {
       name: "单页下方缩略图",
-      icon:"vertical_split",
-      fun: () => onePageThumbnailMode3.isToggle
+      icon: "vertical_split",
+      event: () => onePageThumbnailMode3.isToggle
     })
-    event.register('toolbar', {
+    Event.register('toolbar', {
       name: "工具栏",
-      icon:"view_day",
-      fun: () => this.current.readerNavbarBar$.next(true)
+      icon: "view_day",
+      event: () => this.current.readerNavbarBar$.next(true)
     })
-    event.register('chapters_previous', {
+    Event.register('chapters_previous', {
       name: "上一章",
-      icon:"chevron_left",
-      fun: () => this.previous
+      icon: "chevron_left",
+      event: () => this.previous
     })
-    event.register('chapters_next', {
+    Event.register('chapters_next', {
       name: "下一章",
-      icon:"chevron_right",
-      fun: () => this.next
+      icon: "chevron_right",
+      event: () => this.next
     })
-    event.register('chapters_thumbnail', {
-      name: "章节缩略图",
-      icon:"subject",
-      fun: () => chaptersThumbnail.isToggle
+    Event.register('chapters_thumbnail', {
+      name: "章节列表",
+      icon: "subject",
+      event: () => chaptersThumbnail.isToggle(),
+      shortcut_key:{
+        gamepad:{
+          position:"center",
+          index:1
+        }
+      }
     })
-    event.register('toggle_page', {
+    Event.register('toggle_page', {
       name: "跨页匹配",
-      icon:"swap_horiz",
-      fun: () => this.togglePage
+      icon: "swap_horiz",
+      event: () => this.togglePage
     })
 
-    event.register('back', {
+    Event.register('back', {
       name: "返回",
-      icon:"keyboard_return",
-      fun: () => this.back
+      icon: "keyboard_return",
+      event: () => this.back
     })
-    event.register('back', {
+    Event.register('chrome_reader_mode', {
       name: "阅读模式",
-      icon:"chrome_reader_mode",
-      fun: () => ReaderChange.isToggle()
+      icon: "chrome_reader_mode",
+      event: () => ReaderChange.isToggle()
     })
 
-    event.register('double_page_first_page_toggle', {
+    Event.register('double_page_first_page_toggle', {
       name: "设置第一页为封面",
-      icon:"radio_button_checked",
-      fun: () => this.firstPageCoverChange
+      icon: "radio_button_checked",
+      event: () => this.firstPageCoverChange
     })
-    event.register('page_previous', {
+    Event.register('page_previous', {
       name: "上一页",
-      icon:"first_page",
-      fun: () => this.current._pagePrevious()
+      icon: "first_page",
+      event: () => this.current._pagePrevious()
     })
-    event.register('page_next', {
+    Event.register('page_next', {
       name: "下一页",
-      icon:"last_page",
-      fun: () => this.current._pageNext()
+      icon: "last_page",
+      event: () => this.current._pageNext()
     })
-    event.register('full', {
+    Event.register('full', {
       name: "全屏",
-      icon:"fullscreen",
-      fun: () => this.current._pageNext()
+      icon: "fullscreen",
+      event: () => this.current._pageNext()
     })
-    event.register('chapters_list', {
+    Event.register('chapters_list', {
       name: "(小)章节列表",
-      icon:"subject",
-      fun: () => this.current._pageNext()
+      icon: "subject",
+      event: () => this.current._pageNext()
     })
-    event.register('rotation', {
+    Event.register('rotation', {
       name: "旋转",
-      icon:"screen_rotation",
-      fun: () => this.current._pageNext()
+      icon: "screen_rotation",
+      event: () => this.current._pageNext()
     })
 
 

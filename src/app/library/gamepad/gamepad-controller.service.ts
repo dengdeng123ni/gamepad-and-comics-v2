@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+// @ts-nocheck
+import { Injectable, NgZone } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { ContextMenuControllerService } from '../context-menu/context-menu-controller.service';
 import { GamepadEventService } from './gamepad-event.service';
@@ -25,6 +26,7 @@ export class GamepadControllerService {
     public ContextMenuController: ContextMenuControllerService,
     public GamepadSound: GamepadSoundService,
     public GamepadVoice: GamepadVoiceService,
+    private zone: NgZone,
     private router: Router
   ) {
     // let timer = null;
@@ -35,9 +37,9 @@ export class GamepadControllerService {
     //     document.body.style.cursor = "none";
     //   }, 3000);
     // });
-
+    document.body.setAttribute("pattern", "gamepad")
     this.GamepadInput.down().subscribe((x: string) => {
-      document.body.setAttribute("pattern", "gamepad")
+
       this.device(x);
     })
     this.GamepadInput.up().subscribe((x: string) => {
@@ -112,7 +114,7 @@ export class GamepadControllerService {
   pause = false;
 
   isGamepadExplanationComponent = false;
-  isVoiceComponet=false;
+  isVoiceComponet = false;
 
   device(input: string) {
     if (document.visibilityState === "hidden" || this.pause) return;
@@ -121,19 +123,21 @@ export class GamepadControllerService {
 
     this.GamepadEventBefore$.next({ input: input, node: this.nodes[this.current.index], region: this.current.region, index: this.current.index });
     const region = this.current.region;
-    if (this.Y) {
-      if (this.GamepadEvent.areaEventsY[region]?.[input]) {
-        this.GamepadEvent.areaEventsY[region][input](this.nodes[this.current.index]);
-      } else if (this.GamepadEvent.globalEventsY[input]) {
-        this.GamepadEvent.globalEventsY[input](this.nodes[this.current.index]);
+    this.zone.run(() => {
+      if (this.Y) {
+        if (this.GamepadEvent.areaEventsY[region]?.[input]) {
+          this.GamepadEvent.areaEventsY[region][input](this.nodes[this.current.index]);
+        } else if (this.GamepadEvent.globalEventsY[input]) {
+          this.GamepadEvent.globalEventsY[input](this.nodes[this.current.index]);
+        }
+      } else {
+        if (this.GamepadEvent.areaEvents[region]?.[input]) {
+          this.GamepadEvent.areaEvents[region][input](this.nodes[this.current.index]);
+        } else if (this.GamepadEvent.globalEvents[input]) {
+          this.GamepadEvent.globalEvents[input](this.nodes[this.current.index]);
+        }
       }
-    } else {
-      if (this.GamepadEvent.areaEvents[region]?.[input]) {
-        this.GamepadEvent.areaEvents[region][input](this.nodes[this.current.index]);
-      } else if (this.GamepadEvent.globalEvents[input]) {
-        this.GamepadEvent.globalEvents[input](this.nodes[this.current.index]);
-      }
-    }
+    })
     if (!this.current) return
     this.GamepadEventAfter$.next({ input: input, node: this.nodes[this.current.index], region: this.current.region });
   }
@@ -225,7 +229,7 @@ export class GamepadControllerService {
 
   getNodes() {
     const region = document.body.getAttribute("locked_region");
-    if(!region) {
+    if (!region) {
       this.setDefaultRegion();
       return
     }
@@ -254,15 +258,15 @@ export class GamepadControllerService {
       if (this.router.url.split("/")[1] == "") {
         document.body.setAttribute("router", "list")
         document.body.setAttribute("locked_region", "list")
-      }
-      if (this.router.url.split("/")[1] == "reader") {
-        document.body.setAttribute("router", "reader")
-        document.body.setAttribute("locked_region", "list")
+        return
       }
       if (this.router.url.split("/")[1] == "detail") {
         document.body.setAttribute("router", "detail")
-        document.body.setAttribute("locked_region", "list")
+        document.body.setAttribute("locked_region", "detail")
+        return
       }
+      document.body.setAttribute("router", "reader")
+      document.body.setAttribute("locked_region", "reader")
     }
   }
 
@@ -271,7 +275,7 @@ export class GamepadControllerService {
     current = this.list.find(x => x.select == true);
     if (!current) current = this.list.find(x => x.start == true);
     if (!current) current = this.list[0];
-   if(!current) return
+    if (!current) return
     return this.nodes[current.index]
   };
   getCurrentTarget() {
@@ -427,13 +431,13 @@ export class GamepadControllerService {
   EegionBefore = () => this.EegionBefore$
 
   leftKey = () => {
-    const node=this.nodes[this.current.index];
+    const node = this.nodes[this.current.index];
     const type = node.getAttribute("type")
-    if (type=='chip' || type=='slide') {
+    if (type == 'chip' || type == 'slide') {
       node.querySelector("button").click();
-    }else if(type=='radio'){
+    } else if (type == 'radio') {
       node.querySelector("input").click();
-    }else if(type=='checkbox'){
+    } else if (type == 'checkbox') {
       node.querySelector("[type=checkbox]").click();
     } else {
       node.click();

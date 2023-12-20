@@ -3,6 +3,8 @@ import { CurrentService } from '../../services/current.service';
 import { DataService } from '../../services/data.service';
 import { AppDataService } from 'src/app/library/public-api';
 import { Router } from '@angular/router';
+import { GamepadEventService } from 'src/app/library/gamepad/gamepad-event.service';
+import { IndexService } from './index.service';
 
 @Component({
   selector: 'app-index',
@@ -11,11 +13,15 @@ import { Router } from '@angular/router';
 })
 export class IndexComponent {
 
-  constructor(private Current: CurrentService,
+  constructor(
+    private Current: CurrentService,
     public data: DataService,
     public AppData:AppDataService,
+    public indexser:IndexService,
     public router:Router
     ) {
+      document.body.setAttribute("router", "list")
+      document.body.setAttribute("locked_region", "list")
       // this.Current.init();
   }
 

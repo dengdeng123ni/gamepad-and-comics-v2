@@ -26,13 +26,13 @@ export class IndexComponent {
     public ToolbarOption:ToolbarOptionService,
     public CustomGrid:CustomGridService
   ) {
+    document.body.setAttribute("router", "reader")
+    document.body.setAttribute("locked_region", "reader")
     let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params));
     id$.subscribe(params => {
       this.data.init();
       this.current._init(params.get('id') as string, params.get('sid') as string)
     })
-  //  setTimeout(()=>{ this.CustomGrid.open();},1000)
-  //  setTimeout(()=>{ this.ToolbarOption.open();},1000)
   }
 
   on($event: MouseEvent) {

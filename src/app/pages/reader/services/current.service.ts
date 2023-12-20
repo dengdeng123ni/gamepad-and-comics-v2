@@ -19,8 +19,8 @@ export class CurrentService {
     public DbController: DbControllerService,
     public data: DataService,
     public webDb: NgxIndexedDBService,
-    public image:ImageService,
-    public _http:MessageFetchService
+    public image: ImageService,
+    public _http: MessageFetchService
   ) {
     this.reader_mode_change$.subscribe(x => {
       if (this.reader_modes.includes(x)) this.data.comics_config.reader_mode = x;
@@ -109,7 +109,7 @@ export class CurrentService {
     this.data.chapter_id = chapter_id;
     this.data.comics_id = comic_id;
     const _res = await Promise.all([this.DbController.getPages(chapter_id), this.DbController.getDetail(comic_id), this._getChapterIndex(chapter_id), this._getWebDbComicsConfig(comic_id)])
-    if(_res[0]&&_res[1]){
+    if (_res[0] && _res[1]) {
 
     }
     const list = _res[0];
@@ -121,7 +121,8 @@ export class CurrentService {
       this.data.chapters = res.chapters;
       const chapters = await this._getChapterRead(this.data.comics_id);
       for (let index = 0; index < this.data.chapters.length; index++) {
-        this.data.chapters[index].read = chapters[index].read;
+        if (chapters[index]) this.data.chapters[index].read = chapters[index].read;
+        else this.data.chapters[index].read = 0;
       }
     } else {
       this.data.chapters = res.chapters;
@@ -252,11 +253,11 @@ export class CurrentService {
   }
 
   async _pageNext() {
-    this._change("nextPage", { pages: this.data.pages, page_index: this.data.page_index, chapter_id:this.data.chapter_id })
+    this._change("nextPage", { pages: this.data.pages, page_index: this.data.page_index, chapter_id: this.data.chapter_id })
   }
 
   async _pagePrevious() {
-    this._change("previousPage", { pages: this.data.pages, page_index: this.data.page_index, chapter_id:this.data.chapter_id })
+    this._change("previousPage", { pages: this.data.pages, page_index: this.data.page_index, chapter_id: this.data.chapter_id })
   }
 
   async _chapterPageChange(chapter_id: string, page_index: number) {
