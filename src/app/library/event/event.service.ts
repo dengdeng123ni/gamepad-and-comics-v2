@@ -3,6 +3,7 @@ interface Config {
   name: string,
   event: Function,
   key?: string,
+  router:string,
   icon: string,
   shortcut_key?: {
     keyboard?: Array<Array<string>>,
@@ -26,6 +27,8 @@ export class EventService {
 
   register(key: string, config: Config) {
     config.key = key;
+    // const router=document.body.getAttribute('router')
+    // config['router']=router;
     this.events[key] = config;
   }
 

@@ -9,6 +9,8 @@ export class DataService {
   comics_info: ComicsInfo = {
     cover: '',
     title: '',
+    author:'',
+    intro:"",
     chapter_id: ''
   };
   comics_id = "";

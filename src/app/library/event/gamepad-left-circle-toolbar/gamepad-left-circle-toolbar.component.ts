@@ -62,8 +62,10 @@ export class GamepadLeftCircleToolbarComponent implements OnInit {
       RIGHT_TRIGGER: () => {
       }
     })
+    console.log(Event.events);
+
     Object.keys(Event.events).forEach(x => {
-      if (Event.events[x].shortcut_key) {
+      if (Event.events[x].shortcut_key&&document.body.getAttribute('router')==Event.events[x].router) {
         if (Event.events[x].shortcut_key.gamepad) {
           if (Event.events[x].shortcut_key.gamepad.position == 'center') {
             this.list.push(Event.events[x])
@@ -72,6 +74,7 @@ export class GamepadLeftCircleToolbarComponent implements OnInit {
       }
     })
     this.list.sort((a, b) => a.shortcut_key.gamepad.index - b.shortcut_key.gamepad.index)
+console.log( this.list );
 
 
     // GamepadEvent.registerHoverEvent("handel_toolabr_menu", {

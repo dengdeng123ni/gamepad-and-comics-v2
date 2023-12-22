@@ -25,20 +25,7 @@ export class ImageComponent {
 
 
   async getImage(str:string){
-    // console.log(str.split("/")[3]);
-
-    if(this.src.includes("small")){
-      this.url=await this.image.getLocalSmallBlobUrl(this.src)
-    }else if(this.src.includes("temporary_file_image")){
-      console.log(str);
-
-      this.url=await this.image.getTemporary_file_image(str) as any;
-
-    }else{
-      this.url=await this.image.getImage(str);
-    }
-
-
+    this.url=await this.image.getImageToLocalUrl(this.src)
   }
 
   ngAfterViewInit() {

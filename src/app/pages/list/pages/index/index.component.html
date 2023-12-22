@@ -5,7 +5,7 @@
     border-radius: 4px;
     border-color: #ffffff1f;
     margin: 4px;
-    " [opened]="data.is_left_drawer_opened" (mouseleave)="drawer_mouseleave($event)" [mode]="data.left_drawer_mode" class="example-sidenav" mode="side">
+    " [opened]="menu.opened" [autoFocus]="false" (openedChange)="openedChange($event)" (mouseleave)="drawer_mouseleave($event)" [mode]="data.left_drawer_mode" class="example-sidenav" mode="side">
     <app-menu></app-menu>
   </mat-drawer>
   <div class="container" [attr.is_fixed]="false" [attr.edit]="data.is_edit">

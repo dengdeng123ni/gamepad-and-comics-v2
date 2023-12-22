@@ -29,8 +29,8 @@ export class CurrentService {
       const chapters = await this._getChapterRead(this.data.comics_id);
       const comics = await this._getComicsRead(this.data.comics_id);
       for (let index = 0; index < this.data.chapters.length; index++) {
-        if(chapters[index]) this.data.chapters[index].read = chapters[index].read;
-        else this.data.chapters[index].read =0;
+        if (chapters[index]) this.data.chapters[index].read = chapters[index].read;
+        else this.data.chapters[index].read = 0;
       }
       this.data.chapter_id = comics.chapter_id;
     } else {
@@ -38,8 +38,8 @@ export class CurrentService {
       this.data.chapter_id = this.data.comics_info.chapter_id;
     }
     delete res.chapters;
-    if(this.data.chapters.length&&this.data.chapters[0]){
-      if(this.data.chapters[0].cover) this.data.chapter_config.is_cover_exist=true;
+    if (this.data.chapters.length && this.data.chapters[0]) {
+      if (this.data.chapters[0].cover) this.data.chapter_config.is_cover_exist = true;
     }
     this.data.comics_info = res;
     this.data.is_init_free = true;
@@ -97,6 +97,26 @@ export class CurrentService {
       return { 'comics_id': this.data.comics_id.toString(), chapter_id: this.data.chapters[0].id, chapter_title: this.data.chapters[0].title, chapters_length: this.data.chapters.length }
     }
   }
+  async _getImageHW(id) {
+    const res: any = await firstValueFrom(this.webDb.getByID("imageHW", id))
+    console.log(res);
+
+    if (res) {
+      return {
+        width: res.width,
+        height: res.height
+      }
+    } else {
+      return null
+    }
+  }
+  async _setImageHW(id, option: {
+    width: number,
+    height: number
+  }) {
+    await firstValueFrom(this.webDb.update("imageHW", { 'id': id, ...option }))
+  }
+
   async _setChapterIndex(id: string, index: number) {
     await firstValueFrom(this.webDb.update("last_read_chapter_page", { 'chapter_id': id.toString(), "page_index": index }))
   }

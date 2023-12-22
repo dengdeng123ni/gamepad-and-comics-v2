@@ -6,6 +6,7 @@ import { UploadService } from './upload.service';
 import { TemporaryFileService } from './temporary-file.service';
 import { AppDataService } from 'src/app/library/public-api';
 import { LocalCachService } from './local-cach.service';
+import { MenuService } from './menu.service';
 declare const window: any;
 @Component({
   selector: 'app-menu',
@@ -29,6 +30,7 @@ export class MenuComponent {
     public temporaryFile: TemporaryFileService,
     public AppData: AppDataService,
     public LocalCach:LocalCachService,
+    public menu:MenuService,
     private zone: NgZone
   ) {
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -40,19 +42,19 @@ export class MenuComponent {
     this.data.qurye_page_type = type;
     this.data.list = [];
     this.AppData.setOrigin('bilibili')
+    this.menu.opened=!this.menu.opened;
   }
   on2(id: string) {
     this.data.list = [];
     this.AppData.setOrigin('temporary_file')
     this.data.qurye_page_type = "temporary_file"
     window.comics_query_option.temporary_file_type=id;
+    this.menu.opened=!this.menu.opened;
   }
   onLocalMenu(id: string) {
     this.data.list = [];
     this.AppData.setOrigin('local_cache')
     this.data.qurye_page_type = "local_cache";
-    console.log(this.AppData.origin);
-
   }
 
   private _filter(value: string): string[] {

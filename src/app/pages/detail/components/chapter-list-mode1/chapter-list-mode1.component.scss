@@ -12,6 +12,9 @@
   // margin-top: 2.5vh;
   // margin-bottom: 0.8rem;
 }
+.detail_section[hide=true]{
+  opacity: 0;
+}
 .detail_section[edit=true]{
   width: calc(100vw - 24px) !important;
   margin-left: 0 !important;

@@ -16,7 +16,7 @@
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          <button mat-button class="item" cdkFocusInitial [attr.region]="'list_menu_item'">
+          <button mat-button class="item" [attr.region]="'menu_item'">
             <mat-icon class="icon">home</mat-icon>
             <div class="name" ngc>
               bilibili
@@ -24,31 +24,31 @@
           </button>
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <button mat-button class="item item1" cdkFocusInitial [attr.region]="'list_menu_item'" (click)="on('home')">
+      <button mat-button class="item item1" [attr.region]="'menu_item'" (click)="on('home')">
         <mat-icon class="icon">home</mat-icon>
         <div class="name" ngc>
           首页
         </div>
       </button>
-      <button mat-button class="item item1" [attr.region]="'list_menu_item'" (click)="on('type')">
+      <button mat-button class="item item1" [attr.region]="'menu_item'" (click)="on('type')">
         <mat-icon class="icon">class</mat-icon>
         <div class="name">
           分类
         </div>
       </button>
-      <button mat-button class="item item1" [attr.region]="'list_menu_item'" (click)="on('update')">
+      <button mat-button class="item item1" [attr.region]="'menu_item'" (click)="on('update')">
         <mat-icon class="icon">update</mat-icon>
         <div class="name">
           更新
         </div>
       </button>
-      <button mat-button class="item item1" [attr.region]="'list_menu_item'" (click)="on('ranking')">
+      <button mat-button class="item item1" [attr.region]="'menu_item'" (click)="on('ranking')">
         <mat-icon class="icon">sort</mat-icon>
         <div class="name">
           排行榜
         </div>
       </button>
-      <button mat-button class="item item1" [attr.region]="'list_menu_item'" (click)="on('favorites')">
+      <button mat-button class="item item1" [attr.region]="'menu_item'" (click)="on('favorites')">
         <mat-icon class="icon">favorite</mat-icon>
         <div class="name">
           我的追漫
@@ -56,7 +56,7 @@
       </button>
     </mat-expansion-panel>
   </mat-accordion>
-  <button style="margin-top: 4px;" mat-button class="item" [attr.region]="'list_menu_item'"
+  <button style="margin-top: 4px;" mat-button class="item" [attr.select]="true" [attr.region]="'menu_item'"
   (click)="onLocalMenu('local_cache')">
   <mat-icon class="icon">cached</mat-icon>
   <div class="name" >
@@ -64,13 +64,13 @@
   </div>
 </button>
   <mat-divider style="margin: 8px 16px;"></mat-divider>
-  <button mat-button class="item" [attr.region]="'list_menu_item'" (click)="openTemporaryFile()">
+  <button mat-button class="item" [attr.region]="'menu_item'" (click)="openTemporaryFile()">
     <mat-icon class="icon">add</mat-icon>
     <div class="name">
       打开文件夹
     </div>
   </button>
-  <button mat-button class="item" [attr.region]="'list_menu_item'"  *ngFor="let n of temporaryFile.menu;let index=index" (click)="on2(n.id)">
+  <button mat-button class="item" [attr.region]="'menu_item'" *ngFor="let n of temporaryFile.menu;let index=index" (click)="on2(n.id)">
     <mat-icon class="icon">subject</mat-icon>
     <div class="name">
       {{n.name}}

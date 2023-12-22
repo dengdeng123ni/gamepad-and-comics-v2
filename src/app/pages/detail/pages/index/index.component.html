@@ -8,7 +8,7 @@
    <app-comics-info [info]="data.comics_info" (on_back)="back()" (on_continue)="continue()"></app-comics-info>
 </mat-drawer> -->
   <div class="container" (mouseleave)="mouseleave($event)" *ngIf="data.is_init_free" [attr.edit]="data.is_edit">
-    <app-comics-info [info]="data.comics_info" (on_back)="back()" (on_continue)="continue()"></app-comics-info>
+    <app-comics-info></app-comics-info>
     <div class="content" >
       <app-edit-toolbar *ngIf="data.is_edit"></app-edit-toolbar>
       <app-chapter-list-mode1 *ngIf="data.chapter_config.is_cover_exist"></app-chapter-list-mode1>

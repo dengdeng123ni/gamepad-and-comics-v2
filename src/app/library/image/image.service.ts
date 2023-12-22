@@ -159,4 +159,16 @@ export class ImageService {
       }
     })
   }
+  async getImageToLocalUrl(src:string){
+    // console.log(str.split("/")[3]);
+    let url
+    if(src.includes("small")){
+      url=await this.getLocalSmallBlobUrl(src)
+    }else if(src.includes("temporary_file_image")){
+      url=await this.getTemporary_file_image(src) as any;
+    }else{
+      url=await this.getImage(src);
+    }
+    return url
+  }
 }

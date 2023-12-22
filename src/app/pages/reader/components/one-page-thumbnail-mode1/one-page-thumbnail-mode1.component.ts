@@ -45,7 +45,7 @@ export class OnePageThumbnailMode1Component {
                 console.log(x.intersectionRatio);
 
                 if (x.intersectionRatio != 1) {
-                  node!.scrollIntoView({ block: "center", inline: "center" })
+                  node!.scrollIntoView({ behavior: 'instant',block: "center", inline: "center" })
                   container.classList.remove("opacity-0");
                 }
                 if(node) observer.unobserve(node);

@@ -58,7 +58,7 @@ export class OnePageThumbnailMode2Component {
             changes => {
               changes.forEach(x => {
                 if (x.intersectionRatio != 1) {
-                   if (!this.is_hover) node!.scrollIntoView({ block: "center", inline: "center" })
+                   if (!this.is_hover) node!.scrollIntoView({ behavior: 'instant',block: "center", inline: "center" })
                   container.classList.remove("opacity-0");
                   this.old_index = this.page_index;
                 }

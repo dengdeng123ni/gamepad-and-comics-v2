@@ -18,7 +18,7 @@ import { GamepadLeftCircleToolbarComponent } from './library/event/gamepad-left-
 
 const dbConfig: DBConfig = {
   name: 'db',
-  version: 14,
+  version: 15,
   objectStoresMeta: [
     {
       store: 'local_comics',
@@ -89,7 +89,21 @@ const dbConfig: DBConfig = {
       storeSchema: [
         { name: 'image_id', keypath: 'image_id', options: { unique: false } },
       ]
-    }
+    },
+    {
+      store: 'imageHW',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
+    {
+      store: 'image_info',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
   ]
 };
 

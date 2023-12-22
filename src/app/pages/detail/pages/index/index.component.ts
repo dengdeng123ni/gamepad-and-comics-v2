@@ -30,12 +30,7 @@ export class IndexComponent {
     this.data.is_left_drawer_opened=false;
     this.current.close();
   }
-  back() {
-    this.router.navigate(['/'])
-  }
-  continue() {
-    this.router.navigate(['/', this.data.comics_id,this.data.chapter_id,])
-  }
+
 
   on_list($event: HTMLElement) {
 

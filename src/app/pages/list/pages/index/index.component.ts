@@ -5,6 +5,7 @@ import { AppDataService } from 'src/app/library/public-api';
 import { Router } from '@angular/router';
 import { GamepadEventService } from 'src/app/library/gamepad/gamepad-event.service';
 import { IndexService } from './index.service';
+import { MenuService } from '../../components/menu/menu.service';
 
 @Component({
   selector: 'app-index',
@@ -18,11 +19,14 @@ export class IndexComponent {
     public data: DataService,
     public AppData:AppDataService,
     public indexser:IndexService,
+    public GamepadEvent:GamepadEventService,
+    public menu:MenuService,
     public router:Router
     ) {
       document.body.setAttribute("router", "list")
       document.body.setAttribute("locked_region", "list")
       // this.Current.init();
+      GamepadEvent.registerConfig("menu", { region: ["menu_item"] })
   }
 
   on_list($event:any) {
@@ -38,14 +42,20 @@ export class IndexComponent {
   ngAfterViewInit() {
   }
 
-
+  openedChange(bool){
+     if(bool){
+      document.body.setAttribute("locked_region", "menu")
+     }else{
+      if (document.body.getAttribute("locked_region") == "menu") document.body.setAttribute("locked_region", "list")
+     }
+  }
   mouseleave($event:MouseEvent){
     if($event.offsetX>24) return
     if($event.offsetX+24>window.innerHeight) return
     if(($event.offsetX+13)>window.innerWidth){
 
     }else{
-      this.data.is_left_drawer_opened=true;
+      this.menu.opened=true;
     }
     // if($event.offsetX<window.innerWidth){
 
@@ -53,7 +63,7 @@ export class IndexComponent {
   }
   drawer_mouseleave($event:MouseEvent){
     if($event.offsetX>240) {
-      this.data.is_left_drawer_opened=false;
+      this.menu.opened=false;
     }
   }
 

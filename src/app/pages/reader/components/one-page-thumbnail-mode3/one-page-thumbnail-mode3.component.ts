@@ -43,7 +43,7 @@ export class OnePageThumbnailMode3Component {
             changes => {
               changes.forEach(x => {
                 if (x.intersectionRatio != 3) {
-                  node!.scrollIntoView({ block: "center", inline: "center" })
+                  node!.scrollIntoView({ behavior: 'instant',block: "center", inline: "center" })
                   container.classList.remove("opacity-0");
                 }
                 if(node) observer.unobserve(node);

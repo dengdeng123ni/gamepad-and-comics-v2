@@ -70,7 +70,7 @@ export class DoublePageThumbnailComponent {
     const node = document.querySelector("#double_page_thumbnail button[select=true]");
 
     if (node) {
-      node.scrollIntoView({ block: "center", inline: "center" });
+      node.scrollIntoView({behavior: 'instant', block: "center", inline: "center" });
       (node as any).focus();
       setTimeout(() => {
         document.querySelector("#double_page_thumbnail")!.classList.remove("opacity-0");

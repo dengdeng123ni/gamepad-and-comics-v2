@@ -17,7 +17,7 @@ export class DataService {
 
   qurye_page_type="home"
 
-  is_left_drawer_opened=false;
+  // is_left_drawer_opened=false;
 
   left_drawer_mode:any='over';
   constructor() {

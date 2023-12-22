@@ -36,9 +36,9 @@ export class ComicsSelectTypeService {
         panelClass: "_comics_select_type",
         backdropClass: "_comics_select_type_bg",
       });
-      document.body.setAttribute("locked_region", "double_page_thumbnail")
+      document.body.setAttribute("locked_region", "comics_type")
       dialogRef.afterClosed().subscribe(result => {
-        if (document.body.getAttribute("locked_region") == "double_page_thumbnail" && this.opened) document.body.setAttribute("locked_region", "reader")
+        if (document.body.getAttribute("locked_region") == "comics_type" && this.opened) document.body.setAttribute("locked_region", "list")
         this.opened = false;
       });
     }
