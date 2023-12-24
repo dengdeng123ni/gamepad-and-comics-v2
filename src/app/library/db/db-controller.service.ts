@@ -23,8 +23,12 @@ export class DbControllerService {
 
   }
 
-  async getList(id:string): Promise<Array<Item>> {
-    if (this.DbEvent.Events[this.AppData.origin] && this.DbEvent.Events[this.AppData.origin]["List"]) {
+  async getList(id:string,option?:{
+    origin:string
+  }): Promise<Array<Item>> {
+    if(!option) option={origin:this.AppData.origin}
+    if(!option.origin) option.origin=this.AppData.origin;
+    if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["List"]) {
       if (this.lists[id]) {
         return JSON.parse(JSON.stringify(this.lists[id]))
       } else {
@@ -32,7 +36,7 @@ export class DbControllerService {
           return JSON.parse(decodeURIComponent(escape(window.atob(str))));
         }
         const obj=b64_to_utf8(id)
-        const res = await this.DbEvent.Events[this.AppData.origin]["List"](obj);
+        const res = await this.DbEvent.Events[option.origin]["List"](obj);
         this.lists[id] = JSON.parse(JSON.stringify(res));
         return res
       }
@@ -40,12 +44,16 @@ export class DbControllerService {
       return []
     }
   }
-  async getDetail(id: string) {
-    if (this.DbEvent.Events[this.AppData.origin] && this.DbEvent.Events[this.AppData.origin]["Detail"]) {
+  async getDetail(id: string,option?:{
+    origin:string
+  }) {
+    if(!option) option={origin:this.AppData.origin}
+    if(!option.origin) option.origin=this.AppData.origin;
+    if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Detail"]) {
       if (this.details[id]) {
         return JSON.parse(JSON.stringify(this.details[id]))
       } else {
-        const res = await this.DbEvent.Events[this.AppData.origin]["Detail"](id);
+        const res = await this.DbEvent.Events[option.origin]["Detail"](id);
         this.details[id] = JSON.parse(JSON.stringify(res));
         return res
       }
@@ -53,12 +61,16 @@ export class DbControllerService {
       return []
     }
   }
-  async getPages(id: string) {
-    if (this.DbEvent.Events[this.AppData.origin] && this.DbEvent.Events[this.AppData.origin]["Pages"]) {
+  async getPages(id: string,option?:{
+    origin:string
+  }) {
+    if(!option) option={origin:this.AppData.origin}
+    if(!option.origin) option.origin=this.AppData.origin;
+    if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Pages"]) {
       if (this.pages[id]) {
         return JSON.parse(JSON.stringify(this.pages[id]))
       } else {
-        const res = await this.DbEvent.Events[this.AppData.origin]["Pages"](id);
+        const res = await this.DbEvent.Events[option.origin]["Pages"](id);
         this.pages[id] = JSON.parse(JSON.stringify(res));
         return res
       }
@@ -66,9 +78,13 @@ export class DbControllerService {
       return []
     }
   }
-  async getImage(id: string) {
-    if (this.DbEvent.Events[this.AppData.origin] && this.DbEvent.Events[this.AppData.origin]["Image"]) {
-      const res = await this.DbEvent.Events[this.AppData.origin]["Image"](id)
+  async getImage(id: string,option?:{
+    origin:string
+  }) {
+    if(!option) option={origin:this.AppData.origin}
+    if(!option.origin) option.origin=this.AppData.origin;
+    if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Image"]) {
+      const res = await this.DbEvent.Events[option.origin]["Image"](id)
       return res
     } else {
       return []

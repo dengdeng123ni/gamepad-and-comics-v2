@@ -32,6 +32,6 @@ export class ImageComponent {
     this.getImage(this.src)
   }
   ngOnDestroy() {
-    this.image.delBlobUrl(this.src,this.url as any);
+    // this.image.delBlobUrl(this.src,this.url as any);
   }
 }

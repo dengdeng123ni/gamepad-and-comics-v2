@@ -17,8 +17,8 @@ export class ImageService {
     this.caches = await caches.open('image');
   }
 
-  async getImage(src: string) {
-    const getImageBlobUrl=async (src1)=>{
+  private async getImage(src: string) {
+    const getImageBlobUrl = async (src1) => {
       const res = await this._http.get(src1);
       const blob = await res.blob();
       const request = new Request(src1);
@@ -29,7 +29,7 @@ export class ImageService {
         const blob2 = await res2.blob()
         return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob2));
       } else {
-        return  this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
+        return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
       }
 
     }
@@ -44,7 +44,7 @@ export class ImageService {
       const blob = await res.blob()
       if (blob.size == 0) {
         url = await getImageBlobUrl(src)
-      }else{
+      } else {
         url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
       }
     } else {
@@ -54,10 +54,10 @@ export class ImageService {
     this._data[id] = url;
     return url
   }
-  utf8_to_b64 = (str: string) => {
+  private utf8_to_b64 = (str: string) => {
     return window.btoa(encodeURIComponent(str));
   }
-  b64_to_utf8 = (str: string) => {
+  private b64_to_utf8 = (str: string) => {
     return decodeURIComponent(window.atob(str));
   }
   delBlobUrl(src: string, url: string) {
@@ -67,16 +67,47 @@ export class ImageService {
       delete this._data[id]
     }
   }
-  async getLocalImageBlob(src: string): Promise<Blob> {
-    if (!src) return new Blob([])
+
+  private async getLocalSmallBlob(src: string): Promise<Blob> {
     let str = src.split("/");
     const _id = str.pop()!;
     src = str.join("/");
+    const id = this.utf8_to_b64(src);
     const res = await caches.match(src);
+    // if (this._data[id]) {
+    //   url = this._data[id]
+    //   return url
+    // }
     if (res) {
       const blob = await res.blob()
       return blob
     } else {
+      const blob = await this.DbController.getImage(_id)
+      const thumbnailBlob = await compressAccurately(blob, { size: 50, accuracy: 0.9, width: 200, orientation: 1, scale: 0.5, })
+      const response = new Response(thumbnailBlob);
+      const request = new Request(src);
+      await this.caches.put(request, response);
+      const res2 = await caches.match(src);
+      if (res2) {
+        const blob2 = await res2.blob()
+        return blob2
+      } else {
+        return blob
+      }
+    }
+  }
+
+  async getImageBlob(src) {
+    if (!src) return new Blob([])
+    if(src.includes("temporary_file_image")) {
+      let str = src.split("/");
+      const _id = str.pop()!;
+      return await this.DbController.getImage(_id)
+    }
+    let str = src.split("/");
+    const _id = str.pop()!;
+    src = str.join("/");
+    const getBlob=async ()=>{
       const blob = await this.DbController.getImage(_id)
       const response = new Response(blob);
       const request = new Request(src);
@@ -89,18 +120,25 @@ export class ImageService {
         return blob
       }
     }
+    const res = await caches.match(src);
+    if (res) {
+      const blob = await res.blob()
+      if (blob.size == 0) {
+        return await getBlob()
+      }
+      return blob
+    } else {
+      return await getBlob()
+    }
   }
-  async getLocalImagebase64(src: string): Promise<string> {
+  async getImageBase64(src){
     if (!src) return ""
     if (src.substring(0, 1) !== "h") {
       return src
     }
+
     let blob: any;
-    if (src.includes("temporary_file_image")) {
-      return await this.getTemporary_file_image(src) as string;
-    } else {
-      blob = await this.getLocalImageBlob(src);
-    }
+    blob = await this.getImageBlob(src);
     return new Promise((r, j) => {
       var reader = new FileReader();
       reader.readAsDataURL(blob);
@@ -112,42 +150,7 @@ export class ImageService {
       }
     })
   }
-
-  async getLocalSmallBlobUrl(src: string) {
-    let url;
-    let str = src.split("/");
-    const _id = str.pop()!;
-    src = str.join("/");
-    const id = this.utf8_to_b64(src);
-    const res = await caches.match(src);
-    // if (this._data[id]) {
-    //   url = this._data[id]
-    //   return url
-    // }
-    if (res) {
-      const blob = await res.blob()
-      url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
-    } else {
-      const blob = await this.DbController.getImage(_id)
-      const thumbnailBlob = await compressAccurately(blob, { size: 50, accuracy: 0.9, width: 200, orientation: 1, scale: 0.5, })
-      const response = new Response(thumbnailBlob);
-      const request = new Request(src);
-      await this.caches.put(request, response);
-      const res2 = await caches.match(src);
-      if (res2) {
-        const blob2 = await res2.blob()
-        url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob2));
-      } else {
-        url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
-      }
-    }
-    return url
-  }
-
-  async getTemporary_file_image(src: any) {
-    let str = src.split("/");
-    const _id = str.pop()!;
-    const blob = await this.DbController.getImage(_id)
+  async blobToBase64(blob){
     return new Promise((r, j) => {
       var reader = new FileReader();
       reader.readAsDataURL(blob);
@@ -159,16 +162,22 @@ export class ImageService {
       }
     })
   }
-  async getImageToLocalUrl(src:string){
-    // console.log(str.split("/")[3]);
+  async getImageToLocalUrl(src: string) {
     let url
-    if(src.includes("small")){
-      url=await this.getLocalSmallBlobUrl(src)
-    }else if(src.includes("temporary_file_image")){
-      url=await this.getTemporary_file_image(src) as any;
-    }else{
-      url=await this.getImage(src);
+    if (src.includes("small")) {
+      const blob = await this.getLocalSmallBlob(src)
+      url = await this.blobToBase64(blob);
+    }else if (src.includes("temporary_file_image")) {
+      let str = src.split("/");
+      const _id = str.pop()!;
+      const blob = await this.DbController.getImage(_id)
+      url = await this.blobToBase64(blob);
+    } else if (src.includes("image")) {
+      url = await this.getImageBase64(src)
+    } else {
+      url = await this.getImage(src);
     }
     return url
   }
+
 }

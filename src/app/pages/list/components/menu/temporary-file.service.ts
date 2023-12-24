@@ -84,6 +84,8 @@ export class TemporaryFileService {
         return data
       },
       Image: async (id: string) => {
+        console.log(id);
+
         const obj = this.files.find((x: { id: string; }) => x.id == id);
         const blob = await obj.blob.getFile();
         return blob

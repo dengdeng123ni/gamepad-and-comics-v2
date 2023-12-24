@@ -337,7 +337,7 @@ export class CurrentService {
     try {
       const getImagePixel = async (url: string) => {
         const loadImage = async (url: string) => {
-          return await createImageBitmap(await this.image.getLocalImageBlob(url))
+          return await createImageBitmap(await this.image.getImageBlob(url))
         }
         const img = await loadImage(url);
         let canvas = document.createElement('canvas');
@@ -403,7 +403,7 @@ export class CurrentService {
     try {
       const getImagePixel = async (url: string) => {
         const loadImage = async (url: string) => {
-          return await createImageBitmap(await this.image.getLocalImageBlob(url))
+          return await createImageBitmap(await this.image.getImageBlob(url))
         }
         const img = await loadImage(url);
         let canvas = document.createElement('canvas');

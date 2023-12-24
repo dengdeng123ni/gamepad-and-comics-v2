@@ -1,0 +1,6 @@
+<cdk-virtual-scroll-viewport *ngIf="height&&width" [itemSize]="height" class="list" [maxBufferPx]="height*2" [minBufferPx]="height*2">
+  <div *cdkVirtualFor="let n of list;let index=index" class="item" [attr.index]="index"
+    [style]="{'maxWidth':width+'px'}">
+    <app-canvas-image1 [index]="index" [list]="list" [style]="{'display':'block','width':width+'px','height':height+'px'}" [width]="width" [height]="height" />
+  </div>
+</cdk-virtual-scroll-viewport>

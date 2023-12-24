@@ -24,6 +24,7 @@ import { CustomGridComponent } from './components/custom-grid/custom-grid.compon
 import { ToolbarOptionComponent } from './components/toolbar-option/toolbar-option.component';
 import { SetChapterFirstPageCoverComponent } from './components/set-chapter-first-page-cover/set-chapter-first-page-cover.component';
 import { ChaptersListComponent } from './components/chapters-list/chapters-list.component';
+import { CanvasImage1Component } from './components/canvas-image1/canvas-image1.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { ChaptersListComponent } from './components/chapters-list/chapters-list.
     CustomGridComponent,
     ToolbarOptionComponent,
     SetChapterFirstPageCoverComponent,
-    ChaptersListComponent
+    ChaptersListComponent,
+    CanvasImage1Component
   ],
   imports: [
     CommonModule,
