@@ -13,9 +13,32 @@ chrome.runtime.onMessage.addListener(
     }else if (request.type == "website_proxy_response") {
       request.type="proxy_response";
       sendMessageToTargetContentScript(request,request.proxy_response_website_url)
+    }else if(request.type=="pulg_proxy_request"){
+      console.log(request);
+      if(request.http.option.body) request.http.option.body= await stringToReadStream(request.http.option.body);
+      const rsponse = await fetch(request.http.url, request.http.option)
+      const data = await readStreamToString(rsponse.body)
+      let headers = [];
+      rsponse.headers.forEach(function (value, name) { headers.push({ value, name }) });
+      const res={ id: request.id, proxy_response_website_url: request.proxy_response_website_url, type: "website_proxy_response", data: { body: data, bodyUsed: rsponse.bodyUsed, headers: headers, ok: rsponse.ok, redirected: rsponse.redirected, status: rsponse.status, statusText: rsponse.statusText, type: rsponse.type, url: rsponse.url } }
+      res.type="proxy_response";
+      sendMessageToTargetContentScript(res,res.proxy_response_website_url)
     }
   }
 );
+async function stringToReadStream(string) {
+  const readableStream = new ReadableStream({
+      start(controller) {
+          for (const data of string) {
+              controller.enqueue(Uint8Array.from(data));
+          }
+          controller.close();
+      },
+  });
+  const response=new Response(readableStream)
+  const json=await response.json();
+  return JSON.stringify(json);
+}
 async function readStreamToString(stream) {
   const reader = stream.getReader();
   let result = [];

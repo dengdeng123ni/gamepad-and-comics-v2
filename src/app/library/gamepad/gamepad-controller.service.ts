@@ -57,7 +57,7 @@ export class GamepadControllerService {
       subtree: true, //目标节点所有后代节点的attributes、childList、characterData变化
     };
 
-    let observe = new MutationObserver(() => this.getNodes());
+    let observe = new MutationObserver(() => this.execute());
     observe.observe(document, config);
 
     this.router.events.subscribe((event) => {
@@ -101,7 +101,35 @@ export class GamepadControllerService {
 
     })
   }
+  runs = [];
+  sleep = (duration) => {
+    return new Promise(resolve => {
+      setTimeout(resolve, duration);
+    })
+  }
+  async execute() {
+    if (this.runs.length == 0) {
+      this.runs.push(0)
+      const start = this.runs.length
+      await this.getNodes();
+      await this.sleep(400)
+      const end = this.runs.length
+      if (start != end) {
+        setTimeout(()=>{
+          this.runs = [];
+          this.execute()
+        })
 
+      }else{
+        setTimeout(()=>{
+          this.runs = [];
+        })
+      }
+    } else {
+      this.runs.push(0)
+    }
+
+  }
   Y = false;
 
   private GamepadEventBefore$ = new Subject();
@@ -227,7 +255,9 @@ export class GamepadControllerService {
   }
   oldRegion = null;
 
-  getNodes() {
+  async getNodes() {
+    console.log(123);
+
     const region = document.body.getAttribute("locked_region");
     if (!region) {
       this.setDefaultRegion();

@@ -1,3 +1,6 @@
-<router-outlet *ngIf="is_loading_page"></router-outlet>
+
+<div [@routeAnimation]="getAnimationData()">
+  <router-outlet></router-outlet>
+</div>
 <!-- <app-select-data-source *ngIf="!is_data_source"></app-select-data-source> -->
 <lib-context-menu></lib-context-menu>

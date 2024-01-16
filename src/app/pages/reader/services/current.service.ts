@@ -452,7 +452,7 @@ export class CurrentService {
           bool = false;
         }
       }
-      return bool
+      return !bool
     } catch (error) {
       return true
     }

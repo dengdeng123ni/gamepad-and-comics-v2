@@ -150,6 +150,21 @@ export class ImageService {
       }
     })
   }
+  async batchCachsImage(arr:Array<string>){
+    for (let index = 0; index < arr.length; index++) {
+      let src = arr[index];
+      const res = await caches.match(src);
+      if (res) continue;
+      let str = src.split("/");
+      src = str.join("/");
+      const _id = str.pop()!;
+      const blob = await this.DbController.getImage(_id)
+      const response = new Response(blob);
+      const request = new Request(src);
+      await this.caches.put(request, response);
+    }
+
+  }
   async blobToBase64(blob){
     return new Promise((r, j) => {
       var reader = new FileReader();

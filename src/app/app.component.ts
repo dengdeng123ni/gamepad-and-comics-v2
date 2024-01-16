@@ -3,12 +3,41 @@ import { ContextMenuControllerService, DbControllerService, MessageControllerSer
 import { GamepadControllerService } from './library/gamepad/gamepad-controller.service';
 import { GamepadLeftCircleToolbarService } from './library/event/gamepad-left-circle-toolbar/gamepad-left-circle-toolbar.service';
 import { GamepadEventService } from './library/gamepad/gamepad-event.service';
-
-
+import { ChildrenOutletContexts, RouterOutlet } from '@angular/router';
+import { animate, animateChild, group, query, style, transition, trigger } from '@angular/animations';
+export const slideInAnimation =
+  trigger('routeAnimation', [
+    transition('* <=> *', [
+      style({ position: 'relative' }),
+      query(':enter, :leave', [
+        style({
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height:'100vh'
+        })
+      ]),
+      query(':enter', [
+        style({ top: '100vh'})
+      ]),
+      query(':leave', animateChild()),
+      group([
+        query(':leave', [
+          animate('100ms ease-out', style({ top: '-100vh'}))
+        ]),
+        query(':enter', [
+          animate('100ms ease-out', style({ top: '0vh'}))
+        ])
+      ]),
+      query(':enter', animateChild()),
+    ])
+  ]);
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations: [ slideInAnimation ]
 })
 export class AppComponent {
   is_loading_page = false;
@@ -24,7 +53,8 @@ export class AppComponent {
     public MessageEvent: MessageEventService,
     public DbController: DbControllerService,
     public ContextMenuController: ContextMenuControllerService,
-    public SelectDataSource:SelectDataSourceService
+    public SelectDataSource:SelectDataSourceService,
+    private contexts: ChildrenOutletContexts
   ) {
     GamepadEvent.registerGlobalEvent({
       LEFT_ANALOG_PRESS:()=> GamepadLeftCircleToolbar.isToggle()
@@ -42,7 +72,9 @@ export class AppComponent {
     this.getPulgLoadingFree();
 
   }
-
+  getAnimationData() {
+    return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'];
+  }
   getPulgLoadingFree() {
     if (document.body.getAttribute("pulg")) {
       this.is_loading_page = true;
@@ -62,5 +94,19 @@ export class AppComponent {
       // this.SelectDataSource.open();
     }
   }
+
+}
+
+if (typeof Worker !== 'undefined') {
+  // Create a new
+  const worker = new Worker(new URL('./app.worker', import.meta.url));
+  worker.onmessage = ({ data }) => {
+    console.log(`page got message: ${data}`);
+  };
+  worker.postMessage('hello');
+
+} else {
+  // Web Workers are not supported in this environment.
+  // You should add a fallback so that your program still executes correctly.
 
 }

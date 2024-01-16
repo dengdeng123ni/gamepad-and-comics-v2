@@ -16,6 +16,12 @@ window.addEventListener("message", async function (e) {
 
     }
 
+    if (e.data && e.data.type == "pulg_proxy_request") {
+      // console.log(e.data);
+      await chrome.runtime.sendMessage(e.data);
+
+  }
+
     if (e.data && e.data.type == "website_proxy_response") {
         if(e.data.http.option.body) e.data.http.option.body= await stringToReadStream(e.data.http.option.body);
         const rsponse = await fetch(e.data.http.url, e.data.http.option)
