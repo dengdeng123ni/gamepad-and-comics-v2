@@ -99,7 +99,23 @@ export class ImageService {
 
   async getImageBlob(src) {
     if (!src) return new Blob([])
-    if(src.includes("temporary_file_image")) {
+    if (src.substring(0, 1) !== "h"){
+
+      const dataURLtoBlob = (dataurl) => {
+        var arr = dataurl.split(','),
+          mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]),
+          n = bstr.length,
+          u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mime });
+      }
+      return dataURLtoBlob(src)
+
+    }
+    if (src.includes("temporary_file_image")) {
       let str = src.split("/");
       const _id = str.pop()!;
       return await this.DbController.getImage(_id)
@@ -107,7 +123,7 @@ export class ImageService {
     let str = src.split("/");
     const _id = str.pop()!;
     src = str.join("/");
-    const getBlob=async ()=>{
+    const getBlob = async () => {
       const blob = await this.DbController.getImage(_id)
       const response = new Response(blob);
       const request = new Request(src);
@@ -131,7 +147,7 @@ export class ImageService {
       return await getBlob()
     }
   }
-  async getImageBase64(src){
+  async getImageBase64(src) {
     if (!src) return ""
     if (src.substring(0, 1) !== "h") {
       return src
@@ -150,7 +166,7 @@ export class ImageService {
       }
     })
   }
-  async batchCachsImage(arr:Array<string>){
+  async batchCachsImage(arr: Array<string>) {
     for (let index = 0; index < arr.length; index++) {
       let src = arr[index];
       const res = await caches.match(src);
@@ -165,7 +181,7 @@ export class ImageService {
     }
 
   }
-  async blobToBase64(blob){
+  async blobToBase64(blob) {
     return new Promise((r, j) => {
       var reader = new FileReader();
       reader.readAsDataURL(blob);
@@ -182,7 +198,7 @@ export class ImageService {
     if (src.includes("small")) {
       const blob = await this.getLocalSmallBlob(src)
       url = await this.blobToBase64(blob);
-    }else if (src.includes("temporary_file_image")) {
+    } else if (src.includes("temporary_file_image")) {
       let str = src.split("/");
       const _id = str.pop()!;
       const blob = await this.DbController.getImage(_id)

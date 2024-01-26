@@ -18,8 +18,8 @@ export class LocalCachService {
     DbEvent.register({
       name: "local_cache",
       tab: {
-        url: "https://manga.bilibili.com/",
-        host_names: ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"],
+        url: "",
+        host_names: [],
       },
       is_edit: true,
       is_locked: false,

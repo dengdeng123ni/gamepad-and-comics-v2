@@ -2,12 +2,14 @@
 import { Injectable } from '@angular/core';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import { ImageService } from '../public-api';
 @Injectable({
   providedIn: 'root'
 })
 export class ZipService {
 
-  constructor() { }
+
+  constructor(public image:ImageService) { }
   async createZip(
     list: Array<string>, {
     isFirstPageCover = false,
@@ -18,8 +20,7 @@ export class ZipService {
       let images = [];
       for (let j = 0; j < list.length; j++) {
         const src = list[j];
-        const req=await fetch(src);
-        const blob=await req.blob();
+        const blob=await this.image.getImageBlob(src)
         images.push(blob)
       }
       return images
@@ -83,8 +84,7 @@ export class ZipService {
     let paths = [];
     for (let i = 0; i < images.length; i++) {
       const x = images[i];
-      const response = await fetch(x.src);
-      const blob = await response.blob();
+      const blob = await this.image.getImageBlob(imageUrl)
       const srcs = blob.type.split("/");
       const path = `${x.path}.${srcs.at(-1)}`;
       arr.push({ path: `${path}`, blob: blob })
@@ -94,7 +94,7 @@ export class ZipService {
   }
   createImage = async (imageUrl) => {
     if (!imageUrl) return { width: 0, height: 0 }
-    return await createImageBitmap(await fetch(imageUrl).then((r) => r.blob()))
+    return await createImageBitmap(await this.image.getImageBlob(imageUrl))
   }
   compressImage = async (src) => {
     if (!src) {

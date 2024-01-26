@@ -49,7 +49,9 @@ export class ChapterListMode1Component {
       on: async (e: { value: string; id: string; }) => {
 
         const index = this.data.chapters.findIndex(x => x.id.toString() == e.value.toString());
-        this.data.chapters[index].selected = !this.data.chapters[index].selected;
+        if(this.data.chapters.filter(x=>x.selected).length==0){
+          this.data.chapters[index].selected = !this.data.chapters[index].selected;
+        }
         if (e.id == "delete") {
         } else if (e.id == "thumbnail") {
           const id = e.value
@@ -88,7 +90,7 @@ export class ChapterListMode1Component {
   }
   on($event: MouseEvent) {
     const node = $event.target as HTMLElement;
-    if (node.getAttribute("id") == 'list') {
+    if (node.getAttribute("type") == 'list') {
 
     } else {
       const getTargetNode = (node: HTMLElement): HTMLElement => {

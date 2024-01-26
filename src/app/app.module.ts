@@ -15,6 +15,7 @@ import { ContextMenuComponent } from './library/public-api';
 import { MaterialModule } from './library/material.module';
 import { SelectDataSourceComponent } from './library/select-data-source/select-data-source.component';
 import { GamepadLeftCircleToolbarComponent } from './library/event/gamepad-left-circle-toolbar/gamepad-left-circle-toolbar.component';
+import { QueryComponent } from './library/query/query.component';
 
 const dbConfig: DBConfig = {
   name: 'db',
@@ -110,6 +111,7 @@ const dbConfig: DBConfig = {
 @NgModule({
   declarations: [
     AppComponent,
+    QueryComponent,
     ContextMenuComponent,
     SelectDataSourceComponent,
     GamepadLeftCircleToolbarComponent

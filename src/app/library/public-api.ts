@@ -35,6 +35,8 @@ export * from './window/window-event.service'
 
 export * from './event/event.service'
 
+export * from './query/query.service'
+
 export * from './select-data-source/select-data-source.service'
 
 export interface PagesItem { id: string, src: string, width: number, height: number }

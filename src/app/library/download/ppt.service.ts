@@ -1,12 +1,13 @@
 // @ts-nocheck
 import { Injectable } from '@angular/core';
 import pptxgen from "pptxgenjs";
+import { ImageService } from '../public-api';
 @Injectable({
   providedIn: 'root'
 })
 export class PptService {
 
-  constructor() { }
+  constructor(public image:ImageService) { }
   async createPpt(
     list: Array<string>, {
     isFirstPageCover = false,
@@ -244,7 +245,8 @@ export class PptService {
       return null
     }
   }
-  createImage = async (imageUrl) => {
-    return await createImageBitmap(await fetch(imageUrl).then((r) => r.blob()))
+  const createImage = async (imageUrl) => {
+    if (!imageUrl) return { width: 0, height: 0 }
+    return await createImageBitmap(await this.image.getImageBlob(imageUrl))
   }
 }

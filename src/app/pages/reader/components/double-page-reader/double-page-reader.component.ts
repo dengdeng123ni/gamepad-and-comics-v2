@@ -33,6 +33,11 @@ export class DoublePageReaderComponent {
     if (event.key == "ArrowLeft") this.current._pagePrevious();
     if (event.key == "c") this.pageToggle();
     if (event.key == "v") this.firstPageToggle();
+    if (event.code == "Space") {
+      this.swiper.swiperRef.slideNext()
+      return false
+    }
+    return true
   }
   @HostListener('window:keyup', ['$event'])
   handleKeyUp = (event: KeyboardEvent) => {
@@ -174,27 +179,38 @@ export class DoublePageReaderComponent {
 
   }
   async init2() {
+    this.index=this.data.page_index;
     await this.change(this.data.page_index)
+    let cc = document.querySelector("#double_page_reader") as any
+    cc.style.opacity = 1;
+
+
   }
   runs = [];
+  sleep = (duration) => {
+    return new Promise(resolve => {
+      setTimeout(resolve, duration);
+    })
+  }
   async execute(page_index) {
     if (Number.isNaN(page_index)) page_index = 0;
     if (this.runs.length == 0) {
       this.runs.push(page_index)
-      this.index=page_index;
+      this.index = page_index;
       const start = this.runs.length
       await this.change(page_index);
+      await this.sleep(100)
       const end = this.runs.length
       if (start != end) {
         const index = this.runs.at(-1);
         this.runs = [];
         this.execute(index)
-      }else{
+      } else {
         this.runs = [];
       }
     } else {
       this.runs.push(page_index)
-      this.index=page_index;
+      this.index = page_index;
     }
 
   }
@@ -306,6 +322,7 @@ export class DoublePageReaderComponent {
       forceToAxis: false,
       thresholdTime: 1000,
     },
+    keyboard: false,
     direction: "vertical",
     scrollbar: { draggable: true },
   };
@@ -315,6 +332,7 @@ export class DoublePageReaderComponent {
   }
   async next() {
     const nodes = document.querySelectorAll(`[currentimage]`);
+
     const index = this.index + nodes.length;
 
     if (index >= this.list.length) {
@@ -355,8 +373,6 @@ export class DoublePageReaderComponent {
     this.current._pageChange(index);
   }
   async change(index: number) {
-    console.log(index);
-
     if (this.isPageFirst && index == 0) this.is_first_page_cover = await this.current._getChapter_IsFirstPageCover(this.data.chapter_id);
     const res: any = await this.getCurrentImages(this.list, index);
     if (!res.previous.primary.image.src && !res.previous.secondary.image.src) res.previous = await this.getPreviousLast();

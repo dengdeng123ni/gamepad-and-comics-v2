@@ -19,7 +19,7 @@ export class UploadService {
   }
   async subscribe_to_temporary_file_directory(files, id) {
 
-
+    this.list=[];
     const deepMerge = (obj1, obj2) => {
       var isPlain1 = isPlainObject(obj1);
       var isPlain2 = isPlainObject(obj2);

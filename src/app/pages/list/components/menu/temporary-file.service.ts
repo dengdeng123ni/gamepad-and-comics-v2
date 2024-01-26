@@ -21,8 +21,8 @@ export class TemporaryFileService {
     DbEvent.register({
       name: "temporary_file",
       tab: {
-        url: "https://manga.bilibili.com/",
-        host_names: ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"],
+        url: "",
+        host_names: [],
       },
       is_edit: true,
       is_locked: false,
@@ -30,10 +30,13 @@ export class TemporaryFileService {
       is_tab: false
     }, {
       List: async (obj: any) => {
+        console.log(obj);
+
         let list = [];
-        list = this.data.filter((x: { temporary_file_type: any; })=>obj.temporary_file_type==x.temporary_file_type).map((x: any) => {
+        list = this.data.filter((x: { temporary_file_id: any; })=>obj.temporary_file_id==x.temporary_file_id).map((x: any) => {
           return { id: x.id, cover: `${location.origin}/temporary_file_image/image/${x.chapters[0].pages[0].id}`, title: x.title, subTitle: `${x.chapters[0].title}` }
         }).slice((obj.page_num-1)*obj.page_size,obj.page_size);
+        console.log(list,this.data);
 
         return list
       },
@@ -42,7 +45,7 @@ export class TemporaryFileService {
         return {
           id: obj.id,
           cover: `${location.origin}/temporary_file_image/image/${obj.chapters[0].pages[0].id}`,
-          title: obj.chapters[0].title,
+          title: obj.title,
           author: "",
           intro: "",
           chapters: obj.chapters.map((x: {
@@ -84,8 +87,6 @@ export class TemporaryFileService {
         return data
       },
       Image: async (id: string) => {
-        console.log(id);
-
         const obj = this.files.find((x: { id: string; }) => x.id == id);
         const blob = await obj.blob.getFile();
         return blob

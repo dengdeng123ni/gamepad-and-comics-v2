@@ -29,8 +29,8 @@ export class MenuComponent {
     public upload: UploadService,
     public temporaryFile: TemporaryFileService,
     public AppData: AppDataService,
-    public LocalCach:LocalCachService,
-    public menu:MenuService,
+    public LocalCach: LocalCachService,
+    public menu: MenuService,
     private zone: NgZone
   ) {
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -39,17 +39,28 @@ export class MenuComponent {
     );
   }
   on(type: string) {
-    this.data.qurye_page_type = type;
+
+    this.zone.run(() => {
+      this.data.qurye_page_type = "1"
+      setTimeout(()=>{
+        this.data.qurye_page_type = type;
+      })
+    })
     this.data.list = [];
     this.AppData.setOrigin('bilibili')
-    this.menu.opened=!this.menu.opened;
+    this.menu.opened = !this.menu.opened;
   }
   on2(id: string) {
+    this.zone.run(() => {
+      this.data.qurye_page_type = "1"
+      setTimeout(()=>{
+        this.data.qurye_page_type = 'temporary_file';
+      })
+    })
     this.data.list = [];
     this.AppData.setOrigin('temporary_file')
-    this.data.qurye_page_type = "temporary_file"
-    window.comics_query_option.temporary_file_type=id;
-    this.menu.opened=!this.menu.opened;
+    window.comics_query_option.temporary_file_id = id;
+    this.menu.opened = !this.menu.opened;
   }
   onLocalMenu(id: string) {
     this.data.list = [];
@@ -94,7 +105,7 @@ export class MenuComponent {
     const id = window.btoa(encodeURI(dirHandle["name"]))
     await handleDirectoryEntry(dirHandle, out, dirHandle["name"]);
     let list = await this.upload.subscribe_to_temporary_file_directory(files_arr, id)
-    list.forEach(x => x.temporary_file_type = id);
+    list.forEach(x => x.temporary_file_id = id);
     this.temporaryFile.data = [...this.temporaryFile.data, ...list]
     let chapters: any[] = [];
     this.temporaryFile.menu.push({ id, name: dirHandle["name"] })
@@ -105,7 +116,7 @@ export class MenuComponent {
     this.temporaryFile.chapters = chapters;
     this.temporaryFile.files = [...this.temporaryFile.files, ...files_arr];
     this.zone.run(() => {
-      window.comics_query_option.temporary_file_type=id;
+      window.comics_query_option.temporary_file_id = id;
       this.AppData.origin = "temporary_file";
       this.data.qurye_page_type = "temporary_file"
     })

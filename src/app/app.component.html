@@ -1,5 +1,4 @@
-
-<div [@routeAnimation]="getAnimationData()">
+<div [@routeAnimation]="getAnimationData()" *ngIf="is_loading_page">
   <router-outlet></router-outlet>
 </div>
 <!-- <app-select-data-source *ngIf="!is_data_source"></app-select-data-source> -->

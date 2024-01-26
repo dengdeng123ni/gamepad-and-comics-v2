@@ -49,7 +49,6 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { FormsModule } from '@angular/forms';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { ImageComponent } from './image/image.component';
-import { QueryComponent } from './query/query.component';
 @NgModule({
   imports: [
     FormsModule,
@@ -152,7 +151,6 @@ import { QueryComponent } from './query/query.component';
   ],
   declarations: [
     ImageComponent,
-    QueryComponent,
   ]
 })
 export class MaterialModule {

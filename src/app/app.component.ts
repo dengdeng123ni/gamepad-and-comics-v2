@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ContextMenuControllerService, DbControllerService, MessageControllerService, MessageEventService, SelectDataSourceService } from './library/public-api';
+import { Component, HostListener, Query } from '@angular/core';
+import { ContextMenuControllerService, DbControllerService, MessageControllerService, MessageEventService, QueryService, SelectDataSourceService } from './library/public-api';
 import { GamepadControllerService } from './library/gamepad/gamepad-controller.service';
 import { GamepadLeftCircleToolbarService } from './library/event/gamepad-left-circle-toolbar/gamepad-left-circle-toolbar.service';
 import { GamepadEventService } from './library/gamepad/gamepad-event.service';
@@ -15,19 +15,19 @@ export const slideInAnimation =
           top: 0,
           left: 0,
           width: '100vw',
-          height:'100vh'
+          height: '100vh'
         })
       ]),
       query(':enter', [
-        style({ top: '100vh'})
+        style({ top: '100vh' })
       ]),
       query(':leave', animateChild()),
       group([
         query(':leave', [
-          animate('100ms ease-out', style({ top: '-100vh'}))
+          animate('100ms ease-out', style({ top: '-100vh' }))
         ]),
         query(':enter', [
-          animate('100ms ease-out', style({ top: '0vh'}))
+          animate('100ms ease-out', style({ top: '0vh' }))
         ])
       ]),
       query(':enter', animateChild()),
@@ -37,33 +37,39 @@ export const slideInAnimation =
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  animations: [ slideInAnimation ]
+  animations: [slideInAnimation]
 })
 export class AppComponent {
   is_loading_page = false;
   is_data_source = true;
 
-
+  @HostListener('window:keydown', ['$event'])
+  handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key == "b") this.query.isToggle();
+    // return false
+  }
 
   constructor(
-    public GamepadController:GamepadControllerService,
-    public GamepadEvent:GamepadEventService,
+    public GamepadController: GamepadControllerService,
+    public GamepadEvent: GamepadEventService,
     public MessageController: MessageControllerService,
-    public GamepadLeftCircleToolbar:GamepadLeftCircleToolbarService,
+    public GamepadLeftCircleToolbar: GamepadLeftCircleToolbarService,
     public MessageEvent: MessageEventService,
     public DbController: DbControllerService,
     public ContextMenuController: ContextMenuControllerService,
-    public SelectDataSource:SelectDataSourceService,
+    public SelectDataSource: SelectDataSourceService,
+    public query: QueryService,
     private contexts: ChildrenOutletContexts
   ) {
     GamepadEvent.registerGlobalEvent({
-      LEFT_ANALOG_PRESS:()=> GamepadLeftCircleToolbar.isToggle()
+      LEFT_ANALOG_PRESS: () => GamepadLeftCircleToolbar.isToggle()
     })
     MessageEvent.service_worker_register('local_image', async (event: any) => {
       const data = event.data;
       const response = await DbController.getImage(data.id)
       return { id: data.id, type: "local_image", response: response }
     })
+
     this.init();
 
   }
@@ -88,9 +94,9 @@ export class AppComponent {
   getDataSource() {
     const data = localStorage.getItem("data_source");
     if (data) {
-      document.body.setAttribute("data_source",data);
-      this.is_data_source=true;
-    }else{
+      document.body.setAttribute("data_source", data);
+      this.is_data_source = true;
+    } else {
       // this.SelectDataSource.open();
     }
   }

@@ -400,6 +400,7 @@ export class CurrentService {
     }
   }
   async _getIsLastPageCover(pages: Array<PagesItem>): Promise<boolean> {
+    // return true
     try {
       const getImagePixel = async (url: string) => {
         const loadImage = async (url: string) => {
@@ -452,7 +453,7 @@ export class CurrentService {
           bool = false;
         }
       }
-      return !bool
+      return bool
     } catch (error) {
       return true
     }

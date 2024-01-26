@@ -11,9 +11,10 @@ export class QueryService {
   opened = false;
   constructor(
     public _dialog: MatDialog,
-    public GamepadEvent:GamepadEventService
+    public GamepadEvent:GamepadEventService,
   ) {
-    GamepadEvent.registerAreaEvent('double_page_thumbnail_item',{
+
+    GamepadEvent.registerAreaEvent('query_mode1_item',{
       B:()=>setTimeout(()=>this.close())
     })
   }
@@ -22,11 +23,11 @@ export class QueryService {
       this.opened = true;
 
       const dialogRef = this._dialog.open(QueryComponent, {
-        panelClass: "_double_page_thumbnail"
+        panelClass: "_query_mode1"
       });
-      document.body.setAttribute("locked_region", "double_page_thumbnail")
+      document.body.setAttribute("locked_region", "query_mode1")
       dialogRef.afterClosed().subscribe(result => {
-        if (document.body.getAttribute("locked_region") == "double_page_thumbnail" && this.opened) document.body.setAttribute("locked_region", "reader")
+        if (document.body.getAttribute("locked_region") == "query_mode1" && this.opened) document.body.setAttribute("locked_region", "reader")
         this.opened = false;
       });
     }

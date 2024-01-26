@@ -6,6 +6,7 @@ import getTemplatePageXhtml from './template/page.xhtml'
 import getTemplateFixedLayoutJpCss from './template/fixed-layout-jp.css'
 import getTemplateStandardOpf from './template/standard.opf'
 import getTemplateNavigationDocumentsXhtml from './template/navigation-documents.xhtml'
+import { ImageService } from '../public-api';
 @Injectable({
   providedIn: 'root'
 })
@@ -55,7 +56,10 @@ export class EpubService {
 
   blobs = [];
 
-  constructor() { }
+  constructor(public image:ImageService) { }
+
+
+
   async createEpub(
     list: Array<string>, {
       isFirstPageCover = false,
@@ -768,7 +772,7 @@ export class EpubService {
 
   createImage = async (imageUrl) => {
     if (!imageUrl) return { width: 0, height: 0 }
-    return await createImageBitmap(await fetch(imageUrl).then((r) => r.blob()))
+    return await createImageBitmap(await this.image.getImageBlob(imageUrl))
   }
 
 }

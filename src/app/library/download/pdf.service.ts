@@ -1,12 +1,13 @@
 // @ts-nocheck
 import { Injectable } from '@angular/core';
 import { jsPDF } from "jspdf";
+import { ImageService } from '../public-api';
 @Injectable({
   providedIn: 'root'
 })
 export class PdfService {
 
-  constructor() { }
+  constructor(public image:ImageService) { }
   async createPdf(
     list: Array<string>, {
     isFirstPageCover = false,
@@ -15,7 +16,7 @@ export class PdfService {
   }) {
     const createImage = async (imageUrl) => {
       if (!imageUrl) return { width: 0, height: 0 }
-      return await createImageBitmap(await fetch(imageUrl).then((r) => r.blob()))
+      return await createImageBitmap(await this.image.getImageBlob(imageUrl))
     }
     const compressImage = async (src) => {
       if (!src) {

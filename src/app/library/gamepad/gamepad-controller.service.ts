@@ -37,9 +37,9 @@ export class GamepadControllerService {
     //     document.body.style.cursor = "none";
     //   }, 3000);
     // });
-    document.body.setAttribute("pattern", "gamepad")
-    this.GamepadInput.down().subscribe((x: string) => {
 
+    this.GamepadInput.down().subscribe((x: string) => {
+      document.body.setAttribute("pattern", "gamepad")
       this.device(x);
     })
     this.GamepadInput.up().subscribe((x: string) => {
@@ -108,6 +108,7 @@ export class GamepadControllerService {
     })
   }
   async execute() {
+    if (document.body.getAttribute("pattern") != "gamepad") return
     if (this.runs.length == 0) {
       this.runs.push(0)
       const start = this.runs.length
@@ -115,13 +116,13 @@ export class GamepadControllerService {
       await this.sleep(400)
       const end = this.runs.length
       if (start != end) {
-        setTimeout(()=>{
+        setTimeout(() => {
           this.runs = [];
           this.execute()
         })
 
-      }else{
-        setTimeout(()=>{
+      } else {
+        setTimeout(() => {
           this.runs = [];
         })
       }
@@ -256,8 +257,6 @@ export class GamepadControllerService {
   oldRegion = null;
 
   async getNodes() {
-    console.log(123);
-
     const region = document.body.getAttribute("locked_region");
     if (!region) {
       this.setDefaultRegion();
