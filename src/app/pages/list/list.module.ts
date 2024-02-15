@@ -20,6 +20,7 @@ import { ComicsHomeComponent } from './components/comics-home/comics-home.compon
 import { MenuTopToolbarComponent } from './components/menu-top-toolbar/menu-top-toolbar.component';
 import { ComicsCacheComponent } from './components/comics-cache/comics-cache.component';
 import { TemporaryFileComponent } from './components/temporary-file/temporary-file.component';
+import { HistoryComponent } from './components/history/history.component';
 // import { ImageComponent } from 'src/app/library/public-api';
 
 
@@ -41,7 +42,8 @@ import { TemporaryFileComponent } from './components/temporary-file/temporary-fi
     ComicsHomeComponent,
     MenuTopToolbarComponent,
     ComicsCacheComponent,
-    TemporaryFileComponent
+    TemporaryFileComponent,
+    HistoryComponent
   ],
   imports: [
     CommonModule,

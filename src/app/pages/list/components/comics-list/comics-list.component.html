@@ -6,6 +6,7 @@
 <app-comics-home *ngIf="data.qurye_page_type=='home'"></app-comics-home>
 <app-comics-cache *ngIf="data.qurye_page_type=='local_cache'"></app-comics-cache>
 <app-temporary-file *ngIf="data.qurye_page_type=='temporary_file'"></app-temporary-file>
+<app-history *ngIf="data.qurye_page_type=='history'"></app-history>
 
 <div class="warp" (click)="on($event)">
   <div class="grid" id="comics_list" [attr.size]="'middle'" [attr.type]="'list'" [attr.section]="'comics_list'">

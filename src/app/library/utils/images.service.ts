@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { ImageService } from '../public-api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImagesService {
 
-  constructor() {
+  constructor(public image:ImageService) {
 
   }
   getPageDouble = async (
@@ -390,7 +391,7 @@ export class ImagesService {
     }
     return list
   }
-  loadImage = async (imageUrl:string): Promise<ImageBitmap> =>  await createImageBitmap(await fetch(imageUrl).then((r) => r.blob()))
+  loadImage = async (imageUrl:string): Promise<ImageBitmap> =>  await createImageBitmap(await this.image.getImageBlob(imageUrl))
   async loadImages(list: Array<string>) {
     let arr = [];
     for (let i = 0; i < list.length; i++) {

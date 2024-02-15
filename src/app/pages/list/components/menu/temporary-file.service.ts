@@ -73,13 +73,11 @@ export class TemporaryFileService {
           let obj = {
             id: "",
             src: "",
-            small: "",
             width: 0,
             height: 0
           };
           obj["id"] = `${id}_${index}`;
           obj["src"] = `${location.origin}/temporary_file_image/image/${x.id}`,
-            obj["small"] = `${location.origin}/temporary_file_image/image/${x.id}`,
             obj["width"] = 0;
           obj["height"] = 0;
           data.push(obj)

@@ -19,8 +19,29 @@ import { QueryComponent } from './library/query/query.component';
 
 const dbConfig: DBConfig = {
   name: 'db',
-  version: 15,
+  version: 17,
   objectStoresMeta: [
+    {
+      store: 'details',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
+    {
+      store: 'pages',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
+    {
+      store: 'history',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
     {
       store: 'local_comics',
       storeConfig: { keyPath: 'id', autoIncrement: false },

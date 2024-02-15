@@ -15,10 +15,10 @@
     "permissions": [
         "tabs",
         "runtime",
-        "activeTab",   
+        "activeTab",
         "contextMenus",
         "webRequest",
-		"webRequestBlocking",
+	     	"webRequestBlocking",
         "declarativeNetRequest"
     ],
     "content_scripts": [
@@ -28,5 +28,8 @@
                 "content.js"
             ]
         }
-    ]
+    ],
+    "omnibox": {
+      "keyword": "gh"
+    }
 }

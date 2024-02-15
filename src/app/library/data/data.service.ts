@@ -6,7 +6,7 @@ import { DbEventService } from '../public-api';
   providedIn: 'root'
 })
 export class AppDataService {
-  origin = "bilibili"
+  origin = "hanime1"
   origin$ = new Subject();
   constructor(public DbEvent: DbEventService) { }
 

@@ -42,7 +42,7 @@ export class ImageService {
     const res = await caches.match(src);
     if (res) {
       const blob = await res.blob()
-      if (blob.size == 0) {
+      if (blob.size < 1000) {
         url = await getImageBlobUrl(src)
       } else {
         url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
@@ -80,6 +80,7 @@ export class ImageService {
     // }
     if (res) {
       const blob = await res.blob()
+
       return blob
     } else {
       const blob = await this.DbController.getImage(_id)
@@ -99,7 +100,7 @@ export class ImageService {
 
   async getImageBlob(src) {
     if (!src) return new Blob([])
-    if (src.substring(0, 1) !== "h"){
+    if (src.substring(0, 1) !== "h") {
 
       const dataURLtoBlob = (dataurl) => {
         var arr = dataurl.split(','),
@@ -139,7 +140,7 @@ export class ImageService {
     const res = await caches.match(src);
     if (res) {
       const blob = await res.blob()
-      if (blob.size == 0) {
+      if (blob.size < 1000) {
         return await getBlob()
       }
       return blob

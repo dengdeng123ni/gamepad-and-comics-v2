@@ -55,7 +55,6 @@ export class LocalCachService {
           const res = await this.DbController.getPages(id, { origin });
           res.forEach(x => {
             x.src = `${x.src}_${this.utf8_to_b64(origin)}`
-            x.small = `${x.small}_${this.utf8_to_b64(origin)}`
           })
 
           return res

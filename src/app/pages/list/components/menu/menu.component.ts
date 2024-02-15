@@ -50,6 +50,19 @@ export class MenuComponent {
     this.AppData.setOrigin('bilibili')
     this.menu.opened = !this.menu.opened;
   }
+  on3(type: string) {
+    this.zone.run(() => {
+      this.data.qurye_page_type = "1"
+      setTimeout(()=>{
+        this.data.qurye_page_type = type;
+      })
+    })
+    this.data.list = [];
+    this.AppData.setOrigin('hanime1')
+    this.menu.opened = !this.menu.opened;
+   console.log( this.AppData.origin);
+
+  }
   on2(id: string) {
     this.zone.run(() => {
       this.data.qurye_page_type = "1"

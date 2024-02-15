@@ -52,9 +52,10 @@ export class DoublePageThumbnailComponent {
       id: x.id,
       width: x.width,
       height: x.height,
-      src: x.small
+      src: x.src
     }))
     const is_first_page_cover= await this.current._getChapter_IsFirstPageCover(this.data.chapter_id);
+
     const double_list = await this.utils.Images.getPageDouble(list, { isFirstPageCover: is_first_page_cover, pageOrder: this.data.comics_config.is_page_order });
     double_list.forEach((x: any) => {
       x.images.forEach((c: any) => {

@@ -506,8 +506,8 @@ export class CurrentService {
       this._setChapterIndex(this.data.chapter_id.toString(), option.page_index)
     } else if (type == "changeChapter") {
       this._setWebDbComicsConfig(this.data.comics_id);
-      this._updateChapterRead(this.data.chapter_id);
     }
+    this._updateChapterRead(this.data.chapter_id);
     const types = ['initPage', 'closePage', 'changePage', 'nextPage', 'previousPage', 'nextChapter', 'previousChapter', 'changeChapter'];
     this.change$.next({ ...option, type })
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DbControllerService, PagesItem } from 'src/app/library/public-api';
+import { DbControllerService, HistoryService, PagesItem } from 'src/app/library/public-api';
 import { DataService } from './data.service';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { firstValueFrom } from 'rxjs';
@@ -16,6 +16,7 @@ export class CurrentService {
     public data: DataService,
     public webDb: NgxIndexedDBService,
     public router: Router,
+    public history: HistoryService
   ) { }
 
   async init(comic_id: string) {
@@ -43,7 +44,14 @@ export class CurrentService {
     }
     this.data.comics_info = res;
     this.data.is_init_free = true;
+    this.history.update({
+      id: comic_id,
+      title: this.data.comics_info.title,
+      cover: this.data.comics_info.cover
+    })
+
   }
+
 
   async close() {
     this.data.is_init_free = false;

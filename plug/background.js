@@ -10,6 +10,9 @@ chrome.runtime.onMessage.addListener(
     }else if (request.type == "website_proxy_request") {
       request.type="website_proxy_response";
       sendMessageToTargetContentScript(request,request.proxy_request_website_url)
+    }else if (request.type == "website_proxy_request_html") {
+      request.type="website_proxy_response_html";
+      sendMessageToTargetContentScript(request,request.proxy_request_website_url)
     }else if (request.type == "website_proxy_response") {
       request.type="proxy_response";
       sendMessageToTargetContentScript(request,request.proxy_response_website_url)
@@ -23,9 +26,18 @@ chrome.runtime.onMessage.addListener(
       const res={ id: request.id, proxy_response_website_url: request.proxy_response_website_url, type: "website_proxy_response", data: { body: data, bodyUsed: rsponse.bodyUsed, headers: headers, ok: rsponse.ok, redirected: rsponse.redirected, status: rsponse.status, statusText: rsponse.statusText, type: rsponse.type, url: rsponse.url } }
       res.type="proxy_response";
       sendMessageToTargetContentScript(res,res.proxy_response_website_url)
+    }else if(request.type=="page_load_complete"){
+        const index= data.findIndex(x=>x.tab.pendingUrl==request.url)
+        if(index>-1){
+          const obj=data[index];
+          chrome.tabs.sendMessage(obj.tab.id, obj.data);
+          data=[];
+        }
     }
   }
 );
+
+
 async function stringToReadStream(string) {
   const readableStream = new ReadableStream({
       start(controller) {
@@ -66,7 +78,7 @@ function sendMessageToContentScript(message) {
     chrome.tabs.sendMessage(tabs[0].id, message);
   });
 }
-
+let data=[];
 function sendMessageToTargetContentScript(message, url) {
   chrome.tabs.query({}, function (tabs) {
     const list = tabs.filter(x => x.url.substring(0,url.length) == url);
@@ -75,9 +87,7 @@ function sendMessageToTargetContentScript(message, url) {
         active:false,
         url: url
       }, (tab)=> {
-        setTimeout(()=>{
-          chrome.tabs.sendMessage(tab.id, message);
-        },3000)
+        data.push({tab:tab,data:message})
       })
     }
     const index=Math.floor(Math.random() * ((list.length - 0) + 0))
