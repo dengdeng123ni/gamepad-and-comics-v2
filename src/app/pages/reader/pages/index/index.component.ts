@@ -21,27 +21,33 @@ export class IndexComponent {
     public router: Router,
     public route: ActivatedRoute,
     public left: OnePageThumbnailMode2Service,
-    public ChaptersList:ChaptersListService,
-    public index:IndexService,
-    public ToolbarOption:ToolbarOptionService,
-    public CustomGrid:CustomGridService
+    public ChaptersList: ChaptersListService,
+    public index: IndexService,
+    public ToolbarOption: ToolbarOptionService,
+    public CustomGrid: CustomGridService
   ) {
     document.body.setAttribute("router", "reader")
     document.body.setAttribute("locked_region", "reader")
     let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params));
     id$.subscribe(params => {
+      if (window.location.pathname.split("/")[1] == "reader") {
+        this.data.init();
+        this.current._init(params.get('id').toString() as string, params.get('id').toString() as string)
+        return
+      }
+
       this.data.init();
-      this.current._init(params.get('id') as string, params.get('sid') as string)
+      this.current._init(params.get('id').toString() as string, params.get('sid').toString() as string)
     })
   }
 
   on($event: MouseEvent) {
-     this.current.on$.next($event)
+    this.current.on$.next($event)
   }
   ngOnDestroy() {
     this.current.close();
   }
-  close(){
+  close() {
 
   }
 

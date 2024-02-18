@@ -21,7 +21,7 @@ export class IndexComponent {
     let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params.get('id')));
     id$.subscribe(x => {
       this.data.init();
-      this.current.init(x as string)
+      this.current.init(x.toString() as string)
     })
     document.body.setAttribute("router", "detail")
     document.body.setAttribute("locked_region", "detail")

@@ -4,7 +4,7 @@ import { Observable, map, startWith } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { UploadService } from './upload.service';
 import { TemporaryFileService } from './temporary-file.service';
-import { AppDataService } from 'src/app/library/public-api';
+import { AppDataService, DbEventService } from 'src/app/library/public-api';
 import { LocalCachService } from './local-cach.service';
 import { MenuService } from './menu.service';
 declare const window: any;
@@ -29,6 +29,7 @@ export class MenuComponent {
     public upload: UploadService,
     public temporaryFile: TemporaryFileService,
     public AppData: AppDataService,
+    public DbEvent:DbEventService,
     public LocalCach: LocalCachService,
     public menu: MenuService,
     private zone: NgZone
@@ -48,6 +49,11 @@ export class MenuComponent {
     })
     this.data.list = [];
     this.AppData.setOrigin('bilibili')
+    if(type=='history'){
+      this.DbEvent.Configs[this.AppData.origin].is_cache=true;
+    }else{
+      this.DbEvent.Configs[this.AppData.origin].is_cache=false;
+    }
     this.menu.opened = !this.menu.opened;
   }
   on3(type: string) {
@@ -60,8 +66,6 @@ export class MenuComponent {
     this.data.list = [];
     this.AppData.setOrigin('hanime1')
     this.menu.opened = !this.menu.opened;
-   console.log( this.AppData.origin);
-
   }
   on2(id: string) {
     this.zone.run(() => {

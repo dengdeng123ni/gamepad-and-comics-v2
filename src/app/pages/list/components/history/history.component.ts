@@ -28,5 +28,4 @@ export class HistoryComponent {
     this.init();
   }
 
-  d\
 }

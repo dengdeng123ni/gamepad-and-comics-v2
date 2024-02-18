@@ -26,11 +26,11 @@ export class TemporaryFileService {
       },
       is_edit: true,
       is_locked: false,
-      is_cache: true,
+      is_cache: false,
+      is_offprint:false,
       is_tab: false
     }, {
       List: async (obj: any) => {
-        console.log(obj);
 
         let list = [];
         list = this.data.filter((x: { temporary_file_id: any; })=>obj.temporary_file_id==x.temporary_file_id).map((x: any) => {

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CurrentService } from '../../services/current.service';
 import { DataService } from '../../services/data.service';
-import { AppDataService } from 'src/app/library/public-api';
-import { Router } from '@angular/router';
+import { AppDataService, QueryService } from 'src/app/library/public-api';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { GamepadEventService } from 'src/app/library/gamepad/gamepad-event.service';
 import { IndexService } from './index.service';
 import { MenuService } from '../../components/menu/menu.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-index',
@@ -21,12 +22,26 @@ export class IndexComponent {
     public indexser:IndexService,
     public GamepadEvent:GamepadEventService,
     public menu:MenuService,
-    public router:Router
+    public query: QueryService,
+    public router:Router,
+    public route: ActivatedRoute,
     ) {
       document.body.setAttribute("router", "list")
       document.body.setAttribute("locked_region", "list")
       // this.Current.init();
       GamepadEvent.registerConfig("menu", { region: ["menu_item"] })
+      let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params));
+
+      const b64_to_utf8 = (str: string) => {
+        return decodeURIComponent(window.atob(str));
+      }
+
+      id$.subscribe((params:any) => {
+        if (window.location.pathname.split("/")[1] == "specify_link") {
+          this.query.getComicsId(b64_to_utf8(params.get('id')))
+          return
+        }
+      })
   }
 
   on_list($event:any) {

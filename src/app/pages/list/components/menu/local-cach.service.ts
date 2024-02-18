@@ -24,6 +24,7 @@ export class LocalCachService {
       is_edit: true,
       is_locked: false,
       is_cache: true,
+      is_offprint:false,
       is_tab: false
     }, {
       List: async (obj: any) => {
@@ -45,8 +46,6 @@ export class LocalCachService {
       },
       Pages: async (_id: string) => {
         const { id, origin } = JSON.parse(this.b64_to_utf8(_id)) as { id: string, origin: string }
-        console.log(id, origin);
-
         const res = await firstValueFrom(this.webDb.getByID("local_comics", id.toString()))
         if (res) {
           console.log(res);

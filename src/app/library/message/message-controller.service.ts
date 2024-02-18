@@ -28,9 +28,12 @@ export class MessageControllerService {
     });
 
     window.addEventListener("message", function (event) {
+
       if (event.data.type == "proxy_response") {
         http._data_proxy_response[event.data.id]=event.data;
         if (navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage(event.data)
+      }else if (event.data.type == "specify_link") {
+        MessageEvent.OtherEvents['specify_link'](event.data.data)
       }
     }, false);
 

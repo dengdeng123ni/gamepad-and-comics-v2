@@ -43,6 +43,7 @@ export class ImageService {
     if (res) {
       const blob = await res.blob()
       if (blob.size < 1000) {
+
         url = await getImageBlobUrl(src)
       } else {
         url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
@@ -141,6 +142,7 @@ export class ImageService {
     if (res) {
       const blob = await res.blob()
       if (blob.size < 1000) {
+        console.log(blob.size );
         return await getBlob()
       }
       return blob

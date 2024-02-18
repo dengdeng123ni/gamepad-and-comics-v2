@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { QueryComponent } from './query.component';
 import { GamepadEventService } from '../gamepad/gamepad-event.service';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { DbEventService, DbControllerService, AppDataService, HistoryService, MessageEventService } from '../public-api';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +14,21 @@ export class QueryService {
   constructor(
     public _dialog: MatDialog,
     public GamepadEvent:GamepadEventService,
+    public DbEvent: DbEventService,
+    public DbController: DbControllerService,
+    public AppData: AppDataService,
+    public router: Router,
+    public history: HistoryService,
+    public MessageEvent:MessageEventService
   ) {
 
     GamepadEvent.registerAreaEvent('query_mode1_item',{
       B:()=>setTimeout(()=>this.close())
+    })
+    MessageEvent.other_register('specify_link',e=>{
+      console.log(e.url);
+
+      this.getComicsId("https://hanime1.me/comic/18589")
     })
   }
   open() {
@@ -40,5 +53,29 @@ export class QueryService {
   }
   close() {
     this._dialog.closeAll();
+  }
+  async getComicsId(value) {
+    const url = new URL(value);
+    if (url.protocol.substring(0, 4) == "http") {
+      let proxy_hostnames = [];
+      Object.keys(this.DbEvent.Configs).forEach(x => this.DbEvent.Configs[x].tab.host_names.forEach(c => proxy_hostnames.push({ url: this.DbEvent.Configs[x].tab.url, name: this.DbEvent.Configs[x].name, host_name: c })))
+      const obj = proxy_hostnames.find(x => x.host_name == url.hostname)
+      if (!obj) return false
+      const arr = url.pathname.split("/")
+      const id = arr.at(-1).replace(/[^\d]/g, " ")
+      const bool = await this.DbController.getDetail(id, { origin: obj.name })
+      if (bool) {
+        this.AppData.setOrigin(obj.name)
+        if(this.DbEvent.Configs[obj.name].is_offprint){
+          this.router.navigate(['/reader', id.toString().trim()]);
+          this.history.update({ id: id, title: bool.title, cover: bool.cover })
+        }else{
+          this.router.navigate(['/detail', id.toString().trim()]);
+        }
+
+        return true
+      }
+    }
+    return false
   }
 }

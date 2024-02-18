@@ -13,6 +13,7 @@ interface Config {
   is_edit: boolean;
   is_locked: boolean;
   is_cache: boolean;
+  is_offprint:boolean;
   is_tab: boolean;
 }
 interface Tab {
@@ -40,6 +41,7 @@ export class DbEventService {
       is_edit: false,
       is_locked: true,
       is_cache: false,
+      is_offprint:false,
       is_tab: true
     }, {
       List: async (obj: any) => {
@@ -229,6 +231,9 @@ export class DbEventService {
         return data
       },
       Image: async (id: string) => {
+        const utf8_to_b64 = (str: string) => {
+          return window.btoa(encodeURIComponent(str));
+        }
         const b64_to_utf8 = (str: string) => {
           return decodeURIComponent(window.atob(str));
         }
@@ -257,11 +262,12 @@ export class DbEventService {
       name: "hanime1",
       tab: {
         url: "https://hanime1.me/comic/",
-        host_names: ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"],
+        host_names: ["hanime1.me"],
       },
       is_edit: false,
       is_locked: false,
       is_cache: true,
+      is_offprint:true,
       is_tab: true
     }, {
       List: async (obj: any) => {
@@ -317,10 +323,12 @@ export class DbEventService {
         const text = await res.text();
         var parser = new DOMParser();
         var doc: any = parser.parseFromString(text, 'text/html');
-        let _id=doc.querySelector(".comic-rows-wrapper img").getAttribute("data-srcset").split("/").at(-2)
+
         let data = [];
-        let length=doc.querySelectorAll(".comics-thumbnail-wrapper img").length
-        for (let index = 0; index < length; index++) {
+        let nodes = doc.querySelectorAll(".comics-thumbnail-wrapper img")
+        for (let index = 0; index < nodes.length; index++) {
+          let _id = nodes[index].dataset.srcset.split("/").at(-2)
+          let type = nodes[index].dataset.srcset.split("/").at(-1).split(".").at(-1)
           let obj = {
             id: "",
             src: "",
@@ -332,7 +340,7 @@ export class DbEventService {
           }
 
           obj["id"] = `${id}_${index}`;
-          obj["src"] = `${window.location.origin}/hanime1/${id}_${index}/${utf8_to_b64(`https://i.nhentai.net/galleries/${_id}/${index+1}.jpg`)}`
+          obj["src"] = `${window.location.origin}/hanime1/${id}_${index}/${utf8_to_b64(`https://i.nhentai.net/galleries/${_id}/${index + 1}.${type}`)}`
           data.push(obj)
         }
         return data
@@ -342,7 +350,6 @@ export class DbEventService {
           return decodeURIComponent(window.atob(str));
         }
         const _id = b64_to_utf8(id);
-        console.log(_id);
 
         const getImageUrl = async (id: string) => {
           const res = await this._http.fetch_background(id, {
@@ -358,6 +365,167 @@ export class DbEventService {
           return blob
         }
         const blob = await getImageUrl(_id);
+        return blob
+      }
+    });
+    this.register({
+      name: "ehentai",
+      tab: {
+        url: "https://hanime1.me/comic/",
+        host_names: ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"],
+      },
+      is_edit: false,
+      is_locked: false,
+      is_cache: false,
+      is_offprint:false,
+      is_tab: true
+    }, {
+      List: async (obj: any) => {
+        let list = [];
+        return list
+      },
+      Detail: async (id: string) => {
+        const b64_to_utf8 = (str: string) => {
+          return decodeURIComponent(window.atob(str));
+        }
+        const res = await this._http.fetch_html(b64_to_utf8(id), {
+          "headers": {
+            "accept": "application/json, text/plain, */*",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "content-type": "application/json;charset=UTF-8"
+          },
+          "body": null,
+          "method": "GET"
+        });
+        const text = await res.text();
+        var parser = new DOMParser();
+        var doc: any = parser.parseFromString(text, 'text/html');
+
+        let obj = {
+          id: id,
+          cover: "",
+          title: "",
+          author: "",
+          intro: "",
+          chapters: [
+
+          ],
+          chapter_id: id
+        }
+        const utf8_to_b64 = (str: string) => {
+          return window.btoa(encodeURIComponent(str));
+        }
+        obj.title = doc.querySelector("#gn").textContent.trim()
+        obj.cover = `${window.location.origin}/hanime1/` + utf8_to_b64(doc.querySelector("#gd1 > div").style.background.split('"')[1]);
+        obj.chapters.push({
+          id: obj.id,
+          title: obj.title,
+          cover: obj.cover,
+        })
+
+
+        return obj
+      },
+      Pages: async (id: string) => {
+        const b64_to_utf8 = (str: string) => {
+          return decodeURIComponent(window.atob(str));
+        }
+        const res = await this._http.fetch_html(b64_to_utf8(id), {
+          "headers": {
+            "accept": "application/json, text/plain, */*",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "content-type": "application/json;charset=UTF-8"
+          },
+          "body": null,
+          "method": "GET"
+        });
+        const text = await res.text();
+        var parser = new DOMParser();
+        var doc: any = parser.parseFromString(text, 'text/html');
+        const nodes = doc.querySelectorAll(".ptt a");
+        let arr = []
+        for (let index = 0; index < nodes.length; index++) {
+          const element = nodes[index];
+          arr.push(element.href)
+        }
+        arr.pop()
+
+        let arr2 = [];
+        for (let index = 0; index < arr.length; index++) {
+          const res = await this._http.fetch_html(arr[index], {
+            "headers": {
+              "accept": "application/json, text/plain, */*",
+              "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+              "content-type": "application/json;charset=UTF-8"
+            },
+            "body": null,
+            "method": "GET"
+          });
+          const text = await res.text();
+          var parser = new DOMParser();
+          var doc: any = parser.parseFromString(text, 'text/html');
+          const nodes = doc.querySelectorAll(".gdtm a")
+
+          for (let index = 0; index < nodes.length; index++) {
+            const element = nodes[index] as any;
+            arr2.push(element.href)
+          }
+
+        }
+
+        let data = [];
+        for (let index = 0; index < arr2.length; index++) {
+          let obj = {
+            id: "",
+            src: "",
+            width: 0,
+            height: 0
+          };
+          const utf8_to_b64 = (str: string) => {
+            return window.btoa(encodeURIComponent(str));
+          }
+
+          obj["id"] = `${id}_${index}`;
+          obj["src"] = `${window.location.origin}/hanime1/${id}_${index}/${utf8_to_b64(arr2[index])}`
+          data.push(obj)
+        }
+        return data
+      },
+      Image: async (id: string) => {
+        const b64_to_utf8 = (str: string) => {
+          return decodeURIComponent(window.atob(str));
+        }
+        const _id = b64_to_utf8(id);
+        const getHtmlUrl = async (url) => {
+          const res = await this._http.fetch_html(url, {
+            "headers": {
+              "accept": "application/json, text/plain, */*",
+              "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+              "content-type": "application/json;charset=UTF-8"
+            },
+            "body": null,
+            "method": "GET"
+          });
+          const text = await res.text();
+          var parser = new DOMParser();
+          var doc: any = parser.parseFromString(text, 'text/html');
+          return doc.querySelector("#img").src
+        }
+        const getImageUrl = async (id: string) => {
+          const res = await this._http.fetch_background(id, {
+            method: "GET",
+            headers: {
+              "accept": "image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+              "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+              "sec-ch-ua": "\"Microsoft Edge\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\""
+            },
+            mode: "cors"
+          });
+          const blob = await res.blob();
+          return blob
+        }
+        const url=await getHtmlUrl(_id)
+        const blob = await getImageUrl(url);
         return blob
       }
     });

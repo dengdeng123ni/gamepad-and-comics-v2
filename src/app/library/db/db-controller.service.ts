@@ -20,8 +20,8 @@ export class DbControllerService {
   pages: any = {};
 
   cache = {
-    details:false,
-    pages:false
+    details: false,
+    pages: false
   }
   constructor(
     private AppData: AppDataService,
@@ -62,9 +62,9 @@ export class DbControllerService {
       if (this.details[id]) {
         return JSON.parse(JSON.stringify(this.details[id]))
       } else {
-        if(this.DbEvent.Configs[option.origin].is_cache){
+        if (this.DbEvent.Configs[option.origin].is_cache) {
           const res = await firstValueFrom(this.webDb.getByID('details', id))
-          if(res){
+          if (res) {
             this.details[id] = JSON.parse(JSON.stringify(res));
             return res
           }
@@ -87,15 +87,15 @@ export class DbControllerService {
       if (this.pages[id]) {
         return JSON.parse(JSON.stringify(this.pages[id]))
       } else {
-        if(this.DbEvent.Configs[option.origin].is_cache){
-          const res = await firstValueFrom(this.webDb.getByID('pages', id))
+        if (this.DbEvent.Configs[option.origin].is_cache) {
+          const res = (await firstValueFrom(this.webDb.getByID('pages', id)) as any)
           if (res) {
-            this.pages[id] = JSON.parse(JSON.stringify(res));
-            return res
+            this.pages[id] = JSON.parse(JSON.stringify(res.data));
+            return res.data
           }
         }
         const res = await this.DbEvent.Events[option.origin]["Pages"](id);
-        firstValueFrom(this.webDb.update('pages', res))
+        firstValueFrom(this.webDb.update('pages', { id: id, data: res }))
         this.pages[id] = JSON.parse(JSON.stringify(res));
 
         return res

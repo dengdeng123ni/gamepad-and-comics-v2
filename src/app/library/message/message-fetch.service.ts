@@ -191,6 +191,8 @@ export class MessageFetchService {
       }, 30000)
     })
   }
+  async fetch_image(){
+  }
 
   async post(url: string, body: any): Promise<any> {
     try {

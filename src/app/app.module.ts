@@ -16,6 +16,7 @@ import { MaterialModule } from './library/material.module';
 import { SelectDataSourceComponent } from './library/select-data-source/select-data-source.component';
 import { GamepadLeftCircleToolbarComponent } from './library/event/gamepad-left-circle-toolbar/gamepad-left-circle-toolbar.component';
 import { QueryComponent } from './library/query/query.component';
+import { GamepadVioceComponent } from './library/gamepad/gamepad-vioce/gamepad-vioce.component';
 
 const dbConfig: DBConfig = {
   name: 'db',
@@ -135,7 +136,8 @@ const dbConfig: DBConfig = {
     QueryComponent,
     ContextMenuComponent,
     SelectDataSourceComponent,
-    GamepadLeftCircleToolbarComponent
+    GamepadLeftCircleToolbarComponent,
+    GamepadVioceComponent
   ],
   imports: [
     BrowserModule,
