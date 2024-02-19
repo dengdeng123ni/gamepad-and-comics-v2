@@ -26,9 +26,7 @@ export class QueryService {
       B:()=>setTimeout(()=>this.close())
     })
     MessageEvent.other_register('specify_link',e=>{
-      console.log(e.url);
-
-      this.getComicsId("https://hanime1.me/comic/18589")
+      this.getComicsId(e.url)
     })
   }
   open() {

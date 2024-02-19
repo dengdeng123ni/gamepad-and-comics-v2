@@ -41,13 +41,21 @@ export * from './history/history.service'
 export * from './select-data-source/select-data-source.service'
 
 export interface PagesItem { id: string, src: string, width: number, height: number }
+interface StylesItem { id?: string, name: string, href?: string }
+interface AuthorItem { id?: string, name: string, href?: string }
 export interface ComicsInfo {
   cover: string,
   title: string,
-  author?: string,
+  sub_title?:string,
+  author?: Array<AuthorItem>,
   intro?: string,
-  chapter_id: string
+  styles?: Array<StylesItem>
+  chapter_id: string,
+  author_href?:string,
+  href?:string
 }
+
+
 export interface ChaptersItem {
   id: string,
   cover: string,
@@ -55,6 +63,7 @@ export interface ChaptersItem {
   pub_time?: string | Date | number,
   read?: number,
   selected?: boolean,
-  is_locked?:boolean
+  is_locked?: boolean
 }
-export interface ComicsItem { id: string | number, cover: string, title: string, subTitle: string,selected?: boolean }
+
+export interface ComicsItem { id: string | number, cover: string, title: string, subTitle: string, selected?: boolean }

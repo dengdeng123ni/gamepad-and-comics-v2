@@ -42,6 +42,7 @@ export class CurrentService {
     if (this.data.chapters.length && this.data.chapters[0]) {
       if (this.data.chapters[0].cover) this.data.chapter_config.is_cover_exist = true;
     }
+
     this.data.comics_info = res;
     this.data.is_init_free = true;
     this.history.update({
@@ -49,6 +50,7 @@ export class CurrentService {
       title: this.data.comics_info.title,
       cover: this.data.comics_info.cover
     })
+console.log(this.data);
 
   }
 
@@ -86,6 +88,8 @@ export class CurrentService {
   }
   async _chapterPageChange(chapter_id: string, page_index: number) {
     await this._setChapterIndex(chapter_id, page_index)
+    console.log(chapter_id, page_index);
+
     this.router.navigate(['/', this.data.comics_id, this.data.chapter_id])
 
   }

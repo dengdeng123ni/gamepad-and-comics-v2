@@ -13,6 +13,8 @@ import { EditToolbarComponent } from './components/edit-toolbar/edit-toolbar.com
 import { LoadingComponent } from './components/loading/loading.component';
 import { DoublePageThumbnailComponent } from './components/double-page-thumbnail/double-page-thumbnail.component';
 import { UnlockComponent } from './components/unlock/unlock.component';
+import { ComicsOffprintDetailComponent } from './components/comics-offprint-detail/comics-offprint-detail.component';
+import { ComicsOffprintThumbnailComponent } from './components/comics-offprint-thumbnail/comics-offprint-thumbnail.component';
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import { UnlockComponent } from './components/unlock/unlock.component';
     EditToolbarComponent,
     LoadingComponent,
     DoublePageThumbnailComponent,
-    UnlockComponent
+    UnlockComponent,
+    ComicsOffprintDetailComponent,
+    ComicsOffprintThumbnailComponent
   ],
   imports: [
     CommonModule,

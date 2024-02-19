@@ -1,20 +1,15 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CurrentService } from '../../services/current.service';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataService } from '../../services/data.service';
 import { ImageService } from 'src/app/library/public-api';
-interface Info {
-  cover: string,
-  title: string,
-  author?: string,
-  intro?: string
-}
+import { CurrentService } from '../../services/current.service';
+import { DataService } from '../../services/data.service';
+
 @Component({
-  selector: 'app-comics-info',
-  templateUrl: './comics-info.component.html',
-  styleUrls: ['./comics-info.component.scss']
+  selector: 'app-comics-offprint-detail',
+  templateUrl: './comics-offprint-detail.component.html',
+  styleUrls: ['./comics-offprint-detail.component.scss']
 })
-export class ComicsInfoComponent {
+export class ComicsOffprintDetailComponent {
   info = null;
 
   constructor(
@@ -60,6 +55,4 @@ export class ComicsInfoComponent {
     }
 
   }
-
-
 }
