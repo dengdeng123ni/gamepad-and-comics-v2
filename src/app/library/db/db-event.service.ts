@@ -292,6 +292,7 @@ export class DbEventService {
           cover: "",
           title: "",
           author: "",
+          author_href:"",
           intro: "",
           chapters: [
 
@@ -306,15 +307,21 @@ export class DbEventService {
         obj.cover = `${window.location.origin}/hanime1/` + utf8_to_b64(doc.querySelector("body > div > div:nth-child(4) > div:nth-child(2) > div > div.col-md-4 > a > img").src);
         const nodes=doc.querySelectorAll("h5:nth-child(1) .hover-lighter .no-select");
         const nodes1=doc.querySelectorAll("h5:nth-child(2) .hover-lighter .no-select");
+        const nodes2=doc.querySelectorAll("h5:nth-child(3) .hover-lighter .no-select");
         let styles=[]
+
         if(nodes1.length>nodes.length){
           for (let index = 0; index < nodes1.length; index++) {
-            obj.styles.push({name:nodes1[index].textContent})
+            obj.styles.push({name:nodes1[index].textContent,href:nodes1[index].parentNode.href})
           }
+          obj.author=nodes2[0].textContent;
+          obj.author_href=nodes2[0].parentNode.href
         }else{
           for (let index = 0; index < nodes.length; index++) {
-            obj.styles.push({name:nodes[index].textContent})
+            obj.styles.push({name:nodes[index].textContent,href:nodes1[index].parentNode.href})
           }
+          obj.author=nodes1[0].textContent;
+          obj.author_href=nodes1[0].parentNode.href
         }
 
         obj.chapters.push({

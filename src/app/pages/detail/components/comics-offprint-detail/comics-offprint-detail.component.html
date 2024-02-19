@@ -12,15 +12,15 @@
   <div class="right">
     <div class="info">
       <div class="title">{{info.title}}</div>
-      <div class="author">{{info.title}}</div>
+      <div class="author" (click)="on(info.author_href)">{{info.author}}</div>
       <div class="styles" *ngIf="info.styles">
-        <div class="item" *ngFor="let item of info.styles">
+        <div class="item" *ngFor="let item of info.styles" (click)="on(item.href)">
           <span class="name">{{item.name}}</span>
           <span class="dividing">,</span>
         </div>
       </div>
       <div class="intro">
-        {{info.title}}
+        {{info.intro}}
       </div>
     </div>
     <div style="margin: 0 24px;">  <button mat-button [attr.region]="'continue'" id="continue" [attr.select]="true" [attr.default]="true"

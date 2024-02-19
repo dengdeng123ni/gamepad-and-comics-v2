@@ -51,9 +51,14 @@ margin-bottom: 16px;
   white-space: nowrap;
   color: rgba(232, 230, 227, 0.56);
   margin: 12px 24px;
+
 }
 .item{
   color: rgba(232, 230, 227, 0.34);
+  transition: 0.3s all;
+  &:hover{
+    color:#c2185b;
+  }
 }
 .item:first{
   margin-left: 4px;

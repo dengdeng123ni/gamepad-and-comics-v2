@@ -47,7 +47,7 @@ export interface ComicsInfo {
   cover: string,
   title: string,
   sub_title?:string,
-  author?: Array<AuthorItem>,
+  author?: string,
   intro?: string,
   styles?: Array<StylesItem>
   chapter_id: string,

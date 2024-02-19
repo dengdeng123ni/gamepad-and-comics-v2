@@ -9,7 +9,7 @@ export class DataService {
   comics_info: ComicsInfo = {
     cover: '',
     title: '',
-    author: [],
+    author: '',
     styles: [],
     intro: "",
     chapter_id: ''
