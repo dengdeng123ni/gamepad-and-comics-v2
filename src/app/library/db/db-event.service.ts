@@ -318,7 +318,7 @@ export class DbEventService {
           obj.author_href=nodes2[0].parentNode.href
         }else{
           for (let index = 0; index < nodes.length; index++) {
-            obj.styles.push({name:nodes[index].textContent,href:nodes1[index].parentNode.href})
+            obj.styles.push({name:nodes[index].textContent,href:nodes1[index]?.parentNode?.href})
           }
           obj.author=nodes1[0].textContent;
           obj.author_href=nodes1[0].parentNode.href
@@ -361,7 +361,7 @@ export class DbEventService {
           }
 
           obj["id"] = `${id}_${index}`;
-          obj["src"] = `${window.location.origin}/hanime1/${id}_${index}/${utf8_to_b64(`https://i.nhentai.net/galleries/${_id}/${index + 1}.${type}`)}`
+          obj["src"] = `${window.location.origin}/hanime1/page/${id}_${index}/${utf8_to_b64(`https://i.nhentai.net/galleries/${_id}/${index + 1}.${type}`)}`
           data.push(obj)
         }
         return data

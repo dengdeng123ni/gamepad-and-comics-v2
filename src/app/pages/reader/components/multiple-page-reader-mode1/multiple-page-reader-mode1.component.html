@@ -1,3 +1,3 @@
 <div class="list" id="multiple_page_reader_mode1" [attr.region]="'multiple_page_reader_mode1'">
-  <img *ngFor="let n of pages;let index=index" [width]="n.width" [height]="n.height" [attr.index]="index" [id]="'multiple_page_reader_mode1_'+index" [src]="n.src" >
+  <app-image *ngFor="let n of pages;let index=index" [width]="n.width" [height]="n.height" [attr.index]="index" [id]="'multiple_page_reader_mode1_'+index" [src]="n.src" ></app-image>
 </div>

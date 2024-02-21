@@ -52,7 +52,7 @@ export class MultiplePageReaderMode1Component {
   }
   async init() {
     let list = [];
-    const nodes = document.querySelectorAll(".list img");
+    const nodes = document.querySelectorAll(".list app-image");
     nodes.forEach(x => list.push(x.getBoundingClientRect()))
     var observer = new IntersectionObserver(
       (changes) => {

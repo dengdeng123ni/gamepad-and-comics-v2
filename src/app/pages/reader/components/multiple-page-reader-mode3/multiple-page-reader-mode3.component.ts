@@ -41,8 +41,10 @@ export class MultiplePageReaderMode3Component {
   ngAfterViewInit() {
     const container = document.getElementById("multiple_page_reader_mode3")
     if(container) container.classList.remove("opacity-0");
+   setTimeout(()=>{
     this.pageChnage(this.data.page_index)
     this.init();
+   },100)
   }
 
   async pageChnage(page_index: number) {
@@ -51,7 +53,8 @@ export class MultiplePageReaderMode3Component {
   }
   async init() {
     let list = [];
-    const nodes = document.querySelectorAll(".list img");
+    const nodes = document.querySelectorAll(".list app-image");
+    console.log(nodes);
     nodes.forEach(x => list.push(x.getBoundingClientRect()))
     var observer = new IntersectionObserver(
       (changes) => {

@@ -152,6 +152,8 @@ export class DoublePageReaderComponent {
 
     this.list = this.data.pages as any;
     this.init2();
+    console.log(123);
+
 
     this.change$ = this.current.change().subscribe(x => {
       this.zoom(1);
@@ -179,6 +181,9 @@ export class DoublePageReaderComponent {
 
   }
   async init2() {
+    console.log(this.data.page_index);
+
+    if(Number.isNaN(this.data.page_index)) this.data.page_index=0;
     this.index=this.data.page_index;
     await this.change(this.data.page_index)
     let cc = document.querySelector("#double_page_reader") as any
@@ -377,6 +382,7 @@ export class DoublePageReaderComponent {
     const res: any = await this.getCurrentImages(this.list, index);
     if (!res.previous.primary.image.src && !res.previous.secondary.image.src) res.previous = await this.getPreviousLast();
     if (!res.next.primary.image.src && !res.next.secondary.image.src) res.next = await this.getNextFirst();
+
 
     this.steps = res.steps;
     let previous = "";

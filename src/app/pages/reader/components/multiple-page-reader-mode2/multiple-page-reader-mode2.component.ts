@@ -46,12 +46,16 @@ export class MultiplePageReaderMode2Component {
   }
 
   async pageChnage(page_index: number) {
+
+
     const node = document.getElementById(`multiple_page_reader_mode2_${page_index}`);
     node!.scrollIntoView(true)
   }
   async init() {
     let list = [];
-    const nodes = document.querySelectorAll(".list img");
+    const nodes = document.querySelectorAll(".list app-image");
+
+
     nodes.forEach(x => list.push(x.getBoundingClientRect()))
     var observer = new IntersectionObserver(
       (changes) => {

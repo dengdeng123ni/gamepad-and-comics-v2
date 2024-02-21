@@ -81,6 +81,14 @@
      display: flex;
      cursor: pointer;
      opacity: 0.87;
+     .title{
+      display: inline-block;
+      white-space: nowrap;
+      max-width: 16vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+     }
   }
   .item:last-child{
     opacity: 0.34;
