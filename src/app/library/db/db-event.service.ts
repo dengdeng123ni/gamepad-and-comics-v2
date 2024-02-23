@@ -13,7 +13,7 @@ interface Config {
   is_edit: boolean;
   is_locked: boolean;
   is_cache: boolean;
-  is_offprint:boolean;
+  is_offprint: boolean;
   is_tab: boolean;
 }
 interface Tab {
@@ -28,10 +28,16 @@ declare let window: any;
 export class DbEventService {
   public Events: { [key: string]: Events } = {};
   public Configs: { [key: string]: Config } = {};
-  constructor(public http: HttpClient,
+  constructor(
+    public http: HttpClient,
     public _http: MessageFetchService,
   ) {
-
+    setTimeout(() => {
+      console.log(this.Configs);
+      // http://localhost:7700/名称/comics_cover/漫画ID/图片信息
+      // http://localhost:7700/名称/chapter_cover/章节ID/图片信息
+      // http://localhost:7700/名称/page/页面ID/图片信息
+    }, 3000)
     this.register({
       name: "bilibili",
       tab: {
@@ -40,8 +46,8 @@ export class DbEventService {
       },
       is_edit: false,
       is_locked: true,
-      is_cache: false,
-      is_offprint:false,
+      is_cache: true,
+      is_offprint: false,
       is_tab: true
     }, {
       List: async (obj: any) => {
@@ -221,9 +227,8 @@ export class DbEventService {
           const utf8_to_b64 = (str: string) => {
             return window.btoa(encodeURIComponent(str));
           }
-
           obj["id"] = `${id}_${index}`;
-          obj["src"] = `${window.location.origin}/bilibili/image/${id}_${index}/${utf8_to_b64(x.path)}`
+          obj["src"] = x.path;
           obj["width"] = x.x;
           obj["height"] = x.y;
           data.push(obj)
@@ -231,31 +236,31 @@ export class DbEventService {
         return data
       },
       Image: async (id: string) => {
-        const utf8_to_b64 = (str: string) => {
-          return window.btoa(encodeURIComponent(str));
-        }
-        const b64_to_utf8 = (str: string) => {
-          return decodeURIComponent(window.atob(str));
-        }
-        const _id = b64_to_utf8(id);
+        if (id.substring(0,4)=="http") {
+          const res = await this._http.get_background(id)
+          const blob = await res.blob();
+          return blob
+        }else{
+          const getImageUrl = async (id: string) => {
+            const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web", {
+              "headers": {
+                "accept": "application/json, text/plain, */*",
+                "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+                "content-type": "application/json;charset=UTF-8"
+              },
+              "body": `{\"urls\":\"[\\\"${id}\\\"]\"}`,
+              "method": "POST",
+            });
+            const json = await res.json();
+            console.log(json);
 
-        const getImageUrl = async (id: string) => {
-          const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web", {
-            "headers": {
-              "accept": "application/json, text/plain, */*",
-              "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-              "content-type": "application/json;charset=UTF-8"
-            },
-            "body": `{\"urls\":\"[\\\"${id}\\\"]\"}`,
-            "method": "POST",
-          });
-          const json = await res.json();
-          return `${json.data[0].url}?token=${json.data[0].token}`
+            return `${json.data[0].url}?token=${json.data[0].token}`
+          }
+          const url = await getImageUrl(id);
+          const res = await this._http.get(url);
+          const blob = await res.blob();
+          return blob
         }
-        const url = await getImageUrl(_id);
-        const res = await this._http.get(url);
-        const blob = await res.blob();
-        return blob
       }
     });
     this.register({
@@ -267,7 +272,7 @@ export class DbEventService {
       is_edit: false,
       is_locked: false,
       is_cache: true,
-      is_offprint:true,
+      is_offprint: true,
       is_tab: true
     }, {
       List: async (obj: any) => {
@@ -292,36 +297,36 @@ export class DbEventService {
           cover: "",
           title: "",
           author: "",
-          author_href:"",
+          author_href: "",
           intro: "",
           chapters: [
 
           ],
           chapter_id: id,
-          styles:[]
+          styles: []
         }
         const utf8_to_b64 = (str: string) => {
           return window.btoa(encodeURIComponent(str));
         }
         obj.title = doc.querySelector("body > div > div:nth-child(4) > div:nth-child(2) > div > div.col-md-8 > h3").textContent.trim()
-        obj.cover = `${window.location.origin}/hanime1/` + utf8_to_b64(doc.querySelector("body > div > div:nth-child(4) > div:nth-child(2) > div > div.col-md-4 > a > img").src);
-        const nodes=doc.querySelectorAll("h5:nth-child(1) .hover-lighter .no-select");
-        const nodes1=doc.querySelectorAll("h5:nth-child(2) .hover-lighter .no-select");
-        const nodes2=doc.querySelectorAll("h5:nth-child(3) .hover-lighter .no-select");
-        let styles=[]
+        obj.cover = doc.querySelector("body > div > div:nth-child(4) > div:nth-child(2) > div > div.col-md-4 > a > img").src;
+        const nodes = doc.querySelectorAll("h5:nth-child(1) .hover-lighter .no-select");
+        const nodes1 = doc.querySelectorAll("h5:nth-child(2) .hover-lighter .no-select");
+        const nodes2 = doc.querySelectorAll("h5:nth-child(3) .hover-lighter .no-select");
+        let styles = []
 
-        if(nodes1.length>nodes.length){
+        if (nodes1.length > nodes.length) {
           for (let index = 0; index < nodes1.length; index++) {
-            obj.styles.push({name:nodes1[index].textContent,href:nodes1[index].parentNode.href})
+            obj.styles.push({ name: nodes1[index].textContent, href: nodes1[index].parentNode.href })
           }
-          obj.author=nodes2[0].textContent;
-          obj.author_href=nodes2[0].parentNode.href
-        }else{
+          obj.author = nodes2[0].textContent;
+          obj.author_href = nodes2[0].parentNode.href
+        } else {
           for (let index = 0; index < nodes.length; index++) {
-            obj.styles.push({name:nodes[index].textContent,href:nodes1[index]?.parentNode?.href})
+            obj.styles.push({ name: nodes[index].textContent, href: nodes1[index]?.parentNode?.href })
           }
-          obj.author=nodes1[0].textContent;
-          obj.author_href=nodes1[0].parentNode.href
+          obj.author = nodes1[0].textContent;
+          obj.author_href = nodes1[0].parentNode.href
         }
 
         obj.chapters.push({
@@ -361,16 +366,12 @@ export class DbEventService {
           }
 
           obj["id"] = `${id}_${index}`;
-          obj["src"] = `${window.location.origin}/hanime1/page/${id}_${index}/${utf8_to_b64(`https://i.nhentai.net/galleries/${_id}/${index + 1}.${type}`)}`
+          obj["src"] = `https://i.nhentai.net/galleries/${_id}/${index + 1}.${type}`
           data.push(obj)
         }
         return data
       },
       Image: async (id: string) => {
-        const b64_to_utf8 = (str: string) => {
-          return decodeURIComponent(window.atob(str));
-        }
-        const _id = b64_to_utf8(id);
 
         const getImageUrl = async (id: string) => {
           const res = await this._http.fetch_background(id, {
@@ -385,7 +386,7 @@ export class DbEventService {
           const blob = await res.blob();
           return blob
         }
-        const blob = await getImageUrl(_id);
+        const blob = await getImageUrl(id);
         return blob
       }
     });
@@ -398,7 +399,7 @@ export class DbEventService {
       is_edit: false,
       is_locked: false,
       is_cache: false,
-      is_offprint:false,
+      is_offprint: false,
       is_tab: true
     }, {
       List: async (obj: any) => {
@@ -545,7 +546,7 @@ export class DbEventService {
           const blob = await res.blob();
           return blob
         }
-        const url=await getHtmlUrl(_id)
+        const url = await getHtmlUrl(_id)
         const blob = await getImageUrl(url);
         return blob
       }

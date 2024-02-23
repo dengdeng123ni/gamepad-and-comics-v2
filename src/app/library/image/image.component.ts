@@ -23,15 +23,30 @@ export class ImageComponent {
 
   }
 
+  isInViewPort(element) {
+    const viewWidth = window.innerWidth || document.documentElement.clientWidth;
+    const viewHeight =
+          window.innerHeight || document.documentElement.clientHeight;
+    const { top, right, bottom, left } = element.getBoundingClientRect();
 
+    return top >= 0 && left >= 0 && right <= viewWidth && bottom <= viewHeight;
+}
   async getImage(str:string){
     this.url=await this.image.getImageToLocalUrl(this.src)
   }
 
   ngAfterViewInit() {
-    this.getImage(this.src)
+    if(this.isInViewPort(this.box.nativeElement)){
+      this.getImage(this.src)
+    }else{
+      console.log(24324
+        );
+
+    }
   }
   ngOnDestroy() {
+
+
     // this.image.delBlobUrl(this.src,this.url as any);
   }
 }

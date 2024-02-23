@@ -23,12 +23,18 @@ export class DbControllerService {
     details: false,
     pages: false
   }
+
+  caches!: Cache;
   constructor(
     private AppData: AppDataService,
     private DbEvent: DbEventService,
     private webDb: NgxIndexedDBService,
   ) {
+    this.init();
+  }
 
+  async init() {
+    this.caches = await caches.open('image');
   }
 
   async getList(id: string, option?: {
@@ -36,6 +42,7 @@ export class DbControllerService {
   }): Promise<Array<Item>> {
     if (!option) option = { origin: this.AppData.origin }
     if (!option.origin) option.origin = this.AppData.origin;
+    const config = this.DbEvent.Configs[option.origin]
     if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["List"]) {
       if (this.lists[id]) {
         return JSON.parse(JSON.stringify(this.lists[id]))
@@ -43,9 +50,17 @@ export class DbControllerService {
         const b64_to_utf8 = (str: string) => {
           return JSON.parse(decodeURIComponent(escape(window.atob(str))));
         }
-
         const obj = b64_to_utf8(id)
         const res = await this.DbEvent.Events[option.origin]["List"](obj);
+        if (config.is_cache) {
+          const utf8_to_b64 = (str: string) => {
+            return window.btoa(encodeURIComponent(str));
+          }
+          res.forEach(x=>{
+            x.cover = `http://localhost:7700/${config.name}/comics_cover/${x.id}/${utf8_to_b64(x.cover)}`;
+          })
+
+        }
         this.lists[id] = JSON.parse(JSON.stringify(res));
         return res
       }
@@ -58,11 +73,12 @@ export class DbControllerService {
   }) {
     if (!option) option = { origin: this.AppData.origin }
     if (!option.origin) option.origin = this.AppData.origin;
+    const config = this.DbEvent.Configs[option.origin]
     if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Detail"]) {
       if (this.details[id]) {
         return JSON.parse(JSON.stringify(this.details[id]))
       } else {
-        if (this.DbEvent.Configs[option.origin].is_cache) {
+        if (config.is_cache) {
           const res = await firstValueFrom(this.webDb.getByID('details', id))
           if (res) {
             this.details[id] = JSON.parse(JSON.stringify(res));
@@ -70,7 +86,16 @@ export class DbControllerService {
           }
         }
         const res = await this.DbEvent.Events[option.origin]["Detail"](id);
-        firstValueFrom(this.webDb.update('details', res))
+        if (config.is_cache) {
+          const utf8_to_b64 = (str: string) => {
+            return window.btoa(encodeURIComponent(str));
+          }
+          res.cover = `http://localhost:7700/${config.name}/comics_cover/${res.id}/${utf8_to_b64(res.cover)}`;
+          res.chapters.forEach(x=>{
+            x.cover = `http://localhost:7700/${config.name}/chapter_cover/${x.id}/${utf8_to_b64(x.cover)}`;
+          })
+          firstValueFrom(this.webDb.update('details', res))
+        }
         this.details[id] = JSON.parse(JSON.stringify(res));
         return res
       }
@@ -83,11 +108,13 @@ export class DbControllerService {
   }) {
     if (!option) option = { origin: this.AppData.origin }
     if (!option.origin) option.origin = this.AppData.origin;
+    const config = this.DbEvent.Configs[option.origin]
+
     if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Pages"]) {
       if (this.pages[id]) {
         return JSON.parse(JSON.stringify(this.pages[id]))
       } else {
-        if (this.DbEvent.Configs[option.origin].is_cache) {
+        if (config.is_cache) {
           const res = (await firstValueFrom(this.webDb.getByID('pages', id)) as any)
           if (res) {
             this.pages[id] = JSON.parse(JSON.stringify(res.data));
@@ -95,9 +122,16 @@ export class DbControllerService {
           }
         }
         const res = await this.DbEvent.Events[option.origin]["Pages"](id);
-        firstValueFrom(this.webDb.update('pages', { id: id, data: res }))
+        if (config.is_cache) {
+          const utf8_to_b64 = (str: string) => {
+            return window.btoa(encodeURIComponent(str));
+          }
+          res.forEach((x,i)=>{
+            x.src = `http://localhost:7700/${config.name}/page/${x.id}_${i}/${utf8_to_b64(x.src)}`;
+          })
+          firstValueFrom(this.webDb.update('pages', { id: id, data: res }))
+        }
         this.pages[id] = JSON.parse(JSON.stringify(res));
-
         return res
       }
     } else {
@@ -109,9 +143,44 @@ export class DbControllerService {
   }) {
     if (!option) option = { origin: this.AppData.origin }
     if (!option.origin) option.origin = this.AppData.origin;
+    const config = this.DbEvent.Configs[option.origin]
     if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Image"]) {
-      const res = await this.DbEvent.Events[option.origin]["Image"](id)
-      return res
+      if (id.substring(7,21)=="localhost:7700") {
+        let url=id;
+        let str = url.split("/");
+        const _id = str.pop()!;
+        const src = str.join("/");
+        const getBlob = async () => {
+          const b64_to_utf8 = (str: string) => {
+            return decodeURIComponent(window.atob(str));
+          }
+          const id1=b64_to_utf8(_id);
+          const blob = await this.DbEvent.Events[option.origin]["Image"](id1)
+          const response = new Response(blob);
+          const request = new Request(src);
+          await this.caches.put(request, response);
+          const res2 = await caches.match(src);
+          if (res2) {
+            const blob2 = await res2.blob()
+            return blob2
+          } else {
+            return blob
+          }
+        }
+        const res = await caches.match(src);
+        if (res) {
+          const blob = await res.blob()
+          if (blob.size < 1000) {
+            return await getBlob()
+          }
+          return blob
+        } else {
+          return await getBlob()
+        }
+      }else{
+        const res = await this.DbEvent.Events[option.origin]["Image"](id)
+        return res
+      }
     } else {
       return []
     }

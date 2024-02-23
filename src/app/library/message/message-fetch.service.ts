@@ -212,22 +212,19 @@ export class MessageFetchService {
       return null
     }
   }
+  async get_background(url: string): Promise<any> {
+    const res = await this.fetch_background((url), {
+      method: "GET",
+      headers: {
+        "accept": "image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+        "sec-ch-ua": "\"Microsoft Edge\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\""
+      },
+      mode: "cors"
+    });
+    return res
+  }
   async get(url: string): Promise<any> {
-    if(url.includes("hanime1")){
-      const b64_to_utf8 = (str: string) => {
-        return decodeURIComponent(window.atob(str));
-      }
-      const res = await this.fetch_background(b64_to_utf8(url.split("/").pop()), {
-        method: "GET",
-        headers: {
-          "accept": "image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
-          "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-          "sec-ch-ua": "\"Microsoft Edge\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\""
-        },
-        mode: "cors"
-      });
-      return res
-    }
     const res = await this.fetch(url, {
       method: "GET",
       headers: {
