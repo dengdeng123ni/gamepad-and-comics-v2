@@ -34,17 +34,15 @@ export class TemporaryFileService {
 
         let list = [];
         list = this.data.filter((x: { temporary_file_id: any; })=>obj.temporary_file_id==x.temporary_file_id).map((x: any) => {
-          return { id: x.id, cover: `${location.origin}/temporary_file_image/image/${x.chapters[0].pages[0].id}`, title: x.title, subTitle: `${x.chapters[0].title}` }
+          return { id: x.id, cover: x.chapters[0].pages[0].id.toString(), title: x.title, subTitle: `${x.chapters[0].title}` }
         }).slice((obj.page_num-1)*obj.page_size,obj.page_size);
-        console.log(list,this.data);
-
         return list
       },
       Detail: async (id: string) => {
         const obj = this.data.find((x: { id: string; }) => x.id == id)
         return {
           id: obj.id,
-          cover: `${location.origin}/temporary_file_image/image/${obj.chapters[0].pages[0].id}`,
+          cover: obj.chapters[0].pages[0].id.toString(),
           title: obj.title,
           author: "",
           intro: "",
@@ -55,7 +53,7 @@ export class TemporaryFileService {
             }[];
           }) => ({
             id: x.id,
-            cover: `${location.origin}/temporary_file_image/image/${x.pages[0].id}`,
+            cover: x.pages[0].id.toString(),
             title: x.title,
             read: 0,
             selected: false,
@@ -77,8 +75,8 @@ export class TemporaryFileService {
             height: 0
           };
           obj["id"] = `${id}_${index}`;
-          obj["src"] = `${location.origin}/temporary_file_image/image/${x.id}`,
-            obj["width"] = 0;
+          obj["src"] = x.id.toString();
+          obj["width"] = 0;
           obj["height"] = 0;
           data.push(obj)
         }

@@ -36,13 +36,7 @@ export class ImageComponent {
   }
 
   ngAfterViewInit() {
-    if(this.isInViewPort(this.box.nativeElement)){
-      this.getImage(this.src)
-    }else{
-      console.log(24324
-        );
-
-    }
+    this.getImage(this.src)
   }
   ngOnDestroy() {
 
