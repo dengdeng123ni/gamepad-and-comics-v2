@@ -128,7 +128,7 @@ export class ChapterListMode1Component {
     warp.setAttribute('hide', 'false')
     const node = document.getElementById(`${this.data.chapter_id}`)
     node!.scrollIntoView({ behavior: 'instant', block: 'center' })
-    node?.focus()
+    // node?.focus()
     warp.setAttribute('hide', 'false')
   }
 }

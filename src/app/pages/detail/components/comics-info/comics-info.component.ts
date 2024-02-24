@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { CurrentService } from '../../services/current.service';
 import { Router } from '@angular/router';
 import { DataService } from '../../services/data.service';
@@ -16,7 +16,7 @@ interface Info {
 })
 export class ComicsInfoComponent {
   info = null;
-
+  @ViewChild('node_continue')  node_continue!: ElementRef;
   constructor(
     public current: CurrentService,
     public data: DataService,
@@ -42,7 +42,9 @@ export class ComicsInfoComponent {
   continue() {
     this.router.navigate(['/', this.data.comics_id, this.data.chapter_id,])
   }
-
+  ngAfterViewInit() {
+    this.node_continue.nativeElement.focus();
+  }
 
   async getCoverImageHW(src) {
     const utf8_to_b64 = (str: string) => {

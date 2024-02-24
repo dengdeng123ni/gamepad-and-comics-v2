@@ -124,6 +124,7 @@
   color: rgba(232, 230, 227, 0.34);
   transition: 0.3s all;
   cursor: pointer;
+  display: inline;
   &:hover{
     color:#c2185b;
   }
