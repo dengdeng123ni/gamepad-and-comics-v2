@@ -180,6 +180,7 @@ export class DbEventService {
         });
         const json = await res.json();
         const x = json.data;
+
         const httpUrlToHttps = (str: string) => {
           const url = new URL(str);
           if (url.protocol == "http:") {
@@ -194,6 +195,12 @@ export class DbEventService {
           title: x.title,
           author: x.author_name.toString(),
           intro: x.classic_lines,
+          styles: x.styles2.map(x=>(
+            {
+              ...x,
+              href:`https://manga.bilibili.com/classify?from=manga_detail&styles=${x.id}&areas=-1&status=-1&prices=-1&orders=0`
+            }
+          )),
           chapters: x.ep_list.map((c: any) => (
             {
               ...c,

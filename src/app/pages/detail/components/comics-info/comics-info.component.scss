@@ -73,7 +73,7 @@
 
     .author {
       margin-bottom: 12px;
-      color: rgba(255, 255, 255, .34);
+      color: rgba(232, 230, 227, 0.56);
     }
 
     .intro {
@@ -81,7 +81,9 @@
       overflow: auto;
       max-height: 180px;
     }
-
+    .styles{
+      margin-bottom: 12px;
+    }
     .button {
       position: absolute;
       bottom: 0;
@@ -118,7 +120,22 @@
 
 
 }
-
+.item{
+  color: rgba(232, 230, 227, 0.34);
+  transition: 0.3s all;
+  cursor: pointer;
+  &:hover{
+    color:#c2185b;
+  }
+}
+.item:first{
+  margin-left: 4px;
+}
+.item:last-child{
+  .dividing{
+    display:none;
+  }
+}
 .icon {
   display: flex;
   justify-content: center;

@@ -92,7 +92,7 @@ export class DbControllerService {
           }
           res.cover = `http://localhost:7700/${config.name}/comics_cover/${res.id}/${utf8_to_b64(res.cover)}`;
           res.chapters.forEach(x=>{
-            x.cover = `http://localhost:7700/${config.name}/chapter_cover/${x.id}/${utf8_to_b64(x.cover)}`;
+            x.cover = `http://localhost:7700/${config.name}/chapter_cover/${res.id}_${x.id}/${utf8_to_b64(x.cover)}`;
           })
           firstValueFrom(this.webDb.update('details', res))
         }

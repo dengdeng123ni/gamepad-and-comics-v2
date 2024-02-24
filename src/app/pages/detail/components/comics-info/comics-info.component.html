@@ -10,6 +10,12 @@
   <div class="info">
     <div class="title">{{info.title}}</div>
     <div class="author">{{info.author}}</div>
+    <div class="styles" *ngIf="info.styles">
+      <div class="item" *ngFor="let item of info.styles" (click)="on(item.href)">
+        <span class="name">{{item.name}}</span>
+        <span class="dividing">,</span>
+      </div>
+    </div>
     <div class="intro">
       {{info.intro}}
     </div>

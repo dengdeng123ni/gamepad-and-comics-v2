@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener(
       if (index > -1) {
         const obj = data[index];
         setTimeout(() => {
-          chrome.tabs.remove(obj.tab.id)
+          if (obj.data && obj.data.type && "website_proxy_response_html" == obj.data.type) chrome.tabs.remove(obj.tab.id)
         }, 10000)
         chrome.tabs.sendMessage(obj.tab.id, obj.data);
         data = [];
@@ -45,18 +45,18 @@ chrome.commands.onCommand.addListener((command) => {
     return btoa(encodeURIComponent(str));
   }
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    const url2=tabs[0].url;
+    const url2 = tabs[0].url;
     const url = `${gamepad_and_comics_url}/specify_link/${utf8_to_b64(tabs[0].url)}`
     chrome.tabs.query({}, function (tabs) {
-      const index= tabs.findIndex(x => x.title == "GamepadAndComicsV2")
-      if(index>-1){
+      const index = tabs.findIndex(x => x.title == "GamepadAndComicsV2")
+      if (index > -1) {
         chrome.tabs.sendMessage(tabs[index].id, {
           type: "specify_link",
           data: {
             url: url2
           }
         });
-      }else{
+      } else {
         chrome.tabs.create({
           active: true,
           url: url
