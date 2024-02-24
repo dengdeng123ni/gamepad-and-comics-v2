@@ -8,6 +8,7 @@ import { IndexService } from './index.service';
 import { ChaptersListService } from '../../components/chapters-list/chapters-list.service';
 import { ToolbarOptionService } from '../../components/toolbar-option/toolbar-option.service';
 import { CustomGridService } from '../../components/custom-grid/custom-grid.service';
+import { HistoryService } from 'src/app/library/public-api';
 
 @Component({
   selector: 'app-index',
@@ -24,7 +25,8 @@ export class IndexComponent {
     public ChaptersList: ChaptersListService,
     public index: IndexService,
     public ToolbarOption: ToolbarOptionService,
-    public CustomGrid: CustomGridService
+    public CustomGrid: CustomGridService,
+
   ) {
     document.body.setAttribute("router", "reader")
     document.body.setAttribute("locked_region", "reader")

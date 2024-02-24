@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
-import { DbControllerService, ImageService, MessageFetchService, PagesItem } from 'src/app/library/public-api';
+import { DbControllerService, HistoryService, ImageService, MessageFetchService, PagesItem } from 'src/app/library/public-api';
 import { Subject, firstValueFrom } from 'rxjs';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 
@@ -20,7 +20,8 @@ export class CurrentService {
     public data: DataService,
     public webDb: NgxIndexedDBService,
     public image: ImageService,
-    public _http: MessageFetchService
+    public _http: MessageFetchService,
+    public history: HistoryService
   ) {
     this.reader_mode_change$.subscribe(x => {
       if (this.reader_modes.includes(x)) this.data.comics_config.reader_mode = x;
@@ -515,7 +516,8 @@ export class CurrentService {
   close() {
     this._setWebDbComicsConfig(this.data.comics_id);
     this.data.is_init_free = false;
-    this.webDb.openCursor
+    const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id)
+    this.history.update_progress(this.data.comics_id, `${this.data.is_offprint ? Math.ceil((this.data.page_index / this.data.pages.length)*100) :  Math.ceil((index / this.data.chapters.length)*100)}%`)
   }
 
 

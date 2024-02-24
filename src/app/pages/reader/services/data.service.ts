@@ -22,6 +22,7 @@ export class DataService {
   is_locked = true;
   is_cache = false;
   is_local_record = true;
+  is_offprint=false;
 
   comics_config = {
     reader_mode: "double_page_reader",
@@ -40,5 +41,6 @@ export class DataService {
     this.is_edit = obj.is_edit;
     this.is_locked = obj.is_locked;
     this.is_cache = obj.is_cache;
+    this.is_offprint=obj.is_offprint;
   }
 }
