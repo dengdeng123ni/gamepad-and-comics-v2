@@ -82,6 +82,7 @@
       max-height: 180px;
     }
     .styles{
+     color: rgba(232, 230, 227, 0.34);
       margin-bottom: 12px;
     }
     .button {
@@ -121,12 +122,14 @@
 
 }
 .item{
-  color: rgba(232, 230, 227, 0.34);
   transition: 0.3s all;
-  cursor: pointer;
   display: inline;
+
+}
+[href]{
   &:hover{
     color:#c2185b;
+    cursor: pointer;
   }
 }
 .item:first{

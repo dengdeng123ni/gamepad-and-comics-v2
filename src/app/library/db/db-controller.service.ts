@@ -10,6 +10,7 @@ interface Events {
   Pages: Function;
   Image: Function
 }
+
 @Injectable({
   providedIn: 'root'
 })
@@ -56,7 +57,7 @@ export class DbControllerService {
           const utf8_to_b64 = (str: string) => {
             return window.btoa(encodeURIComponent(str));
           }
-          res.forEach(x=>{
+          res.forEach(x => {
             x.cover = `http://localhost:7700/${config.name}/comics_cover/${x.id}/${utf8_to_b64(x.cover)}`;
           })
 
@@ -79,9 +80,10 @@ export class DbControllerService {
         return JSON.parse(JSON.stringify(this.details[id]))
       } else {
         if (config.is_cache) {
-          const res = await firstValueFrom(this.webDb.getByID('details', id))
+          const res:any = await firstValueFrom(this.webDb.getByID('details', id))
           if (res) {
             this.details[id] = JSON.parse(JSON.stringify(res));
+            res.option = { origin: option.origin, is_offprint: config.is_offprint };
             return res
           }
         }
@@ -91,12 +93,17 @@ export class DbControllerService {
             return window.btoa(encodeURIComponent(str));
           }
           res.cover = `http://localhost:7700/${config.name}/comics_cover/${res.id}/${utf8_to_b64(res.cover)}`;
-          res.chapters.forEach(x=>{
+          res.chapters.forEach(x => {
             x.cover = `http://localhost:7700/${config.name}/chapter_cover/${res.id}_${x.id}/${utf8_to_b64(x.cover)}`;
           })
+          res.option = { origin: option.origin, is_offprint: config.is_offprint };
           firstValueFrom(this.webDb.update('details', res))
         }
+        if (!Array.isArray(res.author)) {
+          res.author = [{ name: res.author }]
+        }
         this.details[id] = JSON.parse(JSON.stringify(res));
+
         return res
       }
     } else {
@@ -126,7 +133,7 @@ export class DbControllerService {
           const utf8_to_b64 = (str: string) => {
             return window.btoa(encodeURIComponent(str));
           }
-          res.forEach((x,i)=>{
+          res.forEach((x, i) => {
             x.src = `http://localhost:7700/${config.name}/page/${x.id}_${i}/${utf8_to_b64(x.src)}`;
           })
           firstValueFrom(this.webDb.update('pages', { id: id, data: res }))
@@ -145,8 +152,8 @@ export class DbControllerService {
     if (!option.origin) option.origin = this.AppData.origin;
     const config = this.DbEvent.Configs[option.origin]
     if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Image"]) {
-      if (id.substring(7,21)=="localhost:7700") {
-        let url=id;
+      if (id.substring(7, 21) == "localhost:7700") {
+        let url = id;
         let str = url.split("/");
         const _id = str.pop()!;
         const src = str.join("/");
@@ -154,7 +161,7 @@ export class DbControllerService {
           const b64_to_utf8 = (str: string) => {
             return decodeURIComponent(window.atob(str));
           }
-          const id1=b64_to_utf8(_id);
+          const id1 = b64_to_utf8(_id);
           const blob = await this.DbEvent.Events[option.origin]["Image"](id1)
           const response = new Response(blob);
           const request = new Request(src);
@@ -177,12 +184,14 @@ export class DbControllerService {
         } else {
           return await getBlob()
         }
-      }else{
+      } else {
         const res = await this.DbEvent.Events[option.origin]["Image"](id)
         return res
       }
     } else {
-      return []
+      return new Blob([], {
+        type: 'image/jpeg'
+      })
     }
   }
 }

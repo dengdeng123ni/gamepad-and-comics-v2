@@ -1,10 +1,11 @@
 import { Component, HostListener, Query } from '@angular/core';
-import { ContextMenuControllerService, DbControllerService, MessageControllerService, MessageEventService, QueryService, SelectDataSourceService } from './library/public-api';
+import { ContextMenuControllerService, DbControllerService, ImageService, MessageControllerService, MessageEventService, QueryService, SelectDataSourceService } from './library/public-api';
 import { GamepadControllerService } from './library/gamepad/gamepad-controller.service';
 import { GamepadLeftCircleToolbarService } from './library/event/gamepad-left-circle-toolbar/gamepad-left-circle-toolbar.service';
 import { GamepadEventService } from './library/gamepad/gamepad-event.service';
 import { ChildrenOutletContexts, RouterOutlet } from '@angular/router';
 import { animate, animateChild, group, query, style, transition, trigger } from '@angular/animations';
+import { WebFileService } from './library/web-file/web-file.service';
 export const slideInAnimation =
   trigger('routeAnimation', [
     transition('* <=> *', [
@@ -59,7 +60,9 @@ export class AppComponent {
     public ContextMenuController: ContextMenuControllerService,
     public SelectDataSource: SelectDataSourceService,
     public query: QueryService,
-    private contexts: ChildrenOutletContexts
+    private contexts: ChildrenOutletContexts,
+    public ccc: WebFileService,
+    public image: ImageService
   ) {
     GamepadEvent.registerGlobalEvent({
       LEFT_ANALOG_PRESS: () => GamepadLeftCircleToolbar.isToggle()
@@ -73,6 +76,7 @@ export class AppComponent {
     this.init();
 
   }
+
   init() {
     this.getDataSource();
     this.getPulgLoadingFree();
@@ -103,16 +107,16 @@ export class AppComponent {
 
 }
 
-if (typeof Worker !== 'undefined') {
-  // Create a new
-  const worker = new Worker(new URL('./app.worker', import.meta.url));
-  worker.onmessage = ({ data }) => {
-    console.log(`page got message: ${data}`);
-  };
-  worker.postMessage('hello');
+// if (typeof Worker !== 'undefined') {
+//   // Create a new
+//   const worker = new Worker(new URL('./app.worker', import.meta.url));
+//   worker.onmessage = ({ data }) => {
+//     console.log(`page got message: ${data}`);
+//   };
+//   worker.postMessage('hello');
 
-} else {
-  // Web Workers are not supported in this environment.
-  // You should add a fallback so that your program still executes correctly.
+// } else {
+//   // Web Workers are not supported in this environment.
+//   // You should add a fallback so that your program still executes correctly.
 
-}
+// }

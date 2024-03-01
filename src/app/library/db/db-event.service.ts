@@ -191,6 +191,7 @@ export class DbEventService {
         }
         return {
           id: x.id,
+          href:`https://manga.bilibili.com/detail/mc${x.id}`,
           cover: httpUrlToHttps(x.vertical_cover),
           title: x.title,
           author: x.author_name.toString(),

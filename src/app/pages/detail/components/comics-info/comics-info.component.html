@@ -4,15 +4,20 @@
     <button mat-button [attr.region]="'continue'" id="continue" [attr.select]="true"  [attr.default]="true" [disabled]="!info.title" (click)="continue()" cdkFocusInitial #node_continue>继续</button>
     <!-- matTooltipPosition="below" [matTooltipShowDelay]="i18n.tooltipShowDelay" [matTooltip]="info.chapter.title"  -->
   </div>
-  <div class="img">
-    <app-image loading="lazy" [width]="info.width" [height]="info.height" [src]="info.cover" alt="" />
+  <div class="img" [attr.href]="info.href" (click)="on($event)">
+    <app-image [objectFit]="'cover'" loading="lazy" [width]="info.width" [height]="info.height" [src]="info.cover" alt="" />
   </div>
   <div class="info">
-    <div class="title">{{info.title}}</div>
-    <div class="author">{{info.author}}</div>
+    <div class="title" [attr.href]="info.href" (click)="on($event)">{{info.title}}</div>
+    <div class="author" (click)="on($event)">
+      <div class="item" *ngFor="let item of info.author" (click)="on($event)">
+        <span class="name" [attr.href]="item.href">{{item.name}}</span>
+        <span class="dividing">,</span>
+      </div>
+    </div>
     <div class="styles" *ngIf="info.styles">
-      <div class="item" *ngFor="let item of info.styles" (click)="on(item.href)">
-        <span class="name">{{item.name}}</span>
+      <div class="item" *ngFor="let item of info.styles" (click)="on($event)">
+        <span class="name" [attr.href]="item.href">{{item.name}}</span>
         <span class="dividing">,</span>
       </div>
     </div>

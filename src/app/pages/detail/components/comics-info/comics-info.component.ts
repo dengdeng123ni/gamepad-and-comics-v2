@@ -32,9 +32,11 @@ export class ComicsInfoComponent {
     this.info.height = height;
   }
   on(e){
-    console.log(e);
+    if(e?.srcElement?.getAttribute('href')){
+      window.open(e?.srcElement?.getAttribute('href'),'_blank')
+    }else{
 
-    window.open(e,'_blank')
+    }
   }
   back() {
     this.router.navigate(['/'])

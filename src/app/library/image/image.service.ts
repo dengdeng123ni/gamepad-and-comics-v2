@@ -25,6 +25,10 @@ export class ImageService {
     const blob = await this.getImageBlob(src);
     url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
     this._data[id] = url;
+    // setTimeout(()=>{
+    //   URL.revokeObjectURL(this._data[id])
+    //   this._data[id] = undefined;
+    // },10000)
     return url
   }
 

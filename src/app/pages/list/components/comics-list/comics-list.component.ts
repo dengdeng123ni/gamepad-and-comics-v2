@@ -3,6 +3,8 @@ import { DataService } from '../../services/data.service';
 import { CurrentService } from '../../services/current.service';
 import { Router } from '@angular/router';
 import { Subject, throttleTime } from 'rxjs';
+import { ContextMenuEventService } from 'src/app/library/public-api';
+import { WebFileService } from 'src/app/library/web-file/web-file.service';
 declare const window: any;
 interface Item {
   id: string | number,
@@ -22,9 +24,26 @@ interface Item {
 export class ComicsListComponent {
   constructor(public data: DataService,
     public current: CurrentService,
-    public router:Router
+    public ContextMenuEvent: ContextMenuEventService,
+    public router: Router,
+    public WebFile:WebFileService
   ) {
 
+    ContextMenuEvent.register('comics_item', {
+      open: () => {
+        // this.close()
+      },
+      close: (e: any) => {
+
+      },
+      on: async (e: { value: string; id: string; }) => {
+        WebFile.downloadComics(e.value,{type:'PDF'})
+      },
+      menu: [
+        { name: "下载本地", id: "thumbnail" },
+        // { name: "delete", id: "delete" },
+      ]
+    })
   }
   on($event: MouseEvent) {
     const node = $event.target as HTMLElement;
@@ -40,7 +59,7 @@ export class ComicsListComponent {
       }
       const target_node = getTargetNode(node);
       const index = parseInt(target_node.getAttribute("index") as string);
-      const data=this.data.list[index]
+      const data = this.data.list[index]
       this.router.navigate(['/detail', data.id]);
     }
   }
@@ -54,11 +73,11 @@ export class ComicsListComponent {
     node!.addEventListener('scroll', (e: any) => {
       this.scroll$.next(e)
     }, true)
-    this.scroll$.pipe(throttleTime(300)).subscribe(e=>{
+    this.scroll$.pipe(throttleTime(300)).subscribe(e => {
       this.handleScroll(e);
     })
   }
-  scroll$=new Subject();
+  scroll$ = new Subject();
   getData() {
     if (this.data.list.length) {
       this.add_pages();
