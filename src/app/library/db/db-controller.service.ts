@@ -26,6 +26,8 @@ export class DbControllerService {
   }
 
   caches!: Cache;
+
+  image_url = {};
   constructor(
     private AppData: AppDataService,
     private DbEvent: DbEventService,
@@ -53,11 +55,9 @@ export class DbControllerService {
         }
         const obj = b64_to_utf8(id)
         let res = await this.DbEvent.Events[option.origin]["List"](obj);
-        const utf8_to_b64 = (str: string) => {
-          return window.btoa(encodeURIComponent(str));
-        }
         res.forEach(x => {
-          x.cover = `http://localhost:7700/${config.name}/comics_cover/${x.id}/${utf8_to_b64(x.cover)}`;
+          this.image_url[`${config.name}_comics_${x.id}`] = x.cover;
+          x.cover = `http://localhost:7700/${config.name}/comics/${x.id}`;
         })
         this.lists[id] = JSON.parse(JSON.stringify(res));
         return res
@@ -77,7 +77,7 @@ export class DbControllerService {
         return JSON.parse(JSON.stringify(this.details[id]))
       } else {
         if (config.is_cache) {
-          let res:any = await firstValueFrom(this.webDb.getByID('details', id))
+          let res: any = await firstValueFrom(this.webDb.getByID('details', id))
           if (res) {
             this.details[id] = JSON.parse(JSON.stringify(res));
             res.option = { origin: option.origin, is_offprint: config.is_offprint }
@@ -89,9 +89,11 @@ export class DbControllerService {
           const utf8_to_b64 = (str: string) => {
             return window.btoa(encodeURIComponent(str));
           }
-          res.cover = `http://localhost:7700/${config.name}/comics_cover/${res.id}/${utf8_to_b64(res.cover)}`;
+          this.image_url[`${config.name}_comics_${res.id}`] = res.cover;
+          res.cover = `http://localhost:7700/${config.name}/comics/${res.id}`;
           res.chapters.forEach(x => {
-            x.cover = `http://localhost:7700/${config.name}/chapter_cover/${res.id}/${x.id}/${utf8_to_b64(x.cover)}`;
+            this.image_url[`${config.name}_chapter_${res.id}_${x.id}`] = x.cover;
+            x.cover = `http://localhost:7700/${config.name}/chapter/${res.id}/${x.id}`;
           })
           res.option = { origin: option.origin, is_offprint: config.is_offprint };
           firstValueFrom(this.webDb.update('details', res))
@@ -99,11 +101,7 @@ export class DbControllerService {
         if (!Array.isArray(res.author)) {
           res.author = [{ name: res.author }]
         }
-        console.log(213);
-
         this.details[id] = JSON.parse(JSON.stringify(res));
-        console.log(res);
-
         return res
       }
     } else {
@@ -134,6 +132,7 @@ export class DbControllerService {
             return window.btoa(encodeURIComponent(str));
           }
           res.forEach((x, i) => {
+            this.image_url[`${config.name}_page_${id}_${i}`] = x.src;
             x.src = `http://localhost:7700/${config.name}/page/${id}/${i}/${utf8_to_b64(x.src)}`;
           })
           firstValueFrom(this.webDb.update('pages', { id: id, data: res }))
@@ -151,24 +150,57 @@ export class DbControllerService {
     if (!option) option = { origin: this.AppData.origin }
     if (!option.origin) option.origin = this.AppData.origin;
     const config = this.DbEvent.Configs[option.origin]
-    console.log(id);
-
     if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Image"]) {
       if (id.substring(7, 21) == "localhost:7700") {
         let url = id;
-        let str = url.split("/");
-        const _id = str.pop()!;
-        const src = str.join("/");
         const getBlob = async () => {
-          const b64_to_utf8 = (str: string) => {
-            return decodeURIComponent(window.atob(str));
+          const getImageURL = async (id: string) => {
+            // return
+            const arr = id.split("/")
+            const name = arr[3];
+            const type = arr[4];
+            if (type == "page") {
+              const chapter_id = arr[5];
+              const index = arr[5];
+              const url = this.image_url[`${name}_page_${chapter_id}_${index}`];
+              if (url) {
+                return url
+              } else {
+                let resc = await this.DbEvent.Events[option.origin]["Pages"](id);
+                resc.forEach((x, i) => {
+                  this.image_url[`${config.name}_page_${id}_${i}`] = x.src;
+                })
+                return this.image_url[`${name}_page_${chapter_id}_${index}`];
+              }
+            } else if (type == "comics") {
+              const comics_id = arr[5];
+              const url = this.image_url[`${name}_comics_${comics_id}`];
+              if (url) {
+                return url
+              } else {
+                await this.getDetail(comics_id)
+                return this.image_url[`${name}_comics_${comics_id}`];
+              }
+            } else if (type == "chapter") {
+              const comics_id = arr[5];
+              const chapter_id = arr[6];
+              const url = this.image_url[`${name}_chapter_${comics_id}_${chapter_id}`];
+              if (url) {
+                return url
+              } else {
+                await this.getDetail(comics_id)
+                return this.image_url[`${name}_chapter_${comics_id}_${chapter_id}`];
+              }
+            } else {
+              return ""
+            }
           }
-          const id1 = b64_to_utf8(_id);
+          const id1 = await getImageURL(url);
           const blob = await this.DbEvent.Events[option.origin]["Image"](id1)
           const response = new Response(blob);
-          const request = new Request(src);
+          const request = new Request(url);
           await this.caches.put(request, response);
-          const res2 = await caches.match(src);
+          const res2 = await caches.match(url);
           if (res2) {
             const blob2 = await res2.blob()
             return blob2
@@ -176,7 +208,7 @@ export class DbControllerService {
             return blob
           }
         }
-        const res = await caches.match(src);
+        const res = await caches.match(url);
         if (res) {
           const blob = await res.blob()
           if (blob.size < 1000) {

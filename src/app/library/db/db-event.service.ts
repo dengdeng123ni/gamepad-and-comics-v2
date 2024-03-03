@@ -33,7 +33,7 @@ export class DbEventService {
     public _http: MessageFetchService,
   ) {
     setTimeout(() => {
-      console.log(this.Configs);
+      // console.log(this.Configs);
       // http://localhost:7700/名称/comics_cover/漫画ID/图片信息
       // http://localhost:7700/名称/chapter_cover/章节ID/图片信息
       // http://localhost:7700/名称/page/页面ID/图片信息
@@ -260,8 +260,6 @@ export class DbEventService {
               "method": "POST",
             });
             const json = await res.json();
-            console.log(json);
-
             return `${json.data[0].url}?token=${json.data[0].token}`
           }
           const url = await getImageUrl(id);
