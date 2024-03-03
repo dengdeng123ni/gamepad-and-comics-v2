@@ -37,7 +37,8 @@ export class ComicsListComponent {
 
       },
       on: async (e: { value: string; id: string; }) => {
-        WebFile.downloadComics(e.value,{type:'PDF'})
+        WebFile.downloadComics(e.value)
+        // ,{type:'PDF'}
       },
       menu: [
         { name: "下载本地", id: "thumbnail" },

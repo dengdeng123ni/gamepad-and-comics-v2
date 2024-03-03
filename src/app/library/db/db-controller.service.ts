@@ -52,16 +52,13 @@ export class DbControllerService {
           return JSON.parse(decodeURIComponent(escape(window.atob(str))));
         }
         const obj = b64_to_utf8(id)
-        const res = await this.DbEvent.Events[option.origin]["List"](obj);
-        if (config.is_cache) {
-          const utf8_to_b64 = (str: string) => {
-            return window.btoa(encodeURIComponent(str));
-          }
-          res.forEach(x => {
-            x.cover = `http://localhost:7700/${config.name}/comics_cover/${x.id}/${utf8_to_b64(x.cover)}`;
-          })
-
+        let res = await this.DbEvent.Events[option.origin]["List"](obj);
+        const utf8_to_b64 = (str: string) => {
+          return window.btoa(encodeURIComponent(str));
         }
+        res.forEach(x => {
+          x.cover = `http://localhost:7700/${config.name}/comics_cover/${x.id}/${utf8_to_b64(x.cover)}`;
+        })
         this.lists[id] = JSON.parse(JSON.stringify(res));
         return res
       }
@@ -80,21 +77,21 @@ export class DbControllerService {
         return JSON.parse(JSON.stringify(this.details[id]))
       } else {
         if (config.is_cache) {
-          const res:any = await firstValueFrom(this.webDb.getByID('details', id))
+          let res:any = await firstValueFrom(this.webDb.getByID('details', id))
           if (res) {
             this.details[id] = JSON.parse(JSON.stringify(res));
-            res.option = { origin: option.origin, is_offprint: config.is_offprint };
+            res.option = { origin: option.origin, is_offprint: config.is_offprint }
             return res
           }
         }
-        const res = await this.DbEvent.Events[option.origin]["Detail"](id);
+        let res = await this.DbEvent.Events[option.origin]["Detail"](id);
         if (config.is_cache) {
           const utf8_to_b64 = (str: string) => {
             return window.btoa(encodeURIComponent(str));
           }
           res.cover = `http://localhost:7700/${config.name}/comics_cover/${res.id}/${utf8_to_b64(res.cover)}`;
           res.chapters.forEach(x => {
-            x.cover = `http://localhost:7700/${config.name}/chapter_cover/${res.id}_${x.id}/${utf8_to_b64(x.cover)}`;
+            x.cover = `http://localhost:7700/${config.name}/chapter_cover/${res.id}/${x.id}/${utf8_to_b64(x.cover)}`;
           })
           res.option = { origin: option.origin, is_offprint: config.is_offprint };
           firstValueFrom(this.webDb.update('details', res))
@@ -102,7 +99,10 @@ export class DbControllerService {
         if (!Array.isArray(res.author)) {
           res.author = [{ name: res.author }]
         }
+        console.log(213);
+
         this.details[id] = JSON.parse(JSON.stringify(res));
+        console.log(res);
 
         return res
       }
@@ -122,19 +122,19 @@ export class DbControllerService {
         return JSON.parse(JSON.stringify(this.pages[id]))
       } else {
         if (config.is_cache) {
-          const res = (await firstValueFrom(this.webDb.getByID('pages', id)) as any)
+          let res = (await firstValueFrom(this.webDb.getByID('pages', id)) as any)
           if (res) {
             this.pages[id] = JSON.parse(JSON.stringify(res.data));
             return res.data
           }
         }
-        const res = await this.DbEvent.Events[option.origin]["Pages"](id);
+        let res = await this.DbEvent.Events[option.origin]["Pages"](id);
         if (config.is_cache) {
           const utf8_to_b64 = (str: string) => {
             return window.btoa(encodeURIComponent(str));
           }
           res.forEach((x, i) => {
-            x.src = `http://localhost:7700/${config.name}/page/${x.id}_${i}/${utf8_to_b64(x.src)}`;
+            x.src = `http://localhost:7700/${config.name}/page/${id}/${i}/${utf8_to_b64(x.src)}`;
           })
           firstValueFrom(this.webDb.update('pages', { id: id, data: res }))
         }
@@ -151,6 +151,8 @@ export class DbControllerService {
     if (!option) option = { origin: this.AppData.origin }
     if (!option.origin) option.origin = this.AppData.origin;
     const config = this.DbEvent.Configs[option.origin]
+    console.log(id);
+
     if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Image"]) {
       if (id.substring(7, 21) == "localhost:7700") {
         let url = id;

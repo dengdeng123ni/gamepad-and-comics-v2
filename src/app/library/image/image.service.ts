@@ -73,7 +73,7 @@ export class ImageService {
 
 
   async getImageToLocalUrl(src: string) {
-    let url = await this.getImageBlobUrl(src);
+    let url = await this.getImageBase64(src);
     return url
   }
 

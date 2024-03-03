@@ -100,11 +100,11 @@ export class WebFileService {
       return title.replace(/[\r\n]/g, "").replace(/  +/g, ' ').trim()
     }
     let { chapters, title, option: config } = await this.DbController.getDetail(comics_id)
-    if (option.chapters_ids && option.chapters_ids.length) chapters = chapters.filetr(x => option.chapters_ids.includes(x.id))
+    if (option?.chapters_ids?.length) chapters = chapters.filetr(x => option.chapters_ids.includes(x.id))
     for (let index = 0; index < chapters.length; index++) {
       const x = chapters[index];
       const pages = await this.DbController.getPages(x.id);
-      if (option.type) {
+      if (option?.type) {
         const pageOrder = false;
         const x = chapters[index]
         const pages = await this.DbController.getPages(x.id);
