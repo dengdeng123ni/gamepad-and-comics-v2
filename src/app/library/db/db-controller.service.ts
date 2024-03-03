@@ -128,12 +128,9 @@ export class DbControllerService {
         }
         let res = await this.DbEvent.Events[option.origin]["Pages"](id);
         if (config.is_cache) {
-          const utf8_to_b64 = (str: string) => {
-            return window.btoa(encodeURIComponent(str));
-          }
           res.forEach((x, i) => {
             this.image_url[`${config.name}_page_${id}_${i}`] = x.src;
-            x.src = `http://localhost:7700/${config.name}/page/${id}/${i}/${utf8_to_b64(x.src)}`;
+            x.src = `http://localhost:7700/${config.name}/page/${id}/${i}`;
           })
           firstValueFrom(this.webDb.update('pages', { id: id, data: res }))
         }
