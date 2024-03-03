@@ -95,12 +95,13 @@ export class DbControllerService {
             this.image_url[`${config.name}_chapter_${res.id}_${x.id}`] = x.cover;
             x.cover = `http://localhost:7700/${config.name}/chapter/${res.id}/${x.id}`;
           })
-          res.option = { origin: option.origin, is_offprint: config.is_offprint };
+
           firstValueFrom(this.webDb.update('details', res))
         }
         if (!Array.isArray(res.author)) {
           res.author = [{ name: res.author }]
         }
+        res.option = { origin: option.origin, is_offprint: config.is_offprint };
         this.details[id] = JSON.parse(JSON.stringify(res));
         return res
       }
@@ -152,20 +153,19 @@ export class DbControllerService {
         let url = id;
         const getBlob = async () => {
           const getImageURL = async (id: string) => {
-            // return
             const arr = id.split("/")
             const name = arr[3];
             const type = arr[4];
             if (type == "page") {
               const chapter_id = arr[5];
-              const index = arr[5];
+              const index = arr[6];
               const url = this.image_url[`${name}_page_${chapter_id}_${index}`];
               if (url) {
                 return url
               } else {
-                let resc = await this.DbEvent.Events[option.origin]["Pages"](id);
+                let resc = await this.DbEvent.Events[option.origin]["Pages"](chapter_id);
                 resc.forEach((x, i) => {
-                  this.image_url[`${config.name}_page_${id}_${i}`] = x.src;
+                  this.image_url[`${name}_page_${chapter_id}_${i}`] = x.src;
                 })
                 return this.image_url[`${name}_page_${chapter_id}_${index}`];
               }

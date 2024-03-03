@@ -49,8 +49,25 @@ export class ImageService {
 
 
   async getImageBlob(src) {
+    if (src.substring(0, 10) == "data:image") {
+      return this.base64ToBlob(src)
+    }
     const blob = await this.DbController.getImage(src);
     return blob
+  }
+  base64ToBlob(base64Data) {
+    let arr = base64Data.split(','),
+      fileType = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      l = bstr.length,
+      u8Arr = new Uint8Array(l);
+
+    while (l--) {
+      u8Arr[l] = bstr.charCodeAt(l);
+    }
+    return new Blob([u8Arr], {
+      type: fileType
+    });
   }
   async getImageBase64(src) {
     if (!src) return ""

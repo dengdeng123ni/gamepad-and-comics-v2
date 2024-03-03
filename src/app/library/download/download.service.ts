@@ -44,13 +44,13 @@ export class DownloadService {
   }
   async download({ type, name, images = [''], pageOrder = false, isFirstPageCover = false, page }) {
     if (type == "PDF") {
-      await this.pdf({ name, images, pageOrder, isFirstPageCover, page })
+      const blob=await this.pdf({ name, images, pageOrder, isFirstPageCover, page })
       const srcs = blob.type.split("/");
       const path = `${name}.${srcs.at(-1)}`;
       saveAs(blob, path);
     }
     if (type == "PPT") {
-      await this.ppt({ name, images, pageOrder, isFirstPageCover, page })
+      const blob= await this.ppt({ name, images, pageOrder, isFirstPageCover, page })
       const path = `${name}.pptx`;
       saveAs(blob, path);
     }
@@ -73,7 +73,7 @@ export class DownloadService {
       })
     }
     if (type == "EPUB") {
-      await this.epub({ name, images, pageOrder, isFirstPageCover, page })
+      const blob= await this.epub({ name, images, pageOrder, isFirstPageCover, page })
       saveAs(blob, `${name}.epub`);
     }
   }

@@ -250,17 +250,21 @@ export class DbEventService {
           return blob
         }else{
           const getImageUrl = async (id: string) => {
-            const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web", {
-              "headers": {
-                "accept": "application/json, text/plain, */*",
-                "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-                "content-type": "application/json;charset=UTF-8"
-              },
-              "body": `{\"urls\":\"[\\\"${id}\\\"]\"}`,
-              "method": "POST",
-            });
-            const json = await res.json();
-            return `${json.data[0].url}?token=${json.data[0].token}`
+            try {
+              const res = await this._http.fetch("https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web", {
+                "headers": {
+                  "accept": "application/json, text/plain, */*",
+                  "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+                  "content-type": "application/json;charset=UTF-8"
+                },
+                "body": `{\"urls\":\"[\\\"${id}\\\"]\"}`,
+                "method": "POST",
+              });
+              const json = await res.json();
+              return `${json.data[0].url}?token=${json.data[0].token}`
+            } catch (error) {
+              return await getImageUrl(id)
+            }
           }
           const url = await getImageUrl(id);
           const res = await this._http.get(url);

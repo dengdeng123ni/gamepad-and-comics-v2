@@ -46,8 +46,6 @@ export class WebFileService {
 
   }
   async post(path, blob): Promise<boolean> {
-    console.log(path);
-
     const obj = this.paths.find(x => x.path == path)
     if (!obj) {
       const arr = path.split("/")

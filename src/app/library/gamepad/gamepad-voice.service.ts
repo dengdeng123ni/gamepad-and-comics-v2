@@ -81,7 +81,13 @@ export class GamepadVoiceService {
     }
     return z / s * 2;
   }
+  is_onf = false;
   init(_str: string) {
+    if (this.is_onf) return
+    else this.is_onf = true;
+    setTimeout(() => {
+      this.is_onf = false;
+    }, 1000)
     const region = document.body.getAttribute("locked_region");
     const str = this.GamepadEvent.configs[region].region.map(x => `[region=${x}][ng-reflect-message]`).toString();
     const nodes = document.querySelectorAll(str)
@@ -134,7 +140,7 @@ export class GamepadVoiceService {
 
         list.sort((a, b) => b.similarity - a.similarity)
         if (!list[0] || list[0] && list[0].similarity < 0.01) return
-        const node:any = nodes[list[0].index];
+        const node: any = nodes[list[0].index];
         const type = node.getAttribute("type")
         if (type == 'chip' || type == 'slide') {
           node.querySelector("button").click();
@@ -183,7 +189,7 @@ export class GamepadVoiceService {
         if (list[0].similarity == 0) {
 
           if (newStr.length < 2) {
-            const node:any = nodes[list[0].index];
+            const node: any = nodes[list[0].index];
             const type = node.getAttribute("type")
             if (type == 'chip' || type == 'slide') {
               node.querySelector("button").click();
