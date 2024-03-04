@@ -132,6 +132,7 @@ export class DbControllerService {
           res.forEach((x, i) => {
             this.image_url[`${config.name}_page_${id}_${i}`] = x.src;
             x.src = `http://localhost:7700/${config.name}/page/${id}/${i}`;
+            x.index=i;
           })
           firstValueFrom(this.webDb.update('pages', { id: id, data: res }))
         }

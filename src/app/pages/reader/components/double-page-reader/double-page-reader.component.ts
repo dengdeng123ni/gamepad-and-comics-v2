@@ -152,8 +152,6 @@ export class DoublePageReaderComponent {
 
     this.list = this.data.pages as any;
     this.init2();
-    console.log(123);
-
 
     this.change$ = this.current.change().subscribe(x => {
       this.zoom(1);
@@ -181,10 +179,8 @@ export class DoublePageReaderComponent {
 
   }
   async init2() {
-    console.log(this.data.page_index);
-
-    if(Number.isNaN(this.data.page_index)) this.data.page_index=0;
-    this.index=this.data.page_index;
+    if (Number.isNaN(this.data.page_index)) this.data.page_index = 0;
+    this.index = this.data.page_index;
     await this.change(this.data.page_index)
     let cc = document.querySelector("#double_page_reader") as any
     cc.style.opacity = 1;
@@ -291,17 +287,7 @@ export class DoublePageReaderComponent {
 
 
   slidePrevTransitionEnd(swiper: Array<Swiper>) {
-    if (this.isMobile) {
-      this.data.comics_config.is_page_direction ? this.previous() : this.next();
-    } else {
-      if (!this.isWaitPrevious) {
-        this.isWaitPrevious = true;
-        setTimeout(() => {
-          this.data.comics_config.is_page_direction ? this.previous() : this.next();
-          this.isWaitPrevious = false;
-        }, 400)
-      }
-    }
+
 
   }
   slideNextTransitionEnd(swiper: Array<Swiper>) {
@@ -327,10 +313,41 @@ export class DoublePageReaderComponent {
       forceToAxis: false,
       thresholdTime: 1000,
     },
-    keyboard: false,
+    keyboard: true,
     direction: "vertical",
     scrollbar: { draggable: true },
+    grabCursor: true,
+    effect: "creative",
+    creativeEffect: {
+      prev: {
+        shadow: true,
+        translate: ["-20%", 0, -1],
+      },
+      next: {
+        translate: ["100%", 0, 0],
+      },
+    },
   };
+
+
+  interleaveOffset = 0.5; //视差比值
+
+  // var swiperOptions = {
+  //   loop: true,
+  //   speed: 1000,
+  //   grabCursor: true,
+  //   watchSlidesProgress: true,
+  //   mousewheelControl: true,
+  //
+  //   navigation: {
+  // 	nextEl: ".swiper-button-next",
+  // 	prevEl: ".swiper-button-prev"
+  //   },
+
+  // };
+
+  // var swiper = new Swiper(".swiper-container", swiperOptions);
+
 
   slideChange($event: Array<Swiper>) {
 

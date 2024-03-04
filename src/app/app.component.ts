@@ -6,6 +6,7 @@ import { GamepadEventService } from './library/gamepad/gamepad-event.service';
 import { ChildrenOutletContexts, RouterOutlet } from '@angular/router';
 import { animate, animateChild, group, query, style, transition, trigger } from '@angular/animations';
 import { WebFileService } from './library/web-file/web-file.service';
+
 export const slideInAnimation =
   trigger('routeAnimation', [
     transition('* <=> *', [
