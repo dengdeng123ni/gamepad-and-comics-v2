@@ -1,11 +1,13 @@
 // @import 'swiper/css';
 :root {
   --double-page-reader-v2-width: 100%;
+
 }
 .swiper {
   width: var(--double-page-reader-v2-width);
   height: 100vh;
-  transition: 0.1s all;
+  overflow: hidden;
+  transition: 0.5s all;
 }
 
 .swiper-slide {

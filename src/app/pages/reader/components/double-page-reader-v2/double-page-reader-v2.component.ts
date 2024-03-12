@@ -18,9 +18,9 @@ export class DoublePageReaderV2Component {
     if (event.key == "ArrowRight") this.current._pageNext();
     if (event.key == "ArrowLeft") this.current._pagePrevious();
     if (event.key == "c") this.pageToggle();
-    if (event.key == "v") this.firstPageToggle();
+    // if (event.key == "v") this.firstPageToggle();
     if (event.code == "Space") {
-      this.swiper.slideNext()
+      this.swiper.slideNext();
       return false
     }
     return true
@@ -28,23 +28,12 @@ export class DoublePageReaderV2Component {
   @HostListener('window:keyup', ['$event'])
   handleKeyUp = (event: KeyboardEvent) => {
   }
-  list: Array<PagesItem> = [];
-
-  index = 0;
-
-  steps = 1;
-
-  isSwitch = false;
-
-  isPageFirst = true;
-  isFirst = false;
-  is_first_page_cover = false;
-
+  @HostListener('window:resize', ['$event'])
+  resize = (event: KeyboardEvent) => {
+    document.documentElement.style.setProperty('--double-page-reader-v2-width', `${(250 / 353) * window.innerHeight * 2}px`);
+  }
   change$;
   event$;
-
-  is_init = false;
-
 
   constructor(
     public current: CurrentService,
@@ -95,285 +84,208 @@ export class DoublePageReaderV2Component {
     // })
 
 
-    this.list = this.data.pages as any;
-    this.init2();
-
     this.change$ = this.current.change().subscribe(x => {
+      if(x.trigger=='double_page_reader_v2') return
+      // console.log(x);
       if (x.type == "changePage") {
-        this.execute(x.page_index);
+        this.change(x.chapter_id, x.pages, x.page_index)
       } else if (x.type == "changeChapter") {
-        this.list = x.pages;
-        this.isPageFirst = true;
-        this.isSwitch = false;
-        this.execute(x.page_index);
+        this.change(x.chapter_id, x.pages, x.page_index)
       } else if (x.type == "nextPage") {
-        this.next()
+        this.swiper.slidePrev();
       } else if (x.type == "previousPage") {
-        this.previous()
+        this.swiper.slideNext();
       }
     })
     this.event$ = this.current.event().subscribe(x => {
-      if (x.key == "double_page_reader_FirstPageToggle") {
-        this.firstPageToggle();
-      } else if (x.key == "double_page_reader_togglePage") {
-        this.pageToggle();
-      }
+
     })
-    setTimeout(() => {
-      this.next()
-    }, 10000)
-
-  }
-  async init2() {
-    if (Number.isNaN(this.data.page_index)) this.data.page_index = 0;
-    this.index = this.data.page_index;
-    await this.change(this.data.page_index)
-    // let cc = document.querySelector("#double_page_reader") as any
-    // cc.style.opacity = 1;
 
 
-  }
-  runs = [];
-  sleep = (duration) => {
-    return new Promise(resolve => {
-      setTimeout(resolve, duration);
-    })
-  }
-  async execute(page_index) {
-    if (Number.isNaN(page_index)) page_index = 0;
-    if (this.runs.length == 0) {
-      this.runs.push(page_index)
-      this.index = page_index;
-      const start = this.runs.length
-      console.log(page_index);
+    this.init();
 
-      await this.change(page_index);
-      await this.sleep(100)
-      const end = this.runs.length
-      if (start != end) {
-        const index = this.runs.at(-1);
-        this.runs = [];
-        this.execute(index)
-      } else {
-        this.runs = [];
-      }
-    } else {
-      this.runs.push(page_index)
-      this.index = page_index;
-    }
-
-  }
-
-  imageRotation() {
-    const node: any = document.querySelector(".swiper-slide-active")
-    const rotate = node.getAttribute("rotate");
-    const nodes: any = document.querySelectorAll(".swiper-slide-active img")
-    if (nodes.length == 1) {
-      const scale = (nodes[0].height / nodes[0].width)
-      if (rotate == "90") {
-        node.style = `transform: rotate(180deg) scale(1);`;
-        node.setAttribute("rotate", "180")
-      } else if (rotate == "180") {
-        node.style = `transform: rotate(270deg) scale(${scale});`;
-        node.setAttribute("rotate", "270")
-      }
-      else if (rotate == "270") {
-        node.style = "";
-        node.setAttribute("rotate", "")
-      } else {
-        node.style = `transform: rotate(90deg) scale(${scale});`;
-        node.setAttribute("rotate", "90")
-      }
-    } else if (nodes.length == 2) {
-      const scale = ((nodes[0].height + nodes[1].height) / 2 / (nodes[0].width + nodes[1].width))
-      if (rotate == "90") {
-        node.style = `transform: rotate(180deg) scale(1);`;
-        node.setAttribute("rotate", "180")
-      } else if (rotate == "180") {
-        node.style = `transform: rotate(270deg) scale(${scale});`;
-        node.setAttribute("rotate", "270")
-      }
-      else if (rotate == "270") {
-        node.style = "";
-        node.setAttribute("rotate", "")
-      } else {
-        node.style = `transform: rotate(90deg) scale(${scale});`;
-        node.setAttribute("rotate", "90")
-      }
-    }
-
+    document.documentElement.style.setProperty('--double-page-reader-v2-width', `${(250 / 353) * window.innerHeight * 2}px`);
   }
 
   ngOnDestroy() {
     this.change$.unsubscribe();
     this.event$.unsubscribe();
   }
-
-  firstPageToggle() {
-    this.is_first_page_cover = !this.is_first_page_cover;
-    if (this.index == 0) {
-      this.pageToggle();
-      this.pageToggle();
-    } else {
-
-    }
-  }
-
+  isSwitch=false;
   pageToggle() {
-    if (this.index == 0) {
-      this.current._pageChange(this.index);
+    if (this.data.page_index == 0) {
+      this.current._pageChange(this.data.page_index);
     } else {
-      if (this.index == this.list.length - 1) {
-        this.current._pageChange(this.isSwitch ? this.index - 1 : this.index - 1);
+      if (this.data.page_index == this.data.pages.length - 1) {
+        this.current._pageChange(this.isSwitch ? this.data.page_index - 1 : this.data.page_index - 1);
         // this.isSwitch = !this.isSwitch;
       } else {
-        this.current._pageChange(this.isSwitch ? this.index - 1 : this.index + 1);
+        this.current._pageChange(this.isSwitch ? this.data.page_index - 1 : this.data.page_index + 1);
       }
     }
     this.isSwitch = !this.isSwitch;
   }
+  async init() {
+    await this.addNextSlide(this.data.chapter_id, this.data.pages, this.data.page_index);
+    setTimeout(async () => {
+      await this.next();
+      await this.previous();
+    })
+  }
 
-
-  isWaitPrevious = false;
-  isWaitNext = false;
-  isMobile = false;
-
-
-
-
-  interleaveOffset = 0.5; //视差比值
-
-  // var swiperOptions = {
-  //   loop: true,
-  //   speed: 1000,
-  //   grabCursor: true,
-  //   watchSlidesProgress: true,
-  //   mousewheelControl: true,
-  //
-  //   navigation: {
-  // 	nextEl: ".swiper-button-next",
-  // 	prevEl: ".swiper-button-prev"
-  //   },
-
-  // };
-
-  // var swiper = new Swiper(".swiper-container", swiperOptions);
-
+  async change(chapter_id, pages, page_index) {
+    this.swiper.removeAllSlides();
+    await this.addNextSlide(chapter_id, pages, page_index);
+    setTimeout(async () => {
+      await this.next();
+      await this.previous();
+    })
+  }
+  async updata() {
+    const nodes = this.swiper.slides[this.swiper.activeIndex].querySelectorAll("[current_page]");
+    let indexs = [];
+    for (let index = 0; index < nodes.length; index++) {
+      const node = nodes[index];
+      indexs.push(parseInt(node.getAttribute("index")))
+    }
+    const index = indexs.sort((a, b) => b - a)[0] - 1;
+    const chapter_id = nodes[0].getAttribute("chapter_id");
+    const list = await this.current._getChapter(chapter_id);
+    this.current._change('changePage', {
+      pages: list,
+      chapter_id: chapter_id,
+      page_index: index,
+      trigger: 'double_page_reader_v2'
+    });
+  }
 
   async next() {
-    const nodes = document.querySelectorAll(`[currentimage]`);
-    const index = this.index + nodes.length;
-    console.log(this.list);
-
-    if (index >= this.list.length) {
-      this.list = await this.current._setNextChapter();
-      this.isPageFirst = true;
-      this.isSwitch = false;
-      this.current._pageChange(0)
-      return
+    const nodes = this.swiper.slides[0].querySelectorAll("[current_page]");
+    let indexs = [];
+    for (let index = 0; index < nodes.length; index++) {
+      const node = nodes[index];
+      indexs.push(parseInt(node.getAttribute("index")))
     }
-    this.current._pageChange(index);
+    const index = indexs.sort((a, b) => b - a)[0] + 1;
+    const chapter_id = nodes[0].getAttribute("chapter_id");
+    if (chapter_id == this.data.chapter_id) {
+      if (index == this.data.pages.length) {
+        const list = await this.current._getNextChapter();
+        const id = await this.current._getNextChapterId();
+        this.addNextSlide(id, list, 0);
+        return
+      } else {
+        this.addNextSlide(this.data.chapter_id, this.data.pages, index)
+      }
+
+    } else {
+      this.data.pages = await this.current._getNextChapter();
+      this.data.chapter_id = await this.current._getNextChapterId();
+      this.addNextSlide(this.data.chapter_id, this.data.pages, index)
+    }
   }
   async previous() {
-    let list = this.list;
-    console.log(this.list);
-
-    let index = this.index;
-
-    if (index >= 2) {
-      let a = await this.loadImage(list[index - 1].src);
-      let c = await this.loadImage(list[index - 2].src);
-      if (a.width < a.height && c.width < c.height) {
-        this.steps = 2;
+    const nodes = this.swiper.slides[this.swiper.slides.length-1].querySelectorAll("[current_page]");
+    let indexs = [];
+    for (let index = 0; index < nodes.length; index++) {
+      const node = nodes[index];
+      indexs.push(parseInt(node.getAttribute("index")))
+    }
+    const index = indexs.sort((a, b) => a - b)[0] - 1;
+    const chapter_id = nodes[0].getAttribute("chapter_id");
+    if (chapter_id == this.data.chapter_id) {
+      if (index < 0) {
+        const list = await this.current._getPreviousChapter();
+        const id = await this.current._getPreviousChapterId();
+        this.addPreviousSlide(id, list, list.length - 1);
+        return
       } else {
-        this.steps = 1;
-        this.isFirst = true;
+        this.addPreviousSlide(this.data.chapter_id, this.data.pages, index)
       }
     } else {
-      this.steps = 1;
+      this.data.pages = await this.current._getPreviousChapter();
+      this.data.chapter_id = await this.current._getPreviousChapterId();
+      this.addPreviousSlide(this.data.chapter_id, this.data.pages, index)
     }
-    console.log(index);
-
-    if ((index - 1) < 0) {
-      // this.list = await this.current._setPreviousChapter();
-      // this.isPageFirst = true;
-      // this.isSwitch = false;
-      // this.current._pageChange(this.list.length - 1)
-      return
-    }
-
-
-    index = index - this.steps;
-    this.current._pageChange(index);
   }
-  async change(index: number) {
-    console.log(index);
+  objNextHtml = {};
+  objPreviousHtml = {};
+  async addNextSlide(chapter_id, list, index: number) {
+    const getNextPages = async (list: Array<PagesItem>, index: number) => {
+      const total = list.length;
+      let page = {
+        primary: { src: "", id: null, index: null, width: 0, height: 0, end: false, start: false },
+        secondary: { src: "", id: null, index: null, width: 0, height: 0, end: false, start: false }
+      }
+      const obj = await this.isWideImage(list[index], list[index + 1]);
+      if (!obj.secondary.src) obj.secondary = undefined;
+      if (index == 0) obj.secondary = undefined;
 
-    if (this.isPageFirst && index == 0) this.is_first_page_cover = await this.current._getChapter_IsFirstPageCover(this.data.chapter_id);
-    const res: any = await this.getCurrentImages(this.list, index);
-    if (!res.previous.primary.image.src && !res.previous.secondary.image.src) res.previous = await this.getPreviousLast();
-    if (!res.next.primary.image.src && !res.next.secondary.image.src) res.next = await this.getNextFirst();
-
-
-    this.steps = res.steps;
-    let previous = "";
-    let next = "";
-    let current = "";
-
-    if (this.data.comics_config.is_page_order) {
-      // 普通模式
-      if (res.previous.primary.start) previous = previous + `<img opacity_0 src="${res.previous.primary.image.src}" />`;
-      if (res.previous.secondary.image.src) previous = previous + `<img previousimage id="${res.previous.secondary.image.id}" src="${res.previous.secondary.image.src}" />`;
-      if (res.previous.primary.image.src) previous = previous + `<img previousimage id="${res.previous.primary.image.id}" src="${res.previous.primary.image.src}" />`;
-      if (res.previous.primary.end) previous = previous + `<img opacity_0 src="${res.previous.primary.image.src}" />`;
-
-      if (res.current.primary.start) current = current + `<img opacity_0  src="${res.current.primary.image.src}" />`;
-      if (res.current.primary.image.src) current = current + `<img  currentimage id="${res.current.primary.image.id}" src="${res.current.primary.image.src}" />`;
-      if (res.current.secondary.image.src) current = current + `<img currentimage id="${res.current.secondary.image.id}" src="${res.current.secondary.image.src}" />`;
-      if (res.current.primary.end) current = current + `<img opacity_0  src="${res.current.primary.image.src}" />`;
-
-      if (res.next.primary.start) next = next + `<img opacity_0  src="${res.next.primary.image.src}" />`;
-      if (res.next.primary.image.src) next = next + `<img nextimage id="${res.next.primary.image.id}" src="${res.next.primary.image.src}" />`;
-      if (res.next.secondary.image.src) next = next + `<img nextimage id="${res.next.secondary.image.id}" src="${res.next.secondary.image.src}" />`;
-      if (res.next.primary.end) next = next + `<img opacity_0  src="${res.next.primary.image.src}" />`;
-    } else {
-      // 日漫模式
-      if (res.previous.primary.end) previous = previous + `<img opacity_0 src="${res.previous.primary.image.src}" />`;
-      if (res.previous.primary.image.src) previous = previous + `<img previousimage id="${res.previous.primary.image.id}" src="${res.previous.primary.image.src}" />`;
-      if (res.previous.secondary.image.src) previous = previous + `<img previousimage id="${res.previous.secondary.image.id}" src="${res.previous.secondary.image.src}" />`;
-      if (res.previous.primary.start) previous = previous + `<img opacity_0  src="${res.previous.primary.image.src}" />`;
-
-      if (res.current.primary.end) current = current + `<img opacity_0  src="${res.current.primary.image.src}" />`;
-      if (res.current.secondary.image.src) current = current + `<img currentimage id="${res.current.secondary.image.id}" src="${res.current.secondary.image.src}" />`;
-      if (res.current.primary.image.src) current = current + `<img  currentimage id="${res.current.primary.image.id}" src="${res.current.primary.image.src}" />`;
-      if (res.current.primary.start) current = current + `<img opacity_0  src="${res.current.primary.image.src}" />`;
-
-      if (res.next.primary.end) next = next + `<img opacity_0  src="${res.next.primary.image.src}" />`;
-      if (res.next.secondary.image.src) next = next + `<img nextimage id="${res.next.secondary.image.id}" src="${res.next.secondary.image.src}" />`;
-      if (res.next.primary.image.src) next = next + `<img nextimage id="${res.next.primary.image.id}" src="${res.next.primary.image.src}" />`;
-      if (res.next.primary.start) next = next + `<img opacity_0  src="${res.next.primary.image.src}" />`;
+      if (index >= (total - 1) && !obj.secondary) {
+        if (obj.primary.width < obj.primary.height) page.primary.end = true;
+      }
+      if (obj.secondary) page.secondary = { ...page.secondary, ...obj.secondary };
+      if (obj.primary) page.primary = { ...page.primary, ...obj.primary };
+      if (index == 0 && !obj.secondary) {
+        if (obj.primary.width < obj.primary.height) page.primary.start = true;
+      }
+      return page
     }
-console.log(res.current);
+    const res = await getNextPages(list, index);
+    let current = "";
+    if (res.primary.end) current = current + `<img style="opacity: 0;"  src="${res.primary.src}" />`;
+    if (res.secondary.src) current = current + `<img current_page chapter_id=${chapter_id} index=${res.secondary.index} page_id="${res.secondary.id}" src="${res.secondary.src}" />`;
+    if (res.primary.src) current = current + `<img  current_page chapter_id=${chapter_id} index=${res.primary.index}  page_id="${res.primary.id}" src="${res.primary.src}" />`;
+    if (res.primary.start) current = current + `<img style="opacity: 0;"  src="${res.primary.src}" />`;
+    this.objNextHtml[`${chapter_id}_${index}`] = current;
+    this.prependSlide(current)
+  }
+  async addPreviousSlide(chapter_id, list, index: number) {
+    const getPreviousPages = async (list: Array<PagesItem>, index: number) => {
+      const total = list.length;
+      let page = {
+        primary: { src: "", id: null, index: null, width: 0, height: 0, end: false, start: false },
+        secondary: { src: "", id: null, index: null, width: 0, height: 0, end: false, start: false }
+      }
+      const obj = await this.isWideImage(list[index], list[index - 1]);
+      if (!obj.secondary.src) obj.secondary = undefined;
+      if (index == 0) obj.secondary = undefined;
 
-    if (res.current.primary.end || res.current.primary.start)  document.documentElement.style.setProperty('--double-page-reader-v2-width', `${(res.current.primary.image.width / res.current.primary.image.height) * window.innerHeight + (res.current.primary.image.width / res.current.primary.image.height) * window.innerHeight }px`);
-    else document.documentElement.style.setProperty('--double-page-reader-v2-width', `${(res.current.primary.image.width / res.current.primary.image.height) * window.innerHeight + (res.current.secondary.image.width / res.current.secondary.image.height) * window.innerHeight }px`);
-    this.swiper.removeAllSlides();
-    if (!!next) this.appendSlide(next)
-    if (!!current) this.appendSlide(current)
-    if (!!previous) this.appendSlide(previous)
-    if (!!previous) this.swiper.slideTo(1, 0, false);
+      if (index >= (total - 1) && !obj.secondary) {
+        if (obj.primary.width < obj.primary.height) page.primary.end = true;
+      }
+      if (obj.secondary) page.secondary = { ...page.secondary, ...obj.secondary };
+      if (obj.primary) page.primary = { ...page.primary, ...obj.primary };
+      if (index == 0 && !obj.secondary) {
+        if (obj.primary.width < obj.primary.height) page.primary.start = true;
+      }
+      return page
+    }
+    const res = await getPreviousPages(list, index);
+    let current = "";
+    if (res.primary.end) current = current + `<img style="opacity: 0;"  src="${res.primary.src}" />`;
+    if (res.primary.src) current = current + `<img  current_page chapter_id=${chapter_id} index=${res.primary.index}  page_id="${res.primary.id}" src="${res.primary.src}" />`;
+    if (res.secondary.src) current = current + `<img current_page chapter_id=${chapter_id} index=${res.secondary.index} page_id="${res.secondary.id}" src="${res.secondary.src}" />`;
+    if (res.primary.start) current = current + `<img style="opacity: 0;"  src="${res.primary.src}" />`;
+    this.objPreviousHtml[`${chapter_id}_${index}`] = current;
+    this.appendSlide(current)
+  }
+  prependSlide(src: string) {
+    this.swiper.prependSlide
+      (`
+     <div class="swiper-slide" style="display: flex;">
+     ${src}
+     </div>
+    `)
   }
   appendSlide(src: string) {
     this.swiper.appendSlide
       (`
      <div class="swiper-slide" style="display: flex;">
-      <div style="width: 100%;height:100%;"  ></div>
-       ${src}
-      <div style="width: 100%;height:100%;"  ></div>
+     ${src}
      </div>
     `)
   }
-
   async getNextFirst() {
     const res = {
       next: {
@@ -442,6 +354,7 @@ console.log(res.current);
     }
     return res.previous
   }
+
   loadImage = async (url: string) => {
     url = await this.image.getImageBase64(url)
     return new Promise<any>((resolve, reject) => {
@@ -460,126 +373,28 @@ console.log(res.current);
     if (primary) primary.src = await this.image.getImageBase64(primary.src)
     if (secondary) secondary.src = await this.image.getImageBase64(secondary.src)
 
-    try {
-      const [imgPrimary, imgSecondary] = await Promise.all([this.loadImage(primary?.src), this.loadImage(secondary?.src)]);
+    const [imgPrimary, imgSecondary] = await Promise.all([this.loadImage(primary?.src), this.loadImage(secondary?.src)]);
 
-      if (imgPrimary.width > imgPrimary.height || imgSecondary.width > imgSecondary.height) {
-
-        return {
-          'primary': { image: primary ?? "", width: imgPrimary.width, height: imgPrimary.height },
-          'secondary': { image: { src: "", id: null }, width: imgSecondary.width, height: imgSecondary.height }
-        };
-      } else {
-        return {
-          'primary': { image: primary ?? "", width: imgPrimary.width, height: imgPrimary.height },
-          'secondary': { image: secondary ?? "", width: imgSecondary.width, height: imgSecondary.height }
-        };
-      }
-    } catch (e) {
+    if (imgPrimary.width > imgPrimary.height || imgSecondary.width > imgSecondary.height) {
       return {
-        'primary': { image: primary ?? "", width: 0, height: 0 },
-        'secondary': { image: secondary ?? "", width: 0, height: 0 }
+        'primary': { ...primary, width: imgPrimary.width, height: imgPrimary.height },
+        'secondary': undefined
+      };
+    } else {
+      return {
+        'primary': { ...primary, width: imgPrimary.width, height: imgPrimary.height },
+        'secondary': { ...secondary, width: imgSecondary.width, height: imgSecondary.height }
       };
     }
   }
 
-  async getCurrentImages(list: Array<PagesItem>, index: number) {
-    const total = list.length;
-
-    const res = {
-      steps: 0,
-      previous: {
-        primary: { image: { src: "", id: null }, end: false, start: false },
-        secondary: { image: { src: "", id: null }, end: false, start: false }
-      },
-      current: {
-        primary: { image: { src: "", id: null }, end: false, start: false },
-        secondary: { image: { src: "", id: null }, end: false, start: false }
-      },
-      next: {
-        primary: { image: { src: "", id: null }, end: false, start: false },
-        secondary: { image: { src: "", id: null }, end: false, start: false }
-      },
-    }
-    const obj = await this.isWideImage(list[index], list[index + 1]);
-    obj.primary.image.width=obj.primary.width;
-    obj.primary.image.height=obj.primary.height;
-    obj.secondary.image.width=obj.secondary.width;
-    obj.secondary.image.height=obj.secondary.height;
-    let steps = 0;
-    if (obj.primary.width > obj.primary.height || obj.secondary.width > obj.secondary.height) {
-      steps = 1;
-      obj.secondary.image = "";
-    } else {
-      steps = 2;
-    }
-
-    if (this.isFirst) {
-      this.isFirst = false;
-      obj.secondary.image = "";
-      steps = 1;
-    }
-
-    if (this.isPageFirst) {
-      this.isPageFirst = false;
-      if (this.is_first_page_cover == true && index == 0) {
-        obj.secondary.image = "";
-        steps = 1;
-      }
-    } else {
-      if (index == 0 && !this.isSwitch && this.is_first_page_cover == true) {
-        obj.secondary.image = "";
-        steps = 1;
-      }
-      if (index == 0 && this.isSwitch && this.is_first_page_cover == false) {
-        obj.secondary.image = ""
-        steps = 1;
-      }
-    }
-
-    const [objPrevious, objNext] = await Promise.all([
-      this.isWideImage(list[index - 1], list[index - 2]),
-      this.isWideImage(list[index + steps], list[index + steps + 1])
-    ]);
-    setTimeout(() => {
-      if (list[index + steps + 2]) this.loadImage(list[index + steps + 2]?.src)
-      if (list[index + steps + 3]) this.loadImage(list[index + steps + 3]?.src)
-      if (index >= list.length - 3) this.loadingNextFirstPage();
-    }, 100)
-    if (index >= (total - 1) && !obj.secondary.image) {
-      if (obj.primary.width < obj.primary.height) res.current.primary.end = true;
-    }
-    if (obj.secondary.image) res.current.secondary.image = obj.secondary.image;
-    if (obj.primary.image) res.current.primary.image = obj.primary.image;
-    if (index == 0 && !obj.secondary.image) {
-      if (obj.primary.width < obj.primary.height) res.current.primary.start = true;
-    }
-
-    if (objPrevious.primary.image) res.previous.primary.image = objPrevious.primary.image;
-    if (objPrevious.secondary.image) res.previous.secondary.image = objPrevious.secondary.image;
-    if (((index - 1) == 0 || (index - 2) == 0) && !objPrevious.secondary.image) {
-      if (objPrevious.primary.width < objPrevious.primary.height) res.previous.primary.start = true;
-    }
-
-    if (((index + 1) >= (total - 1) || (index + 2) >= (total - 1)) && !objNext.secondary.image) {
-      if (objNext.primary.width < objNext.primary.height) res.next.primary.end = true;
-    }
-    if (objNext.secondary.image) res.next.secondary.image = objNext.secondary.image;
-    if (objNext.primary.image) res.next.primary.image = objNext.primary.image;
-    res.steps = steps;
-
-    return res
-  }
-
-
-
-
-  // ------------------------------------------------------------------------------------------
   ngAfterViewInit() {
-    // setTimeout(() => {
-    //   this.init();
-    // })
     this.swiper = new Swiper(".mySwiper3", {
+      mousewheel: {
+        thresholdDelta: 20,
+        forceToAxis: false,
+        thresholdTime: 500,
+      },
       grabCursor: true,
       effect: "creative",
       creativeEffect: {
@@ -592,44 +407,43 @@ console.log(res.current);
         },
       },
     });
+    // this.swiper.stop
     this.swiper.on('slidePrevTransitionEnd', () => {
 
-      if (this.isMobile) {
-      } else {
-        if (!this.isWaitNext) {
-          this.isWaitNext = true;
+      if (!this.ccc) {
+        this.ccc = true;
 
-
-          setTimeout(() => {
-            this.next();
-
-          }, 400)
-          setTimeout(() => {
-            this.isWaitNext = false;
-          }, 800)
-
-        }
+        setTimeout(() => {
+          this.next()
+          this.ccc = false;
+        }, 500)
       }
     });
+    // this.swiper.on('slideChange', () => {
+    //   if (!this.ppp) {
+    //     this.ppp = true;
+
+    //     setTimeout(() => {
+    //       this.updata()
+    //       this.ppp = false;
+    //     }, 500)
+    //   }
+    // })
+
     this.swiper.on('slideNextTransitionEnd', () => {
+      if (!this.bbb) {
+        this.bbb = true;
 
-      if (this.isMobile) {
-        this.data.comics_config.is_page_direction ? this.next() : this.previous();
-      } else {
-        if (!this.isWaitNext) {
-          this.isWaitNext = true;
-
-
-          setTimeout(() => {
-            this.isWaitNext = false;
-          }, 800)
-          setTimeout(() => {
-            this.previous();
-
-          }, 400)
-        }
+        setTimeout(() => {
+          this.previous()
+          this.bbb = false;
+        }, 500)
       }
     });
 
   }
+
+  ccc = false;
+  bbb = false;
+  ppp = false;
 }

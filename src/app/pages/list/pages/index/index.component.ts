@@ -7,6 +7,7 @@ import { GamepadEventService } from 'src/app/library/gamepad/gamepad-event.servi
 import { IndexService } from './index.service';
 import { MenuService } from '../../components/menu/menu.service';
 import { map } from 'rxjs';
+import { DownloadOptionService } from '../../components/download-option/download-option.service';
 
 @Component({
   selector: 'app-index',
@@ -24,7 +25,8 @@ export class IndexComponent {
     public menu:MenuService,
     public query: QueryService,
     public router:Router,
-    public route: ActivatedRoute,
+    public route: ActivatedRoute
+
     ) {
       document.body.setAttribute("router", "list")
       document.body.setAttribute("locked_region", "list")

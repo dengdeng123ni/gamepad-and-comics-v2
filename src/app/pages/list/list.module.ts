@@ -21,6 +21,7 @@ import { MenuTopToolbarComponent } from './components/menu-top-toolbar/menu-top-
 import { ComicsCacheComponent } from './components/comics-cache/comics-cache.component';
 import { TemporaryFileComponent } from './components/temporary-file/temporary-file.component';
 import { HistoryComponent } from './components/history/history.component';
+import { DownloadOptionComponent } from './components/download-option/download-option.component';
 // import { ImageComponent } from 'src/app/library/public-api';
 
 
@@ -43,7 +44,8 @@ import { HistoryComponent } from './components/history/history.component';
     MenuTopToolbarComponent,
     ComicsCacheComponent,
     TemporaryFileComponent,
-    HistoryComponent
+    HistoryComponent,
+    DownloadOptionComponent
   ],
   imports: [
     CommonModule,

@@ -91,9 +91,14 @@ export class WebFileService {
 
   async downloadComics(comics_id, option?: {
     chapters_ids?: Array<any>,
-    type?: string
+    type?: string,
+    pageOrder: boolean,
+    isFirstPageCover: boolean,
+    page: string
   }) {
-    await this.open();
+
+    if(!this.dirHandle)  await this.open();
+
     const toTitle = (title) => {
       return title.replace(/[\r\n]/g, "").replace(/  +/g, ' ').trim()
     }
@@ -102,14 +107,35 @@ export class WebFileService {
     for (let index = 0; index < chapters.length; index++) {
       const x = chapters[index];
       const pages = await this.DbController.getPages(x.id);
+
       if (option?.type) {
-        const pageOrder = false;
-        const x = chapters[index]
-        const pages = await this.DbController.getPages(x.id);
-        const isFirstPageCover = true;
-        const page = "double";
-        const blob = await this.download.ImageToTypeBlob({ type: option.type, name: toTitle(x.title), images: pages.map((x: { src: any; }) => x.src), pageOrder: pageOrder, isFirstPageCover: isFirstPageCover, page: page }) as any
-        let suffix_name=blob.type.split("/").at(-1);
+        if (option.type == "JPG") {
+          const downloadImage = async (x2, index) => {
+            const blob = await this.DbController.getImage(x2.src)
+
+            if (blob.size > 500) {
+              if (config.is_offprint) {
+                await this.post(`${config.origin}/${toTitle(title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
+              } else {
+                await this.post(`${config.origin}/${toTitle(title)}/${toTitle(x.title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
+              }
+            } else {
+              const blob = await this.DbController.getImage(x2.src)
+              if (blob.size > 500) {
+                if (config.is_offprint) {
+                  await this.post(`${config.origin}/${toTitle(title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
+                } else {
+                  await this.post(`${config.origin}/${toTitle(title)}/${toTitle(x.title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
+                }
+              }
+            }
+          }
+          await Promise.all(pages.map((x2, index) => downloadImage(x2, index)))
+          return
+        }
+
+        const blob = await this.download.ImageToTypeBlob({ type: option.type, name: toTitle(x.title), images: pages.map((x: { src: any; }) => x.src), pageOrder: option.pageOrder, isFirstPageCover: option.isFirstPageCover, page: option.page }) as any
+        let suffix_name = blob.type.split("/").at(-1);
         if (option.type == "PDF") {
 
         }
@@ -126,28 +152,7 @@ export class WebFileService {
         } else {
           await this.post(`${config.origin}_${suffix_name}/${toTitle(title)}/${toTitle(x.title)}.${suffix_name}`, blob)
         }
-      } else {
-        const downloadImage = async (x2, index) => {
-          const blob = await this.DbController.getImage(x2.src)
 
-          if (blob.size > 500) {
-            if (config.is_offprint) {
-              await this.post(`${config.origin}/${toTitle(title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
-            } else {
-              await this.post(`${config.origin}/${toTitle(title)}/${toTitle(x.title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
-            }
-          } else {
-            const blob = await this.DbController.getImage(x2.src)
-            if (blob.size > 500) {
-              if (config.is_offprint) {
-                await this.post(`${config.origin}/${toTitle(title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
-              } else {
-                await this.post(`${config.origin}/${toTitle(title)}/${toTitle(x.title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
-              }
-            }
-          }
-        }
-        await Promise.all(pages.map((x2, index) => downloadImage(x2, index)))
       }
     }
   }

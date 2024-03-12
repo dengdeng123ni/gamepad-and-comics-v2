@@ -36,50 +36,50 @@ export class IndexService {
       region: ['double_page_thumbnail_item'],
     });
 
-    // this.current.on$.subscribe((event$) => {
-    //   const { x, y } = event$;
-    //   const { innerWidth, innerHeight } = window;
-    //   if (
-    //     x > innerWidth * 0.33 &&
-    //     x < innerWidth * 0.66 &&
-    //     y > innerHeight * 0.33 &&
-    //     y < innerHeight * 0.66
-    //   ) {
-    //     this.current.readerNavbarBar$.next(true);
-    //   } else if (
-    //     x > innerWidth * 0.33 &&
-    //     x < innerWidth * 0.66 &&
-    //     y > innerHeight * 0 &&
-    //     y < innerHeight * 0.33
-    //   ) {
-    //     if (data.comics_config.is_double_page) {
-    //       this.doublePageThumbnail.isToggle();
-    //     } else {
-    //       this.onePageThumbnailMode3.isToggle();
-    //     }
-    //   } else if (
-    //     x > innerWidth * 0.33 &&
-    //     x < innerWidth * 0.66 &&
-    //     y > innerHeight * 0.66 &&
-    //     y < innerHeight * 1
-    //   ) {
-    //     this.chaptersThumbnail.isToggle();
-    //   } else {
-    //     if (x < innerWidth / 2) {
-    //       this.current._change('previousPage', {
-    //         pages: this.data.pages,
-    //         page_index: this.data.page_index,
-    //         chapter_id: this.data.chapter_id,
-    //       });
-    //     } else {
-    //       this.current._change('nextPage', {
-    //         pages: this.data.pages,
-    //         page_index: this.data.page_index,
-    //         chapter_id: this.data.chapter_id,
-    //       });
-    //     }
-    //   }
-    // });
+    this.current.on$.subscribe((event$) => {
+      const { x, y } = event$;
+      const { innerWidth, innerHeight } = window;
+      if (
+        x > innerWidth * 0.33 &&
+        x < innerWidth * 0.66 &&
+        y > innerHeight * 0.33 &&
+        y < innerHeight * 0.66
+      ) {
+        this.current.readerNavbarBar$.next(true);
+      } else if (
+        x > innerWidth * 0.33 &&
+        x < innerWidth * 0.66 &&
+        y > innerHeight * 0 &&
+        y < innerHeight * 0.33
+      ) {
+        if (data.comics_config.is_double_page) {
+          this.doublePageThumbnail.isToggle();
+        } else {
+          this.onePageThumbnailMode3.isToggle();
+        }
+      } else if (
+        x > innerWidth * 0.33 &&
+        x < innerWidth * 0.66 &&
+        y > innerHeight * 0.66 &&
+        y < innerHeight * 1
+      ) {
+        this.chaptersThumbnail.isToggle();
+      } else {
+        if (x < innerWidth / 2) {
+          this.current._change('previousPage', {
+            pages: this.data.pages,
+            page_index: this.data.page_index,
+            chapter_id: this.data.chapter_id,
+          });
+        } else {
+          this.current._change('nextPage', {
+            pages: this.data.pages,
+            page_index: this.data.page_index,
+            chapter_id: this.data.chapter_id,
+          });
+        }
+      }
+    });
     Event.register('double_page_thumbnail', {
       icon: 'grid_view',
       name: '双页缩略图',

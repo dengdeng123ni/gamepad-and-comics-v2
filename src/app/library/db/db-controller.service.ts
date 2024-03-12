@@ -135,6 +135,10 @@ export class DbControllerService {
             x.index=i;
           })
           firstValueFrom(this.webDb.update('pages', { id: id, data: res }))
+        }else{
+          res.forEach((x, i) => {
+            x.index=i;
+          })
         }
         this.pages[id] = JSON.parse(JSON.stringify(res));
         return res

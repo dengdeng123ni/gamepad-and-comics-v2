@@ -80,6 +80,8 @@ export class TemporaryFileService {
           obj["height"] = 0;
           data.push(obj)
         }
+        console.log(data);
+
         return data
       },
       Image: async (id: string) => {
