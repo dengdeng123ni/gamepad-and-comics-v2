@@ -70,8 +70,6 @@ export class ImageService {
     });
   }
   async getImageBase64(src) {
-    console.log(src);
-
     if (!src) return ""
     if (src.substring(0, 10) == "data:image") {
       return src
