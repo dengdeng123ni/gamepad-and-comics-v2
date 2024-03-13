@@ -17,7 +17,7 @@
           <mat-radio-button value="double">双页</mat-radio-button>
         </mat-radio-group>
       </div>
-      <div class="item">
+      <div class="item" *ngIf="option.page!='one'">
         <div class="name">页面顺序</div>
         <mat-radio-group [(ngModel)]="option.pageOrder">
           <mat-radio-button [value]="true" style="display: flex;">默认</mat-radio-button>
@@ -27,8 +27,8 @@
       <div class="item">
         <div class="name">选项</div>
         <div class="iten">
-          <mat-checkbox [(ngModel)]="option.isFirstPageCover">第一页封面</mat-checkbox>
-          <mat-checkbox [(ngModel)]="option.isOneFile">只生成一个文件</mat-checkbox>
+          <mat-checkbox [(ngModel)]="option.isFirstPageCover" *ngIf="option.page!='one'">第一页封面</mat-checkbox>
+          <mat-checkbox [(ngModel)]="option.isOneFile" [disabled]="true">只生成一个文件</mat-checkbox>
         </div>
       </div>
     </div>
@@ -58,11 +58,11 @@
       </button>
     </div>
 <div class="toolbar">
-  <mat-button-toggle-group si name="fontStyle" aria-label="Font Style">
+  <!-- <mat-button-toggle-group si name="fontStyle" aria-label="Font Style">
     <mat-button-toggle value="bold">待下载</mat-button-toggle>
     <mat-button-toggle value="italic">下载中</mat-button-toggle>
     <mat-button-toggle value="underline">已完成</mat-button-toggle>
-  </mat-button-toggle-group>
+  </mat-button-toggle-group> -->
 </div>
   </div>
 </div>

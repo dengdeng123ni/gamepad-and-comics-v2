@@ -94,7 +94,8 @@ export class WebFileService {
     type?: string,
     pageOrder: boolean,
     isFirstPageCover: boolean,
-    page: string
+    page: string,
+    downloadChapterAtrer?:Function
   }) {
 
     if(!this.dirHandle)  await this.open();
@@ -152,8 +153,8 @@ export class WebFileService {
         } else {
           await this.post(`${config.origin}_${suffix_name}/${toTitle(title)}/${toTitle(x.title)}.${suffix_name}`, blob)
         }
-
       }
+      if(option.downloadChapterAtrer) option.downloadChapterAtrer(x)
     }
   }
 

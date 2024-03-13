@@ -68,9 +68,12 @@
       margin: 12px;
       display: flex;
     }
+    .name{
+      text-align: left;
+    }
 
     .img {
-      width: auto;
+      min-width: fit-content;
       height: 108px;
       margin-right: 12px;
 
