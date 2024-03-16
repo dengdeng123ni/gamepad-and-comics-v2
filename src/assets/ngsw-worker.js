@@ -19,7 +19,7 @@
   };
   var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/named-cache-storage.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/named-cache-storage.mjs
   var NamedCacheStorage = class {
     constructor(original, cacheNamePrefix) {
       this.original = original;
@@ -46,7 +46,7 @@
     }
   };
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/adapter.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/adapter.mjs
   var Adapter = class {
     constructor(scopeUrl, caches) {
       this.scopeUrl = scopeUrl;
@@ -84,7 +84,7 @@
     }
   };
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/database.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/database.mjs
   var NotFound = class {
     constructor(table, key) {
       this.table = table;
@@ -92,7 +92,7 @@
     }
   };
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/db-cache.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/db-cache.mjs
   var CacheDatabase = class {
     constructor(adapter2) {
       this.adapter = adapter2;
@@ -150,15 +150,15 @@
     }
   };
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/api.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/api.mjs
   var UpdateCacheStatus;
-  (function (UpdateCacheStatus2) {
+  (function(UpdateCacheStatus2) {
     UpdateCacheStatus2[UpdateCacheStatus2["NOT_CACHED"] = 0] = "NOT_CACHED";
     UpdateCacheStatus2[UpdateCacheStatus2["CACHED_BUT_UNUSED"] = 1] = "CACHED_BUT_UNUSED";
     UpdateCacheStatus2[UpdateCacheStatus2["CACHED"] = 2] = "CACHED";
   })(UpdateCacheStatus || (UpdateCacheStatus = {}));
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/error.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/error.mjs
   var SwCriticalError = class extends Error {
     constructor() {
       super(...arguments);
@@ -180,7 +180,7 @@ ${error.stack}`;
     }
   };
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/sha1.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/sha1.mjs
   function sha1(str) {
     const utf8 = str;
     const words32 = stringToWords32(utf8, Endian.Big);
@@ -223,7 +223,7 @@ ${error.stack}`;
     return a << count | a >>> 32 - count;
   }
   var Endian;
-  (function (Endian2) {
+  (function(Endian2) {
     Endian2[Endian2["Little"] = 0] = "Little";
     Endian2[Endian2["Big"] = 1] = "Big";
   })(Endian || (Endian = {}));
@@ -295,7 +295,7 @@ ${error.stack}`;
     return hex.toLowerCase();
   }
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/assets.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/assets.mjs
   var AssetGroup = class {
     constructor(scope2, adapter2, idle, config, hashes, db, cacheNamePrefix) {
       this.scope = scope2;
@@ -571,7 +571,7 @@ ${error.stack}`;
     }
   };
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/data.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/data.mjs
   var LruList = class {
     constructor(state) {
       if (state === void 0) {
@@ -865,7 +865,7 @@ ${error.stack}`;
     }
   };
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/app-version.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/app-version.mjs
   var BACKWARDS_COMPATIBILITY_NAVIGATION_URLS = [
     { positive: true, regex: "^/.*$" },
     { positive: false, regex: "^/.*\\.[^/]*$" },
@@ -1016,8 +1016,8 @@ ${error.stack}`;
     }
   };
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/debug.mjs
-  var SW_VERSION = "16.0.0";
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/debug.mjs
+  var SW_VERSION = "16.1.7";
   var DEBUG_LOG_BUFFER_SIZE = 100;
   var DebugHandler = class {
     constructor(driver, adapter2) {
@@ -1090,7 +1090,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
     }
   };
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/idle.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/idle.mjs
   var IdleScheduler = class {
     constructor(adapter2, delay, maxDelay, debug) {
       this.adapter = adapter2;
@@ -1168,12 +1168,12 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
     }
   };
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/manifest.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/manifest.mjs
   function hashManifest(manifest) {
     return sha1(JSON.stringify(manifest));
   }
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/msg.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/msg.mjs
   function isMsgCheckForUpdates(msg) {
     return msg.action === "CHECK_FOR_UPDATES";
   }
@@ -1181,7 +1181,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
     return msg.action === "ACTIVATE_UPDATE";
   }
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/driver.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/driver.mjs
   var IDLE_DELAY = 5e3;
   var MAX_IDLE_DELAY = 3e4;
   var SUPPORTED_CONFIG_VERSION = 1;
@@ -1203,7 +1203,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
     "vibrate"
   ];
   var DriverReadyState;
-  (function (DriverReadyState2) {
+  (function(DriverReadyState2) {
     DriverReadyState2[DriverReadyState2["NORMAL"] = 0] = "NORMAL";
     DriverReadyState2[DriverReadyState2["EXISTING_CLIENTS_ONLY"] = 1] = "EXISTING_CLIENTS_ONLY";
     DriverReadyState2[DriverReadyState2["SAFE_MODE"] = 2] = "SAFE_MODE";
@@ -1248,265 +1248,9 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       this.scope.addEventListener("notificationclick", (event) => this.onClick(event));
       this.debugger = new DebugHandler(this, this.adapter);
       this.idle = new IdleScheduler(this.adapter, IDLE_DELAY, MAX_IDLE_DELAY, this.debugger);
-
-      this._data_temporary_files = {};
-
-      this._data_proxy_response = {};
-
-      this._data_images = {};
-      this._data_pulg_config = {};
-
-      this._proxy_hostnames = ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"];
-
-      this.image_cache = null;
-
-      this.init();
-    }
-    async init() {
-      this.image_cache = await caches.open('image');
-    }
-    getCacheImage = async (src) => {
-      const cache = await caches.open('image');
-      const res = await cache.match(src);
-      return res
-    }
-
-    delTemporaryFiles() { }
-
-    getTemporaryFile = async (id) => {
-      await this.broadcast({ type: "temporary_file", id: id })
-      let bool = true;
-      return new Promise((r, j) => {
-        const getFile = () => {
-          setTimeout(() => {
-            if (this._data_temporary_files[id]) {
-              const bolb = this._data_temporary_files[id].blob
-              delete this._data_temporary_files[id]
-              r(new Response(bolb))
-            } else {
-              if (bool) getFile()
-            }
-          }, 0)
-        }
-        getFile()
-        setTimeout(() => {
-          bool = false;
-          r(new Response(""))
-          j(new Response(""))
-        }, 500)
-      })
-    }
-    base64ToBlob(base64Data) {
-      let arr = base64Data.split(','),
-        fileType = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]),
-        l = bstr.length,
-        u8Arr = new Uint8Array(l);
-
-      while (l--) {
-        u8Arr[l] = bstr.charCodeAt(l);
-      }
-      return new Blob([u8Arr], {
-        type: fileType
-      });
-    }
-    async readStreamToString(stream) {
-      const reader = stream.getReader();
-      let result = [];
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        result.push(Array.from(value));
-      }
-      return result;
-    }
-    async onProxyRequest(event) {
-      let headers = [];
-      event.request.headers.forEach(function (value, name) { headers.push({ value, name }) });
-      const id = event.clientId;
-      await this.broadcast({ type: "proxy_request", id: id, data: { method: event.request.method, body: event.request.body, headers: headers, url: event.request.url } })
-      let bool = true;
-      return new Promise((r, j) => {
-        const getFile = () => {
-          setTimeout(() => {
-            if (this._data_proxy_response[id]) {
-              let rsponse = this._data_proxy_response[id].data;
-              const readableStream = new ReadableStream({
-                start(controller) {
-                  for (const data of rsponse.body) {
-                    controller.enqueue(Uint8Array.from(data));
-                  }
-                  controller.close();
-                },
-              });
-              delete rsponse.body;
-              const headers = new Headers();
-              rsponse.headers.forEach(x => {
-                headers.append(x.name, x.value);
-              })
-              rsponse.headers = headers
-              delete this._data_proxy_response[id]
-              r(new Response(readableStream, rsponse))
-            } else {
-              if (bool) getFile()
-            }
-          }, 0)
-        }
-        getFile()
-        setTimeout(() => {
-          bool = false;
-          r(new Response(""))
-          j(new Response(""))
-        }, 3500)
-      })
-    }
-    async onWebsiteProxyRequest(event) {
-      const req = event.request;
-      const local_url = new URL(this.adapter.origin);
-      const req_url = new URL(req.url);
-      let headers = {};
-      event.request.headers.forEach(function (value, name) { headers[name] = value })
-      let body = null;
-      if (req.body) body = await this.readStreamToString(req.body)
-      const id = new Date() + Math.floor(Math.random() * 100000);
-      await this.broadcast({
-        id: id,
-        type: "website_proxy_request",
-        proxy_request_website_url: "https://manga.bilibili.com/",
-        proxy_response_website_url: event.request.referrer,
-        http: {
-          url: req.url,
-          option: {
-            "headers": headers,
-            "body": body,
-            "method": req.method
-          }
-        }
-      })
-      let bool = true;
-      return new Promise((r, j) => {
-        const getFile = () => {
-          setTimeout(() => {
-            if (this._data_proxy_response[id]) {
-              let rsponse = this._data_proxy_response[id].data;
-              const readableStream = new ReadableStream({
-                start(controller) {
-                  for (const data of rsponse.body) {
-                    controller.enqueue(Uint8Array.from(data));
-                  }
-                  controller.close();
-                },
-              });
-              delete rsponse.body;
-              const headers = new Headers();
-              rsponse.headers.forEach(x => {
-                headers.append(x.name, x.value);
-              })
-              rsponse.headers = headers
-              delete this._data_proxy_response[id]
-              r(new Response(readableStream, rsponse))
-            } else {
-              if (bool) getFile()
-            }
-          }, 0)
-        }
-        getFile()
-        setTimeout(() => {
-          bool = false;
-          r(new Response(""))
-          j(new Response(""))
-        }, 30000)
-      })
-    }
-    async onWebsiteProxyRequestImageCache(event) {
-      if (event.request.destination == "image") {
-        const res = await this.image_cache.match(event.request.url);
-        if (res) {
-          return res
-        } else {
-          // 勿动，不知道为啥，存起来，r返回就是null，必须再取一次
-          const r = await this.onWebsiteProxyRequest(event);
-          const request = new Request(event.request.url);
-          await this.image_cache.put(request, r);
-          const r2 = await this.image_cache.match(event.request.url);
-          return r2
-        }
-      } else {
-        return this.onWebsiteProxyRequest(event)
-      }
-    }
-    async onLocalProxyRequest(id) {
-      await this.broadcast({ type: "local_image", id: id })
-      let bool = true;
-      return new Promise((r, j) => {
-        const getFile = () => {
-          setTimeout(() => {
-            if (this._data_images[id]) {
-              let rsponse = this._data_images[id].response;
-              const readableStream = new ReadableStream({
-                start(controller) {
-                  for (const data of rsponse.body) {
-                    controller.enqueue(Uint8Array.from(data));
-                  }
-                  controller.close();
-                },
-              });
-              delete rsponse.body;
-              const headers = new Headers();
-              rsponse.init.headers.forEach(x => {
-                headers.append(x.name, x.value);
-              })
-              rsponse.init.headers = headers
-              delete this._data_images[id]
-              r(new Response(readableStream, rsponse.init))
-            } else {
-              if (bool) getFile()
-            }
-          }, 0)
-        }
-        getFile()
-        setTimeout(() => {
-          bool = false;
-          r(new Response(""))
-          j(new Response(""))
-        }, 30000)
-      })
-    }
-    async onLocalProxyRequestImageCache(event) {
-      const req = event.request;
-      let str = req.url.split("/");
-      const id = str.pop();
-      const url = str.join("/");
-      const res = await this.image_cache.match(url);
-      if (res && res.headers.get('content-length')) {
-        return res
-      } else {
-        const r = await this.onLocalProxyRequest(id);
-        const request = new Request(url);
-        await this.image_cache.put(request, r);
-        const r2 = await this.image_cache.match(url);
-        return r2
-      }
     }
     onFetch(event) {
       const req = event.request;
-      const local_url = new URL(this.adapter.origin);
-      const req_url = new URL(req.url);
-      if (local_url.hostname == req_url.hostname) {
-        if (req_url.pathname.split("/")[1] == "image") {
-          event.respondWith(this.onLocalProxyRequestImageCache(event))
-          return;
-        }
-        // if (req.url.split("/")[3] == "temporary_file") {
-        //   event.respondWith(this.getTemporaryFile(req.url.split("/")[4]))
-        //   return;
-        // }
-      } else {
-        if (this._proxy_hostnames.find(x=>x.host_name==req_url.hostname)) {
-          event.respondWith(this.onWebsiteProxyRequestImageCache(event))
-          return;
-        }
-      }
       const scopeUrl = this.scope.registration.scope;
       const requestUrlObj = this.adapter.parseUrl(req.url, scopeUrl);
       if (req.headers.has("ngsw-bypass") || /[?&]ngsw-bypass(?:[=&]|$)/i.test(requestUrlObj.search)) {
@@ -1537,28 +1281,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       if (this.state === DriverReadyState.SAFE_MODE) {
         return;
       }
-
-      let data = event.data;
-      if (data && data.type && data.type == "temporary_file") {
-        this._data_temporary_files[data.id] = data;
-        return;
-      }
-      if (data && data.type && data.type == "proxy_response") {
-        this._data_proxy_response[data.id] = data;
-        return;
-      }
-      if (data && data.type && data.type == "local_image") {
-        this._data_images[data.id] = data;
-        return;
-      }
-
-      if (data && data.type && data.type == "pulg_config") {
-        console.log(data);
-        this._data_pulg_config = data.configs;
-        this._proxy_hostnames = data.proxy_hostnames;
-        return;
-      }
-
+      const data = event.data;
       if (!data || !data.action) {
         return;
       }
@@ -1663,7 +1386,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       });
     }
     async getLastFocusedMatchingClient(scope2) {
-      const windowClients = await scxfope2.clients.matchAll({ type: "window" });
+      const windowClients = await scope2.clients.matchAll({ type: "window" });
       return windowClients[0];
     }
     async completeOperation(client, promise, nonce) {
@@ -2115,7 +1838,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
     }
   };
 
-  // bazel-out/darwin_arm64-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/main.mjs
+  // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/main.mjs
   var scope = self;
   var adapter = new Adapter(scope.registration.scope, self.caches);
   new Driver(scope, adapter, new CacheDatabase(adapter));

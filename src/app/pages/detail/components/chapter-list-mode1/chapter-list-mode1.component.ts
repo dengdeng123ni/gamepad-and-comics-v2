@@ -36,6 +36,8 @@ export class ChapterListMode1Component {
   }
   // abbreviated list
   _ctrl = false;
+
+  pattern = ''
   constructor(public data: DataService,
     public router: Router,
     public current: CurrentService, public doublePageThumbnail: DoublePageThumbnailService, public ContextMenuEvent: ContextMenuEventService, public exportSettings: ExportSettingsService,) {
@@ -49,7 +51,7 @@ export class ChapterListMode1Component {
       on: async (e: { value: string; id: string; }) => {
 
         const index = this.data.chapters.findIndex(x => x.id.toString() == e.value.toString());
-        if(this.data.chapters.filter(x=>x.selected).length==0){
+        if (this.data.chapters.filter(x => x.selected).length == 0) {
           this.data.chapters[index].selected = !this.data.chapters[index].selected;
         }
         if (e.id == "delete") {
@@ -87,6 +89,9 @@ export class ChapterListMode1Component {
         // { name: "delete", id: "delete" },
       ]
     })
+    if (this.data.chapters[0].cover) this.pattern = 'image';
+    else if (this.data.chapters[0].title) this.pattern = 'title';
+    else this.pattern = 'index';
   }
   on($event: MouseEvent) {
     const node = $event.target as HTMLElement;

@@ -282,7 +282,7 @@ export class DbEventService {
       is_edit: false,
       is_locked: false,
       is_cache: true,
-      is_offprint: true,
+      is_offprint: false,
       is_tab: true
     }, {
       List: async (obj: any) => {
@@ -382,7 +382,6 @@ export class DbEventService {
         return data
       },
       Image: async (id: string) => {
-
         const getImageUrl = async (id: string) => {
           const res = await this._http.fetch_background(id, {
             method: "GET",
@@ -561,6 +560,124 @@ export class DbEventService {
         return blob
       }
     });
+    this.register({
+      name: "haoguoman",
+      tab: {
+        url: "https://hanime1.me/comic/",
+        host_names: ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"],
+      },
+      is_edit: false,
+      is_locked: false,
+      is_cache: false,
+      is_offprint: false,
+      is_tab: true
+    }, {
+      List: async (obj: any) => {
+        let list = [];
+        return list
+      },
+      Detail: async (id: string) => {
+        const res = await this._http.fetch_html('https://www.haoguoman.com/36554', {
+          "headers": {
+            "accept": "application/json, text/plain, */*",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "content-type": "application/json;charset=UTF-8"
+          },
+          "body": null,
+          "method": "GET"
+        });
+        const text = await res.text();
+        var parser = new DOMParser();
+        var doc: any = parser.parseFromString(text, 'text/html');
+
+        let obj = {
+          id: id,
+          cover: "",
+          title: "",
+          author: "",
+          intro: "",
+          chapters: [
+
+          ],
+          chapter_id: id
+        }
+        const utf8_to_b64 = (str: string) => {
+          return window.btoa(encodeURIComponent(str));
+        }
+        obj.title = doc.querySelector("#content-container > div.columns > div.column.is-three-quarters > div > div > div > h1").textContent.trim()
+        obj.cover =doc.querySelector("#content-container > div.columns > div.column.is-three-quarters > div > div > div > div.metas-image > img").src;
+        const nodes=doc.querySelectorAll("#content-container > div:nth-child(3) > div.panel-body > ul > li > a")
+        for (let index = 0; index < nodes.length; index++) {
+          const node = nodes[index];
+          obj.chapters.push({
+            id: utf8_to_b64(node.href),
+            title: node.textContent,
+          })
+        }
+        return obj
+      },
+      Pages: async (id: string) => {
+        const b64_to_utf8 = (str: string) => {
+          return decodeURIComponent(window.atob(str));
+        }
+        const res = await this._http.fetch_html(b64_to_utf8(id), {
+          "headers": {
+            "accept": "application/json, text/plain, */*",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "content-type": "application/json;charset=UTF-8"
+          },
+          "body": null,
+          "method": "GET"
+        });
+        const text = await res.text();
+        var parser = new DOMParser();
+        var doc: any = parser.parseFromString(text, 'text/html');
+
+
+        const nodes = doc.querySelectorAll(".ptt a");
+
+
+        return data
+      },
+      Image: async (id: string) => {
+        const b64_to_utf8 = (str: string) => {
+          return decodeURIComponent(window.atob(str));
+        }
+        const _id = b64_to_utf8(id);
+        const getHtmlUrl = async (url) => {
+          const res = await this._http.fetch_html(url, {
+            "headers": {
+              "accept": "application/json, text/plain, */*",
+              "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+              "content-type": "application/json;charset=UTF-8"
+            },
+            "body": null,
+            "method": "GET"
+          });
+          const text = await res.text();
+          var parser = new DOMParser();
+          var doc: any = parser.parseFromString(text, 'text/html');
+          return doc.querySelector("#img").src
+        }
+        const getImageUrl = async (id: string) => {
+          const res = await this._http.fetch_background(id, {
+            method: "GET",
+            headers: {
+              "accept": "image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+              "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+              "sec-ch-ua": "\"Microsoft Edge\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\""
+            },
+            mode: "cors"
+          });
+          const blob = await res.blob();
+          return blob
+        }
+        const url = await getHtmlUrl(_id)
+        const blob = await getImageUrl(url);
+        return blob
+      }
+    });
+
     window._register = this.register;
   }
 

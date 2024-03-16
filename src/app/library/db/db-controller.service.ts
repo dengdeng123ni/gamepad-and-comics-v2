@@ -134,7 +134,9 @@ export class DbControllerService {
             x.src = `http://localhost:7700/${config.name}/page/${id}/${i}`;
             x.index=i;
           })
-          firstValueFrom(this.webDb.update('pages', { id: id, data: res }))
+          if(res.length){
+            firstValueFrom(this.webDb.update('pages', { id: id, data: res }))
+          }
         }else{
           res.forEach((x, i) => {
             x.index=i;
@@ -180,7 +182,11 @@ export class DbControllerService {
               if (url) {
                 return url
               } else {
-                await this.getDetail(comics_id)
+                let res = await this.DbEvent.Events[option.origin]["Detail"](comics_id);
+                this.image_url[`${config.name}_comics_${res.id}`] = res.cover;
+                res.chapters.forEach(x => {
+                  this.image_url[`${config.name}_chapter_${res.id}_${x.id}`] = x.cover;
+                })
                 return this.image_url[`${name}_comics_${comics_id}`];
               }
             } else if (type == "chapter") {
@@ -190,7 +196,11 @@ export class DbControllerService {
               if (url) {
                 return url
               } else {
-                await this.getDetail(comics_id)
+                let res = await this.DbEvent.Events[option.origin]["Detail"](comics_id);
+                this.image_url[`${config.name}_comics_${res.id}`] = res.cover;
+                res.chapters.forEach(x => {
+                  this.image_url[`${config.name}_chapter_${res.id}_${x.id}`] = x.cover;
+                })
                 return this.image_url[`${name}_chapter_${comics_id}_${chapter_id}`];
               }
             } else {

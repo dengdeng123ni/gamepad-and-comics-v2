@@ -56,7 +56,7 @@ export class MenuComponent {
     }
     this.menu.opened = !this.menu.opened;
   }
-  on3(type: string) {
+  on3(c,type: string) {
     this.zone.run(() => {
       this.data.qurye_page_type = "1"
       setTimeout(()=>{
@@ -64,7 +64,7 @@ export class MenuComponent {
       })
     })
     this.data.list = [];
-    this.AppData.setOrigin('hanime1')
+    this.AppData.setOrigin(c)
     this.menu.opened = !this.menu.opened;
   }
   on2(id: string) {
