@@ -568,7 +568,7 @@ export class DbEventService {
       },
       is_edit: false,
       is_locked: false,
-      is_cache: false,
+      is_cache: true,
       is_offprint: false,
       is_tab: true
     }, {
@@ -610,7 +610,7 @@ export class DbEventService {
         for (let index = 0; index < nodes.length; index++) {
           const node = nodes[index];
           obj.chapters.push({
-            id: utf8_to_b64(node.href),
+            id: utf8_to_b64(`https://www.haoguoman.com${node.getAttribute('href')}`),
             title: node.textContent,
           })
         }
@@ -620,6 +620,8 @@ export class DbEventService {
         const b64_to_utf8 = (str: string) => {
           return decodeURIComponent(window.atob(str));
         }
+        console.log(b64_to_utf8(id));
+
         const res = await this._http.fetch_html(b64_to_utf8(id), {
           "headers": {
             "accept": "application/json, text/plain, */*",
@@ -632,33 +634,38 @@ export class DbEventService {
         const text = await res.text();
         var parser = new DOMParser();
         var doc: any = parser.parseFromString(text, 'text/html');
+console.log(doc);
 
 
-        const nodes = doc.querySelectorAll(".ptt a");
+        let arr = []
+        let data = [];
+        const nodes = doc.querySelectorAll("body > img")
+        console.log(nodes);
 
+        for (let index = 0; index < nodes.length; index++) {
+          // let _id = nodes[index].dataset.srcset.split("/").at(-2)
+          // let type = nodes[index].dataset.srcset.split("/").at(-1).split(".").at(-1)
+          let obj = {
+            id: "",
+            src: "",
+            width: 0,
+            height: 0
+          };
+          const utf8_to_b64 = (str: string) => {
+            return window.btoa(encodeURIComponent(str));
+          }
+
+          obj["id"] = `${id}_${index}`;
+          obj["src"] = `https://www.haoguoman.com${nodes[index].getAttribute('src')}`
+          data.push(obj)
+        }
+        console.log(data);
 
         return data
+
+        return []
       },
       Image: async (id: string) => {
-        const b64_to_utf8 = (str: string) => {
-          return decodeURIComponent(window.atob(str));
-        }
-        const _id = b64_to_utf8(id);
-        const getHtmlUrl = async (url) => {
-          const res = await this._http.fetch_html(url, {
-            "headers": {
-              "accept": "application/json, text/plain, */*",
-              "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-              "content-type": "application/json;charset=UTF-8"
-            },
-            "body": null,
-            "method": "GET"
-          });
-          const text = await res.text();
-          var parser = new DOMParser();
-          var doc: any = parser.parseFromString(text, 'text/html');
-          return doc.querySelector("#img").src
-        }
         const getImageUrl = async (id: string) => {
           const res = await this._http.fetch_background(id, {
             method: "GET",
@@ -672,8 +679,7 @@ export class DbEventService {
           const blob = await res.blob();
           return blob
         }
-        const url = await getHtmlUrl(_id)
-        const blob = await getImageUrl(url);
+        const blob = await getImageUrl(id);
         return blob
       }
     });

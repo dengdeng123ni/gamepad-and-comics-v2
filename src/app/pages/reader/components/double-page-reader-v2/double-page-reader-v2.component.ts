@@ -101,10 +101,28 @@ export class DoublePageReaderV2Component {
 
     })
 
+    this.event$ = this.current.event().subscribe(x => {
+      if (x.key == "double_page_reader_FirstPageToggle") {
+        this.firstPageToggle();
+      } else if (x.key == "double_page_reader_togglePage") {
+        this.pageToggle();
+      }
+    })
 
     this.init();
 
     document.documentElement.style.setProperty('--double-page-reader-v2-width', `${(250 / 353) * window.innerHeight * 2}px`);
+  }
+  firstPageToggle() {
+    console.log(this.data.page_index);
+
+    this.is_first_page_cover = !this.is_first_page_cover;
+    if (this.data.page_index == 0) {
+      this.pageToggle();
+      this.pageToggle();
+    } else {
+
+    }
   }
 
   ngOnDestroy() {

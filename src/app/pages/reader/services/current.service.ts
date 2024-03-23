@@ -499,6 +499,7 @@ export class CurrentService {
     chapter_id: string,
     trigger?: string
   }) {
+    if (option.page_index < 0) option.page_index = 0;
     this.data.page_index = option.page_index;
     this.data.pages = option.pages;
     if (!!option.chapter_id) {
@@ -519,7 +520,7 @@ export class CurrentService {
     this._setWebDbComicsConfig(this.data.comics_id);
     this.data.is_init_free = false;
     const index = this.data.chapters.findIndex(x => x.id == this.data.chapter_id)
-    this.history.update_progress(this.data.comics_id, `${this.data.is_offprint ? Math.ceil((this.data.page_index / this.data.pages.length)*100) :  Math.ceil((index / this.data.chapters.length)*100)}%`)
+    this.history.update_progress(this.data.comics_id, `${this.data.is_offprint ? Math.ceil((this.data.page_index / this.data.pages.length) * 100) : Math.ceil((index / this.data.chapters.length) * 100)}%`)
   }
 
 
