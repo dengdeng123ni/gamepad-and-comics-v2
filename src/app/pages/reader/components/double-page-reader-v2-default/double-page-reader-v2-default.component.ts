@@ -1,3 +1,4 @@
+
 import { Component, HostListener } from '@angular/core';
 import { ImageService, PagesItem } from 'src/app/library/public-api';
 import { CurrentService } from '../../services/current.service';
@@ -7,11 +8,11 @@ import { GamepadEventService } from 'src/app/library/gamepad/gamepad-event.servi
 // import Swiper from 'swiper';
 declare const Swiper: any;
 @Component({
-  selector: 'app-double-page-reader-v2',
-  templateUrl: './double-page-reader-v2.component.html',
-  styleUrls: ['./double-page-reader-v2.component.scss']
+  selector: 'app-double-page-reader-v2-default',
+  templateUrl: './double-page-reader-v2-default.component.html',
+  styleUrls: ['./double-page-reader-v2-default.component.scss']
 })
-export class DoublePageReaderV2Component {
+export class DoublePageReaderV2DefaultComponent {
   swiper = null;
   @HostListener('window:keydown', ['$event'])
   handleKeyDown = (event: KeyboardEvent) => {
@@ -184,7 +185,7 @@ export class DoublePageReaderV2Component {
   }
 
   async next() {
-    const nodes = this.swiper.slides[0].querySelectorAll("[current_page]");
+    const nodes = this.swiper.slides[this.swiper.slides.length - 1].querySelectorAll("[current_page]");
     let indexs = [];
     for (let index = 0; index < nodes.length; index++) {
       const node = nodes[index];
@@ -209,7 +210,7 @@ export class DoublePageReaderV2Component {
     }
   }
   async previous() {
-    const nodes = this.swiper.slides[this.swiper.slides.length - 1].querySelectorAll("[current_page]");
+    const nodes = this.swiper.slides[0].querySelectorAll("[current_page]");
     let indexs = [];
     for (let index = 0; index < nodes.length; index++) {
       const node = nodes[index];
@@ -281,12 +282,12 @@ export class DoublePageReaderV2Component {
     const res = await getNextPages(list, index);
     let current = "";
     const c = res.primary.end || res.primary.start || res.secondary.src;
-    if (res.primary.end) current = current + `<img style="opacity: 0;50%"  src="${res.primary.src}" />`;
-    if (res.secondary.src) current = current + `<img style="width: 50%;height: auto;object-fit: contain;object-position: right;" current_page chapter_id=${chapter_id} index=${res.secondary.index} page_id="${res.secondary.id}" src="${res.secondary.src}" />`;
-    if (res.primary.src) current = current + `<img  style="width: ${c ? '50%' : '100%'};height: auto;object-fit: contain;object-position: left;"  current_page chapter_id=${chapter_id} index=${res.primary.index}  page_id="${res.primary.id}" src="${res.primary.src}" />`;
     if (res.primary.start) current = current + `<img style="opacity: 0;50%"  src="${res.primary.src}" />`;
+    if (res.primary.src) current = current + `<img  style="width: ${c ? '50%' : '100%'};height: auto;object-fit: contain;object-position: right;"  current_page chapter_id=${chapter_id} index=${res.primary.index}  page_id="${res.primary.id}" src="${res.primary.src}" />`;
+    if (res.secondary.src) current = current + `<img style="width: 50%;height: auto;object-fit: contain;object-position: left;" current_page chapter_id=${chapter_id} index=${res.secondary.index} page_id="${res.secondary.id}" src="${res.secondary.src}" />`;
+    if (res.primary.end) current = current + `<img style="opacity: 0;50%"  src="${res.primary.src}" />`;
     this.objNextHtml[`${chapter_id}_${index}`] = current;
-    this.prependSlide(current)
+    this.appendSlide(current)
   }
   async addPreviousSlide(chapter_id, list, index: number) {
     if(this.objPreviousHtml[`${chapter_id}_${index}`]) return
@@ -314,13 +315,12 @@ export class DoublePageReaderV2Component {
     const res = await getPreviousPages(list, index);
     let current = "";
     const c = res.primary.end || res.primary.start || res.secondary.src;
-    if (res.primary.end) current = current + `<img style="opacity: 0;50%" src="${res.primary.src}" />`;
-    if (res.primary.src) current = current + `<img  style="width: ${c ? '50%' : '100%'};height: auto;object-fit: contain;object-position: right;"  current_page chapter_id=${chapter_id} index=${res.primary.index}  page_id="${res.primary.id}" src="${res.primary.src}" />`
-    if (res.secondary.src) current = current + `<img style="width: 50%;height: auto;object-fit: contain;object-position: left;" current_page chapter_id=${chapter_id} index=${res.secondary.index} page_id="${res.secondary.id}" src="${res.secondary.src}" />`;
     if (res.primary.start) current = current + `<img style="opacity: 0;50%"  src="${res.primary.src}" />`;
-
+    if (res.secondary.src) current = current + `<img style="width: 50%;height: auto;object-fit: contain;object-position: right;" current_page chapter_id=${chapter_id} index=${res.secondary.index} page_id="${res.secondary.id}" src="${res.secondary.src}" />`;
+    if (res.primary.src) current = current + `<img  style="width: ${c ? '50%' : '100%'};height: auto;object-fit: contain;object-position: left;"  current_page chapter_id=${chapter_id} index=${res.primary.index}  page_id="${res.primary.id}" src="${res.primary.src}" />`
+    if (res.primary.end) current = current + `<img style="opacity: 0;50%" src="${res.primary.src}" />`;
     this.objPreviousHtml[`${chapter_id}_${index}`] = current;
-    this.appendSlide(current)
+    this.prependSlide(current)
   }
   prependSlide(src: string) {
     this.swiper.prependSlide
@@ -373,7 +373,7 @@ export class DoublePageReaderV2Component {
   }
 
   ngAfterViewInit() {
-    this.swiper = new Swiper(".mySwiper3", {
+    this.swiper = new Swiper(".mySwiper5", {
       mousewheel: {
         thresholdDelta: 20,
         forceToAxis: false,
@@ -398,7 +398,7 @@ export class DoublePageReaderV2Component {
         this.ccc = true;
 
         setTimeout(() => {
-          this.next()
+          this.previous()
           this.ccc = false;
         }, 500)
       }
@@ -419,7 +419,7 @@ export class DoublePageReaderV2Component {
         this.ccc = true;
 
         setTimeout(() => {
-          this.previous()
+          this.next()
           this.ccc = false;
         }, 500)
       }

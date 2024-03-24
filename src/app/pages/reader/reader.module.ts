@@ -24,6 +24,7 @@ import { SetChapterFirstPageCoverComponent } from './components/set-chapter-firs
 import { ChaptersListComponent } from './components/chapters-list/chapters-list.component';
 import { CanvasImage1Component } from './components/canvas-image1/canvas-image1.component';
 import { DoublePageReaderV2Component } from './components/double-page-reader-v2/double-page-reader-v2.component';
+import { DoublePageReaderV2DefaultComponent } from './components/double-page-reader-v2-default/double-page-reader-v2-default.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { DoublePageReaderV2Component } from './components/double-page-reader-v2/
     SetChapterFirstPageCoverComponent,
     ChaptersListComponent,
     CanvasImage1Component,
-    DoublePageReaderV2Component
+    DoublePageReaderV2Component,
+    DoublePageReaderV2DefaultComponent
   ],
   imports: [
     CommonModule,

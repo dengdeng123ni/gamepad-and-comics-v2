@@ -561,14 +561,14 @@ export class DbEventService {
       }
     });
     this.register({
-      name: "haoguoman",
+      name: "didamh",
       tab: {
         url: "https://hanime1.me/comic/",
         host_names: ["manga.bilibili.com", "i0.hdslb.com", "manga.hdslb.com"],
       },
       is_edit: false,
       is_locked: false,
-      is_cache: true,
+      is_cache: false,
       is_offprint: false,
       is_tab: true
     }, {
@@ -577,7 +577,7 @@ export class DbEventService {
         return list
       },
       Detail: async (id: string) => {
-        const res = await this._http.fetch_html('https://www.haoguoman.com/36554', {
+        const res = await this._http.fetch_html('https://www.didamh.com/book/755.html', {
           "headers": {
             "accept": "application/json, text/plain, */*",
             "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
@@ -601,17 +601,18 @@ export class DbEventService {
           ],
           chapter_id: id
         }
+
         const utf8_to_b64 = (str: string) => {
           return window.btoa(encodeURIComponent(str));
         }
-        obj.title = doc.querySelector("#content-container > div.columns > div.column.is-three-quarters > div > div > div > h1").textContent.trim()
-        obj.cover =doc.querySelector("#content-container > div.columns > div.column.is-three-quarters > div > div > div > div.metas-image > img").src;
-        const nodes=doc.querySelectorAll("#content-container > div:nth-child(3) > div.panel-body > ul > li > a")
+        obj.title = doc.querySelector("body > div.container > div.article-container > header > div:nth-child(3) > span > a").textContent.trim()
+        obj.cover =doc.querySelector("body > div.container > div.article-container > header > img").src;
+        const nodes=doc.querySelectorAll("#slider > div > div > div > div:nth-child(1) a")
         for (let index = 0; index < nodes.length; index++) {
           const node = nodes[index];
           obj.chapters.push({
-            id: utf8_to_b64(`https://www.haoguoman.com${node.getAttribute('href')}`),
-            title: node.textContent,
+            id: utf8_to_b64(`https://www.didamh.com${node.getAttribute('href')}`),
+            title: `${node.textContent}`,
           })
         }
         return obj
@@ -620,7 +621,8 @@ export class DbEventService {
         const b64_to_utf8 = (str: string) => {
           return decodeURIComponent(window.atob(str));
         }
-        console.log(b64_to_utf8(id));
+        console.log(123);
+        console.log(123,b64_to_utf8(id));
 
         const res = await this._http.fetch_html(b64_to_utf8(id), {
           "headers": {
@@ -631,20 +633,21 @@ export class DbEventService {
           "body": null,
           "method": "GET"
         });
+        console.log(res);
+
+        console.log(123);
+
         const text = await res.text();
+        console.log(text);
+
         var parser = new DOMParser();
         var doc: any = parser.parseFromString(text, 'text/html');
-console.log(doc);
 
 
         let arr = []
         let data = [];
         const nodes = doc.querySelectorAll("body > img")
-        console.log(nodes);
-
         for (let index = 0; index < nodes.length; index++) {
-          // let _id = nodes[index].dataset.srcset.split("/").at(-2)
-          // let type = nodes[index].dataset.srcset.split("/").at(-1).split(".").at(-1)
           let obj = {
             id: "",
             src: "",
@@ -656,14 +659,12 @@ console.log(doc);
           }
 
           obj["id"] = `${id}_${index}`;
-          obj["src"] = `https://www.haoguoman.com${nodes[index].getAttribute('src')}`
+          obj["src"] = nodes[index].getAttribute('data-original');
           data.push(obj)
         }
         console.log(data);
 
         return data
-
-        return []
       },
       Image: async (id: string) => {
         const getImageUrl = async (id: string) => {
