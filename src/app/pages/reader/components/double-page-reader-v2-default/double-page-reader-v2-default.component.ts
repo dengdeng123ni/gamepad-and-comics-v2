@@ -263,17 +263,11 @@ export class DoublePageReaderV2DefaultComponent {
           obj.secondary = undefined;
         }
       }
-      console.log(obj);
-
-
-
       if (index >= (total - 1) && !obj.secondary) {
         if (obj.primary.width < obj.primary.height) page.primary.end = true;
       }
       if (obj.secondary) page.secondary = { ...page.secondary, ...obj.secondary };
       if (obj.primary) page.primary = { ...page.primary, ...obj.primary };
-      console.log(index == 0 && !obj.secondary);
-
       if (index == 0 && !obj.secondary) {
         if (obj.primary.width < obj.primary.height) page.primary.start = true;
       }

@@ -34,12 +34,6 @@ export class DbControllerService {
     private webDb: NgxIndexedDBService,
   ) {
     this.init();
-
-    setTimeout(()=>{
-      this.getPages('aHR0cHMlM0ElMkYlMkZ3d3cuZGlkYW1oLmNvbSUyRmNoYXB0ZXIlMkY3NTUtMi01NC5odG1s',{
-        origin:"didamh"
-      })
-    },1000)
   }
 
   async init() {
@@ -87,6 +81,8 @@ export class DbControllerService {
           if (res) {
             this.details[id] = JSON.parse(JSON.stringify(res));
             res.option = { origin: option.origin, is_offprint: config.is_offprint }
+            console.log(res);
+
             return res
           }
         }

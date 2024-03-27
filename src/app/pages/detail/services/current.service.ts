@@ -50,8 +50,6 @@ export class CurrentService {
       title: this.data.comics_info.title,
       cover: this.data.comics_info.cover
     })
-console.log(this.data);
-
   }
 
 

@@ -36,6 +36,12 @@ export class MultiplePageReaderMode1Component {
       }
     })
   }
+  async on(e){
+    e.stopPropagation();
+    await this.current._chapterNext();
+    await this.init();
+
+  }
   ngOnDestroy() {
     this.change$.unsubscribe();
   }
@@ -43,7 +49,7 @@ export class MultiplePageReaderMode1Component {
     const container = document.getElementById("multiple_page_reader_mode1")
     if(container) container.classList.remove("opacity-0");
     this.pageChnage(this.data.page_index)
-    this.init();
+
   }
 
   async pageChnage(page_index: number) {
@@ -72,18 +78,20 @@ export class MultiplePageReaderMode1Component {
     );
     nodes.forEach(node => observer.observe(node))
   }
-  next() {
+  async next() {
     const page_index = this.page_index + 1;
     if (page_index >= this.pages.length) {
-
+      await this.current._chapterNext();
+      await this.init();
       return
     }
     this.current._pageChange(page_index);
   }
-  previous() {
+  async previous() {
     const page_index = this.page_index - 1;
     if (page_index <= 0) {
-
+      await this.current._pagePrevious();
+      await this.init();
       return
     }
     this.current._pageChange(page_index);

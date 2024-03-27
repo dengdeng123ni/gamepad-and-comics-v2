@@ -32,12 +32,6 @@ export class DbEventService {
     public http: HttpClient,
     public _http: MessageFetchService,
   ) {
-    setTimeout(() => {
-      // console.log(this.Configs);
-      // http://localhost:7700/名称/comics_cover/漫画ID/图片信息
-      // http://localhost:7700/名称/chapter_cover/章节ID/图片信息
-      // http://localhost:7700/名称/page/页面ID/图片信息
-    }, 3000)
     this.register({
       name: "bilibili",
       tab: {
