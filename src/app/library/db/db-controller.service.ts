@@ -81,8 +81,6 @@ export class DbControllerService {
           if (res) {
             this.details[id] = JSON.parse(JSON.stringify(res));
             res.option = { origin: option.origin, is_offprint: config.is_offprint }
-            console.log(res);
-
             return res
           }
         }

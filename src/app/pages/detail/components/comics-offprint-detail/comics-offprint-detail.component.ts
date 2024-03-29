@@ -27,8 +27,6 @@ export class ComicsOffprintDetailComponent {
     this.info.height = height;
   }
   on(e){
-    console.log(e);
-
     window.open(e,'_blank')
   }
   back() {

@@ -86,7 +86,6 @@ export class CurrentService {
   }
   async _chapterPageChange(chapter_id: string, page_index: number) {
     await this._setChapterIndex(chapter_id, page_index)
-    console.log(chapter_id, page_index);
 
     this.router.navigate(['/', this.data.comics_id, this.data.chapter_id])
 
@@ -109,7 +108,6 @@ export class CurrentService {
   }
   async _getImageHW(id) {
     const res: any = await firstValueFrom(this.webDb.getByID("imageHW", id))
-    console.log(res);
 
     if (res) {
       return {

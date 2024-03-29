@@ -36,7 +36,6 @@ export class ExportSettingsComponent {
   async on() {
     this.loading.open();
     const chapters = this.data.chapters.filter(x => x.selected);
-    console.log(chapters);
 
     if (chapters.length == 0) return
     for (let index = 0; index < chapters.length; index++) {

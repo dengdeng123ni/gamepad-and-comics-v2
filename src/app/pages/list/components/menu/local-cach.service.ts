@@ -48,8 +48,6 @@ export class LocalCachService {
         const { id, origin } = JSON.parse(this.b64_to_utf8(_id)) as { id: string, origin: string }
         const res = await firstValueFrom(this.webDb.getByID("local_comics", id.toString()))
         if (res) {
-          console.log(res);
-
         } else {
           const res = await this.DbController.getPages(id, { origin });
           res.forEach(x => {

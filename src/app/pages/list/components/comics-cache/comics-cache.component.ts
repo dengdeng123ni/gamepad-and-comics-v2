@@ -27,8 +27,6 @@ export class ComicsCacheComponent {
 ]
 
   constructor() {
-    console.log(123);
-
     window.comics_query_option = {
       query_type:"home"
     };

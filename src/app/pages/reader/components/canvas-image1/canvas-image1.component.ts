@@ -58,8 +58,6 @@ export class CanvasImage1Component {
 
   }
   ngAfterViewInit() {
-    console.log(this.index);
-
     this.init()
   }
 }

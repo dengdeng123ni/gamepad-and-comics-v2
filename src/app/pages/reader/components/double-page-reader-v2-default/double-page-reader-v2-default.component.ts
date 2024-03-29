@@ -87,7 +87,6 @@ export class DoublePageReaderV2DefaultComponent {
 
     this.change$ = this.current.change().subscribe(x => {
       if (x.trigger == 'double_page_reader_v2') return
-      // console.log(x);
       if (x.type == "changePage") {
         this.change(x.chapter_id, x.pages, x.page_index)
       } else if (x.type == "changeChapter") {

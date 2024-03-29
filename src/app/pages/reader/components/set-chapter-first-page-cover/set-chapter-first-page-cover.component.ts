@@ -33,7 +33,6 @@ export class SetChapterFirstPageCoverComponent {
     if (e == 1) this.current._delChapterFirstPageCover(this.data.chapter_id)
     if (e == 2) this.current._setChapterFirstPageCover(this.data.chapter_id, true)
     if (e == 3) this.current._setChapterFirstPageCover(this.data.chapter_id, false)
-    console.log(this.data.page_index );
 
     if (this.data.page_index == 0) this.current.event$.next({ key: "double_page_reader_FirstPageToggle", value: null })
     this.close();

@@ -10,10 +10,10 @@ import { DataService } from '../../services/data.service';
 export class LoadingCoverComponent {
   cover = "";
   constructor(private data: DataService) {
-    this.cover = this.data.comics_info.cover
-    console.log(this.data.comics_info);
-
+    this.cover = this.data.comics_info.cover;
   }
+
+
 
 
 

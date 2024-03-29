@@ -86,7 +86,6 @@ export class DoublePageReaderV2Component {
 
     this.change$ = this.current.change().subscribe(x => {
       if (x.trigger == 'double_page_reader_v2') return
-      // console.log(x);
       if (x.type == "changePage") {
         this.change(x.chapter_id, x.pages, x.page_index)
       } else if (x.type == "changeChapter") {
@@ -262,16 +261,11 @@ export class DoublePageReaderV2Component {
           obj.secondary = undefined;
         }
       }
-      console.log(obj);
-
-
-
       if (index >= (total - 1) && !obj.secondary) {
         if (obj.primary.width < obj.primary.height) page.primary.end = true;
       }
       if (obj.secondary) page.secondary = { ...page.secondary, ...obj.secondary };
       if (obj.primary) page.primary = { ...page.primary, ...obj.primary };
-      console.log(index == 0 && !obj.secondary);
 
       if (index == 0 && !obj.secondary) {
         if (obj.primary.width < obj.primary.height) page.primary.start = true;

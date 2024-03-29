@@ -133,7 +133,6 @@ export class CurrentService {
     this.data.comics_info = res;
     this.init$.next(this.data)
     this.data.is_init_free = true;
-    console.log(this.data);
 
     setTimeout(() => {
       this._updateChapterRead(this.data.chapter_id)
