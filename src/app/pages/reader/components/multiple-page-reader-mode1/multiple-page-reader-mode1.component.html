@@ -1,14 +1,3 @@
-
-<div class="warp">
-  <div class="list" id="multiple_page_reader_mode1" [attr.region]="'multiple_page_reader_mode1'">
-    <app-image style=" width: 50vw;
-    min-width: 836px;" *ngFor="let n of pages;let index=index" [width]="n.width" [height]="n.height" [attr.index]="index" [id]="'multiple_page_reader_mode1_'+index" [src]="n.src" ></app-image>
-  </div>
-  <div style="display: flex;
-  justify-content: center;
-  height: 100px;
-  align-items: center;">
-    <button mat-raised-button style="    width: 15vw;
-    min-width: 200px;" (click)="on($event)" color="primary">下一章</button>
-  </div>
+<div class="list"  id="multiple_page_reader_mode1" [attr.region]="'multiple_page_reader_mode1'" [attr.direction]="false">
+  <app-image *ngFor="let n of pages;let index=index" [attr.chapter_id]="n.chapter_id" [width]="n.width" [height]="n.height" [attr.index]="n.index" [id]="'multiple_page_reader_mode1_'+index" [src]="n.src" [alt]="n.index"></app-image>
 </div>

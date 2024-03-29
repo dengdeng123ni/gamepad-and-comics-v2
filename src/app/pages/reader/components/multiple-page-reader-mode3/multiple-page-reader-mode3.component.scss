@@ -1,6 +1,6 @@
 .list{
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   width: 100vw;
   transform: scale(1);
   justify-content: top;
@@ -11,7 +11,4 @@
     app-image{
       min-width: fit-content;
     }
-}
-.list[direction=false]{
-  flex-direction: row-reverse;
 }

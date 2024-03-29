@@ -500,7 +500,9 @@ export class CurrentService {
     chapter_id: string,
     trigger?: string
   }) {
+    if(!option.chapter_id) return
     if (Number.isNaN(option.page_index) || option.page_index < 0) option.page_index = 0;
+
     this.data.page_index = option.page_index;
     this.data.pages = option.pages;
     if (!!option.chapter_id) {

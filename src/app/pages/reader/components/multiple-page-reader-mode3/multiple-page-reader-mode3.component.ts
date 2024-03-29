@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CurrentService } from '../../services/current.service';
 import { DataService } from '../../services/data.service';
 import { ImageService } from 'src/app/library/public-api';
-interface Item { chapter_id:string,id: string, src: string, width: number, height: number }
+interface Item { chapter_id: string, index: number, id: string, src: string, width: number, height: number }
 @Component({
   selector: 'app-multiple-page-reader-mode3',
   templateUrl: './multiple-page-reader-mode3.component.html',
@@ -24,12 +24,11 @@ export class MultiplePageReaderMode3Component {
     this.change$ = this.current.change().subscribe(x => {
       if (x.trigger == "up_down_page_reader") return
       if (x.type == "changePage") {
-        this.pages = x.pages.map(c => ({ ...c, chapter_id:x.chapter_id }));
+        this.pages = x.pages.map(c => ({ ...c, chapter_id: x.chapter_id }));
         this.pageChnage(x.page_index);
       } else if (x.type == "changeChapter") {
-        this.pages = x.pages.map(c => ({ ...c, chapter_id:x.chapter_id }));
+        this.pages = x.pages.map(c => ({ ...c, chapter_id: x.chapter_id }));
         this.pageChnage(x.page_index);
-        this.init();
       } else if (x.type == "nextPage") {
         this.next()
       } else if (x.type == "previousPage") {
@@ -44,26 +43,30 @@ export class MultiplePageReaderMode3Component {
   ngAfterViewInit() {
     const container = document.getElementById("multiple_page_reader_mode3")
     container.addEventListener("scroll", (event) => {
-      if ((-container.scrollLeft / container.scrollWidth) > 0.7) {
-        this.nec()
+      if ((-container.scrollLeft + container.clientWidth * 2.5) > container.scrollWidth) {
+        this.loadNext()
       }
-
     });
     if (container) container.classList.remove("opacity-0");
     setTimeout(() => {
       this.pageChnage(this.data.page_index)
-      this.init();
+      this.getCurrentPage();
     }, 100)
 
-    setInterval(()=>{
-      this.init();
-    },500)
+    this.updata();
 
   }
-  cccc = false
-  async nec() {
-    if (this.cccc) return
-    this.cccc = true;
+  async updata() {
+    setTimeout(async () => {
+      this.getCurrentPage();
+      const container = document.getElementById("multiple_page_reader_mode3")
+      if (container) this.updata();
+    }, 3000)
+  }
+  is_load = false
+  async loadNext() {
+    if (this.is_load) return
+    this.is_load = true;
     const id = await this.current._getNextChapterId()
     const pages = await this.current._getChapter(id)
     this.data.chapter_id = id;
@@ -74,10 +77,10 @@ export class MultiplePageReaderMode3Component {
       obj["src"] = img.src;
       obj["width"] = img.width;
       obj["height"] = img.height;
-      obj["chapter_id"]=id;
+      obj["chapter_id"] = id;
       this.pages.push(obj)
     }
-    this.cccc = false;
+    this.is_load = false;
   }
   loadImage = async (url: string) => {
     url = await this.image.getImageBase64(url)
@@ -97,7 +100,7 @@ export class MultiplePageReaderMode3Component {
     const node = document.getElementById(`multiple_page_reader_mode3_${page_index}`);
     node!.scrollIntoView(true)
   }
-  async init() {
+  async getCurrentPage() {
     const nodes = document.querySelectorAll(".list app-image");
     var observer = new IntersectionObserver(
       (changes) => {
@@ -106,7 +109,7 @@ export class MultiplePageReaderMode3Component {
             var container = change.target;
             const id = container.getAttribute('chapter_id');
             const index = parseInt(container.getAttribute('index'));
-            this.current._change('changePage', { pages: this.data.pages, chapter_id:id, page_index: index, trigger: "up_down_page_reader" })
+            this.current._change('changePage', { pages: this.data.pages, chapter_id: id, page_index: index, trigger: "up_down_page_reader" })
           } else {
             var container = change.target;
             const id = parseInt(container.getAttribute('id'));
@@ -117,20 +120,14 @@ export class MultiplePageReaderMode3Component {
     );
     nodes.forEach(node => observer.observe(node))
   }
-  next() {
-    const page_index = this.page_index + 1;
-    if (page_index >= this.pages.length) {
-
-      return
-    }
-    this.current._pageChange(page_index);
+  async next() {
+    const id = await this.current._getNextChapterId();
+    let pages = await this.current._getChapter(id)
+    this.pages = pages.map(c => ({ ...c, chapter_id: id }));
   }
-  previous() {
-    const page_index = this.page_index - 1;
-    if (page_index <= 0) {
-
-      return
-    }
-    this.current._pageChange(page_index);
+  async previous() {
+    const id = await this.current._getPreviousChapterId();
+    let pages = await this.current._getChapter(id)
+    this.pages = pages.map(c => ({ ...c, chapter_id: id }));
   }
 }

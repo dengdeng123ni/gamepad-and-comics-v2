@@ -42,7 +42,7 @@ export * from './select-data-source/select-data-source.service'
 
 export * from './custom-route-reuse-strategy'
 
-export interface PagesItem { id: string, src: string, width: number, height: number }
+export interface PagesItem { id: string,index:number,src: string, width: number, height: number }
 interface StylesItem { id?: string, name: string, href?: string }
 interface AuthorItem { id?: string, name: string, href?: string }
 export interface ComicsInfo {
