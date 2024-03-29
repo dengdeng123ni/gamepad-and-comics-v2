@@ -9,6 +9,7 @@ import { ChaptersListService } from '../../components/chapters-list/chapters-lis
 import { ToolbarOptionService } from '../../components/toolbar-option/toolbar-option.service';
 import { CustomGridService } from '../../components/custom-grid/custom-grid.service';
 import { HistoryService } from 'src/app/library/public-api';
+import { LoadingCoverService } from '../../components/loading-cover/loading-cover.service';
 
 @Component({
   selector: 'app-index',
@@ -26,6 +27,7 @@ export class IndexComponent {
     public index: IndexService,
     public ToolbarOption: ToolbarOptionService,
     public CustomGrid: CustomGridService,
+    public LoadingCover:LoadingCoverService
 
   ) {
     document.body.setAttribute("router", "reader")

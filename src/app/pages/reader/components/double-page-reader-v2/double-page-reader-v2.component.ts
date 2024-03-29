@@ -15,8 +15,8 @@ export class DoublePageReaderV2Component {
   swiper = null;
   @HostListener('window:keydown', ['$event'])
   handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key == "ArrowRight") this.current._pageNext();
-    if (event.key == "ArrowLeft") this.current._pagePrevious();
+    if (event.key == "ArrowRight") this.current._pagePrevious();
+    if (event.key == "ArrowLeft") this.current._pageNext();
     if (event.key == "c") this.pageToggle();
     // if (event.key == "v") this.firstPageToggle();
     if (event.code == "Space") {

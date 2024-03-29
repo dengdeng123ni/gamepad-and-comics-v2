@@ -10,9 +10,27 @@ export class ImageService {
 
   _data: any = {};
   constructor(public _http: MessageFetchService, public DbController: DbControllerService, private sanitizer: DomSanitizer) {
-
+    this.del();
   }
 
+
+  del() {
+    setTimeout(() => {
+      const nodes: any = document.querySelectorAll("app-image img");
+      let arr = [];
+      for (let index = 0; index < nodes.length; index++) {
+        arr.push(nodes[index].src)
+      }
+      Object.keys(this._data).forEach(id => {
+        if (arr.includes(this._data[id].changingThisBreaksApplicationSecurity)) {
+        } else {
+          URL.revokeObjectURL(this._data[id])
+          this._data[id] = undefined;
+        }
+      })
+      this.del();
+    }, 10000)
+  }
 
 
   private async getImageBlobUrl(src: string) {
@@ -25,10 +43,6 @@ export class ImageService {
     const blob = await this.getImageBlob(src);
     url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
     this._data[id] = url;
-    // setTimeout(()=>{
-    //   URL.revokeObjectURL(this._data[id])
-    //   this._data[id] = undefined;
-    // },10000)
     return url
   }
 
@@ -92,7 +106,7 @@ export class ImageService {
 
 
   async getImageToLocalUrl(src: string) {
-    let url = await this.getImageBase64(src);
+    let url = await this.getImageBlobUrl(src);
     return url
   }
 

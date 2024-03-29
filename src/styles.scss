@@ -123,3 +123,8 @@ app-image{
   display: flex;
   justify-content: center;
 }
+._loading_cover_bg{
+  background: rgba(0, 0, 0, 0.32);
+  backdrop-filter: brightness(0.5) blur(10px);
+
+}

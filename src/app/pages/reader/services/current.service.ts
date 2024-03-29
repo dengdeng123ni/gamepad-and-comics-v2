@@ -115,6 +115,7 @@ export class CurrentService {
     }
     const list = _res[0];
     const res = _res[1];
+    if (Number.isNaN(_res[2]) || _res[2] < 0) this.data.page_index = 0;
     this.data.page_index = _res[2];
     this.data.comics_config = _res[3];
     this.data.pages = list;
@@ -499,7 +500,7 @@ export class CurrentService {
     chapter_id: string,
     trigger?: string
   }) {
-    if (option.page_index < 0) option.page_index = 0;
+    if (Number.isNaN(option.page_index) || option.page_index < 0) option.page_index = 0;
     this.data.page_index = option.page_index;
     this.data.pages = option.pages;
     if (!!option.chapter_id) {
