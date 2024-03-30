@@ -10,6 +10,7 @@ import { ToolbarOptionService } from '../../components/toolbar-option/toolbar-op
 import { CustomGridService } from '../../components/custom-grid/custom-grid.service';
 import { HistoryService } from 'src/app/library/public-api';
 import { LoadingCoverService } from '../../components/loading-cover/loading-cover.service';
+import { ReaderConfigService } from '../../components/reader-config/reader-config.service';
 
 @Component({
   selector: 'app-index',
@@ -27,11 +28,14 @@ export class IndexComponent {
     public index: IndexService,
     public ToolbarOption: ToolbarOptionService,
     public CustomGrid: CustomGridService,
-    public LoadingCover:LoadingCoverService
-
+    public LoadingCover:LoadingCoverService,
+    public ReaderConfig:ReaderConfigService
   ) {
     document.body.setAttribute("router", "reader")
     document.body.setAttribute("locked_region", "reader")
+
+    // ReaderConfig.open();
+
     let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params));
     id$.subscribe(params => {
       if (window.location.pathname.split("/")[1] == "reader") {

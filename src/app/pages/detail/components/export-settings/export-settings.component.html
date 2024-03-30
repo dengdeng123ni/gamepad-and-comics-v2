@@ -20,7 +20,7 @@
       <mat-chip-listbox>
         <mat-chip-option [attr.type]="'chip'" [matTooltipShowDelay]="3000" [matTooltip]="i18n.config.single_page" (selectionChange)="change('one')" [selectable]="page!='one'"
           *ngIf="type!='EPUB'" [attr.region]="'detail_export_settings_page'">{{i18n.config.single_page}}</mat-chip-option>
-        <mat-chip-option id="page_double" [matTooltipShowDelay]="3000" [matTooltip]="i18n.config.double_page" [attr.type]="'chip'" (selectionChange)="change('double')"
+        <mat-chip-option id="page_double" [matTooltipShowDelay]="3000" [matTooltip]="i18n.config.double_page" [attr.type]="'chip'" ≈
           [selectable]="page!='double'" selected [attr.region]="'detail_export_settings_page'">{{i18n.config.double_page}}</mat-chip-option>
       </mat-chip-listbox>
       <button mat-mini-fab style="    height: 32px;

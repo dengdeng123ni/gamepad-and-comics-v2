@@ -9,6 +9,7 @@ import { OnePageThumbnailMode2Service } from '../one-page-thumbnail-mode2/one-pa
 import { OnePageThumbnailMode3Service } from '../one-page-thumbnail-mode3/one-page-thumbnail-mode3.service';
 import { ReaderChangeService } from '../reader-change/reader-change.service';
 import { SetChapterFirstPageCoverService } from '../set-chapter-first-page-cover/set-chapter-first-page-cover.service';
+import { ReaderConfigService } from '../reader-config/reader-config.service';
 
 @Component({
   selector: 'app-reader-toolbar',
@@ -30,7 +31,8 @@ export class ReaderToolbarComponent {
     public onePageThumbnailMode2: OnePageThumbnailMode2Service,
     public onePageThumbnailMode3: OnePageThumbnailMode3Service,
     public SetChapterFirstPageCover:SetChapterFirstPageCoverService,
-    public ReaderChange: ReaderChangeService
+    public ReaderChange: ReaderChangeService,
+    public ReaderConfig:ReaderConfigService
   ) {
   }
   menuObj: {
@@ -178,5 +180,11 @@ export class ReaderToolbarComponent {
     const y = (window.innerHeight - 512) / 2;
     // this.uploadSelect.open({ x, y });
     this.SetChapterFirstPageCover.open({position:{ top: `${y}px`, left: `${70}px` },delayFocusTrap:false,})
+  }
+
+  openReaderSettings($event){
+    const node = ($event.target as HTMLElement);
+    const position = node.getBoundingClientRect();
+    this.ReaderConfig.open({right:"30px",top:`${position.top}px`})
   }
 }
