@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CurrentService } from '../../services/current.service';
 import { DataService } from '../../services/data.service';
 
@@ -9,6 +9,9 @@ import { DataService } from '../../services/data.service';
 })
 export class LoadingCoverComponent {
   cover = "";
+
+
+
   constructor(private data: DataService) {
     this.cover = this.data.comics_info.cover;
   }

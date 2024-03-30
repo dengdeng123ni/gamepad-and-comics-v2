@@ -30,12 +30,6 @@ export class IndexComponent {
     public LoadingCover:LoadingCoverService
 
   ) {
-    // setTimeout(()=>{
-    //   this.LoadingCover.open()
-    //   // setTimeout(()=>{
-    //   //   this.LoadingCover.close()
-    //   // },2000)
-    // },1000)
     document.body.setAttribute("router", "reader")
     document.body.setAttribute("locked_region", "reader")
     let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params));

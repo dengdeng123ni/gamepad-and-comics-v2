@@ -128,3 +128,16 @@ app-image{
   backdrop-filter: brightness(0.5) blur(10px);
 
 }
+._loading_cover {
+  max-width: none;
+  width: 100%;
+  height: 100%;
+  max-width: none !important;
+  // backdrop-filter: blur(4px);
+
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    // background: transparent;
+    box-shadow: none !important;
+    background: transparent;
+  }
+}

@@ -39,6 +39,9 @@ export class LoadingCoverService {
     else this.open()
   }
   close() {
-    this._dialog.closeAll();
+    let node= document.querySelector("#loading_cover")
+    node.setAttribute("type","end")
+    setTimeout(()=>{this._dialog.closeAll();
+    },200)
   }
 }
