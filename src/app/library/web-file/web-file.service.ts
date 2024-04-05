@@ -105,10 +105,11 @@ export class WebFileService {
     }
     let { chapters, title, option: config } = await this.DbController.getDetail(comics_id)
     if (option?.chapters_ids?.length) chapters = chapters.filetr(x => option.chapters_ids.includes(x.id))
+    console.log(chapters);
+
     for (let index = 0; index < chapters.length; index++) {
       const x = chapters[index];
       const pages = await this.DbController.getPages(x.id);
-
       if (option?.type) {
         if (option.type == "JPG") {
           const downloadImage = async (x2, index) => {
@@ -132,7 +133,7 @@ export class WebFileService {
             }
           }
           await Promise.all(pages.map((x2, index) => downloadImage(x2, index)))
-          return
+          continue;
         }
 
         const blob = await this.download.ImageToTypeBlob({ type: option.type, name: toTitle(x.title), images: pages.map((x: { src: any; }) => x.src), pageOrder: option.pageOrder, isFirstPageCover: option.isFirstPageCover, page: option.page }) as any

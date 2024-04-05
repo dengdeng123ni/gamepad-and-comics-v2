@@ -31,14 +31,18 @@ export class DownloadOptionComponent {
   }
   async on() {
     const ids = this.list.map(x => x.id);
+    console.log(ids);
+
     if (this.option.isOneFile) {
 
     } else {
-      this.DownloadOption.close();
+
       for (let index = 0; index < ids.length; index++) {
         const id = ids[index];
         for (let index = 0; index < this.option.type.length; index++) {
           const type = this.option.type[index];
+          console.log(this.option,type);
+
           await this.WebFile.downloadComics(id, {
             type,
             isFirstPageCover: this.option.isFirstPageCover,
@@ -54,6 +58,7 @@ export class DownloadOptionComponent {
           })
         }
       }
+      // this.DownloadOption.close();
     }
 
   }

@@ -22,11 +22,14 @@ export class ImageService {
         arr.push(nodes[index].src)
       }
       Object.keys(this._data).forEach(id => {
-        if (arr.includes(this._data[id].changingThisBreaksApplicationSecurity)) {
-        } else {
-          URL.revokeObjectURL(this._data[id])
-          this._data[id] = undefined;
+        if(!this._data[id]&&this._data.changingThisBreaksApplicationSecurity) {
+          if (arr.includes(this._data[id].changingThisBreaksApplicationSecurity)) {
+          } else {
+            URL.revokeObjectURL(this._data[id])
+            this._data[id] = undefined;
+          }
         }
+
       })
       this.del();
     }, 10000)

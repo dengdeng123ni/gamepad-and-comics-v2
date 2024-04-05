@@ -73,7 +73,8 @@ export class DbControllerService {
     if (!option.origin) option.origin = this.AppData.origin;
     const config = this.DbEvent.Configs[option.origin]
     if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Detail"]) {
-      if (this.details[id]) {
+      const is_wait = await this.waitForRepetition(id)
+      if (this.details[id] && is_wait) {
         return JSON.parse(JSON.stringify(this.details[id]))
       } else {
         if (config.is_cache) {
@@ -103,6 +104,7 @@ export class DbControllerService {
         }
         res.option = { origin: option.origin, is_offprint: config.is_offprint };
         this.details[id] = JSON.parse(JSON.stringify(res));
+        this.updateWaitList(id)
         return res
       }
     } else {
@@ -112,12 +114,14 @@ export class DbControllerService {
   async getPages(id: string, option?: {
     origin: string
   }) {
+
     if (!option) option = { origin: this.AppData.origin }
     if (!option.origin) option.origin = this.AppData.origin;
     const config = this.DbEvent.Configs[option.origin]
 
     if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Pages"]) {
-      if (this.pages[id]) {
+      const is_wait = await this.waitForRepetition(id)
+      if (this.pages[id] && is_wait) {
         return JSON.parse(JSON.stringify(this.pages[id]))
       } else {
         if (config.is_cache) {
@@ -132,17 +136,18 @@ export class DbControllerService {
           res.forEach((x, i) => {
             this.image_url[`${config.name}_page_${id}_${i}`] = x.src;
             x.src = `http://localhost:7700/${config.name}/page/${id}/${i}`;
-            x.index=i;
+            x.index = i;
           })
-          if(res.length){
+          if (res.length) {
             firstValueFrom(this.webDb.update('pages', { id: id, data: res }))
           }
-        }else{
+        } else {
           res.forEach((x, i) => {
-            x.index=i;
+            x.index = i;
           })
         }
         this.pages[id] = JSON.parse(JSON.stringify(res));
+        this.updateWaitList(id)
         return res
       }
     } else {
@@ -170,6 +175,7 @@ export class DbControllerService {
               if (url) {
                 return url
               } else {
+                console.log(123);
                 let resc = await this.DbEvent.Events[option.origin]["Pages"](chapter_id);
                 resc.forEach((x, i) => {
                   this.image_url[`${name}_page_${chapter_id}_${i}`] = x.src;
@@ -196,6 +202,8 @@ export class DbControllerService {
               if (url) {
                 return url
               } else {
+                console.log(123);
+
                 let res = await this.DbEvent.Events[option.origin]["Detail"](comics_id);
                 this.image_url[`${config.name}_comics_${res.id}`] = res.cover;
                 res.chapters.forEach(x => {
@@ -239,5 +247,31 @@ export class DbControllerService {
         type: 'image/jpeg'
       })
     }
+  }
+  waitList = [];
+  async waitForRepetition(id) {
+    const obj = this.waitList.find(x => x.id == id);
+    if (obj) {
+      if (obj.is_loading) {
+        return true
+      } else {
+        await this.sleep(30)
+        return await this.waitForRepetition(id)
+      }
+    } else {
+      this.waitList.push({ id: id, is_loading: false })
+      return false
+    }
+  }
+  async updateWaitList(id) {
+    const index = this.waitList.findIndex(x => x.id == id);
+    if (index > -1) {
+      this.waitList[index].is_loading = true;
+    }
+  }
+  sleep = (duration) => {
+    return new Promise(resolve => {
+      setTimeout(resolve, duration);
+    })
   }
 }
