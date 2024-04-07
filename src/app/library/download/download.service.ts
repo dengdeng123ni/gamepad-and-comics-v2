@@ -36,13 +36,21 @@ export class DownloadService {
 
   }
 
+  async jpg({ name, images = [''], pageOrder = false, isFirstPageCover = false, page }): Promise<Blob> {
+    const blobs = await this.zip({ name, images, pageOrder, isFirstPageCover, page })
+    return blobs
+
+  }
+
   async ImageToTypeBlob({ type, name, images = [''], pageOrder = false, isFirstPageCover = false, page }) {
     if (type == "PDF") return await this.pdf({ name, images, pageOrder, isFirstPageCover, page })
     if (type == "PPT") return await this.ppt({ name, images, pageOrder, isFirstPageCover, page })
     if (type == "ZIP") return await this.zip({ name, images, pageOrder, isFirstPageCover, page })
     if (type == "EPUB") return await this.epub({ name, images, pageOrder, isFirstPageCover, page })
+    if (type == "JPG") return await this.jpg({ name, images, pageOrder, isFirstPageCover, page })
   }
   async download({ type, name, images = [''], pageOrder = false, isFirstPageCover = false, page }) {
+
     if (type == "PDF") {
       const blob=await this.pdf({ name, images, pageOrder, isFirstPageCover, page })
       const srcs = blob.type.split("/");

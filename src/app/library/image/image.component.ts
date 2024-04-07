@@ -8,15 +8,15 @@ import { ImageService, MessageFetchService } from 'src/app/library/public-api';
   styleUrls: ['./image.component.scss']
 })
 export class ImageComponent {
-  @Input() src: string="";
-  @Input() width: string | number | null="";
-  @Input() height: string | number | null="";
-  @Input() alt: string | number | null="";
+  @Input() src: string = "";
+  @Input() width: string | number | null = "";
+  @Input() height: string | number | null = "";
+  @Input() alt: string | number | null = "";
   url: SafeUrl | undefined
   @ViewChild('box')
   box!: ElementRef;
-  @Input() objectFit:string=""
-  constructor(public image:ImageService){
+  @Input() objectFit: string = ""
+  constructor(public image: ImageService) {
     // console.log(this.src);
 
 
@@ -26,17 +26,19 @@ export class ImageComponent {
   isInViewPort(element) {
     const viewWidth = window.innerWidth || document.documentElement.clientWidth;
     const viewHeight =
-          window.innerHeight || document.documentElement.clientHeight;
+      window.innerHeight || document.documentElement.clientHeight;
     const { top, right, bottom, left } = element.getBoundingClientRect();
 
     return top >= 0 && left >= 0 && right <= viewWidth && bottom <= viewHeight;
-}
-  async getImage(str:string){
-    this.url=await this.image.getImageToLocalUrl(this.src)
+  }
+  async getImage(str: string) {
+    this.url = await this.image.getImageToLocalUrl(this.src)
   }
 
   ngAfterViewInit() {
-    this.getImage(this.src)
+    setTimeout(() => {
+      this.getImage(this.src)
+    })
   }
   ngOnDestroy() {
 

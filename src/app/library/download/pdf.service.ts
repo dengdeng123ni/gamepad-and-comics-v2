@@ -18,6 +18,7 @@ export class PdfService {
       if (!imageUrl) return { width: 0, height: 0 }
       return await createImageBitmap(await this.image.getImageBlob(imageUrl))
     }
+
     const compressImage = async (src) => {
       if (!src) {
         return {
@@ -53,7 +54,7 @@ export class PdfService {
       const doc = new jsPDF();
       doc.deletePage(1);
       for (let i = 0; i < list.length; i++) {
-        const img: any = await createImage(list[i]);
+        const img: any = await compressImage(list[i]);
         if (img.height < img.width) {
           doc.addPage([img.width, img.height], "l")
         } else {

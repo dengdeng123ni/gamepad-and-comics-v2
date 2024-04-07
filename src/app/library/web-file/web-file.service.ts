@@ -105,34 +105,42 @@ export class WebFileService {
     }
     let { chapters, title, option: config } = await this.DbController.getDetail(comics_id)
     if (option?.chapters_ids?.length) chapters = chapters.filetr(x => option.chapters_ids.includes(x.id))
-    console.log(chapters);
-
     for (let index = 0; index < chapters.length; index++) {
       const x = chapters[index];
       const pages = await this.DbController.getPages(x.id);
       if (option?.type) {
         if (option.type == "JPG") {
-          const downloadImage = async (x2, index) => {
-            const blob = await this.DbController.getImage(x2.src)
+          if(option.page=="double"){
+            const blobs= await this.download.ImageToTypeBlob({ type: option.type, name: toTitle(x.title), images: pages.map((x: { src: any; }) => x.src), pageOrder: option.pageOrder, isFirstPageCover: option.isFirstPageCover, page: option.page }) as any
+            for (let index = 0; index < blobs.length; index++) {
+              const blob=blobs[index]
+              await this.post(`${config.origin}[双页]${option.pageOrder?"":"[日漫]"}/${toTitle(title)}/${toTitle(x.title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
 
-            if (blob.size > 500) {
-              if (config.is_offprint) {
-                await this.post(`${config.origin}/${toTitle(title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
-              } else {
-                await this.post(`${config.origin}/${toTitle(title)}/${toTitle(x.title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
-              }
-            } else {
+            }
+          }else{
+            const downloadImage = async (x2, index) => {
               const blob = await this.DbController.getImage(x2.src)
+
               if (blob.size > 500) {
                 if (config.is_offprint) {
                   await this.post(`${config.origin}/${toTitle(title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
                 } else {
                   await this.post(`${config.origin}/${toTitle(title)}/${toTitle(x.title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
                 }
+              } else {
+                const blob = await this.DbController.getImage(x2.src)
+                if (blob.size > 500) {
+                  if (config.is_offprint) {
+                    await this.post(`${config.origin}/${toTitle(title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
+                  } else {
+                    await this.post(`${config.origin}/${toTitle(title)}/${toTitle(x.title)}/${index + 1}.${blob.type.split("/").at(-1)}`, blob)
+                  }
+                }
               }
             }
+            await Promise.all(pages.map((x2, index) => downloadImage(x2, index)))
+
           }
-          await Promise.all(pages.map((x2, index) => downloadImage(x2, index)))
           continue;
         }
 
@@ -150,9 +158,9 @@ export class WebFileService {
           suffix_name = `epub`;
         }
         if (config.is_offprint) {
-          await this.post(`${config.origin}_${suffix_name}/${toTitle(title)}.${suffix_name}`, blob)
+          await this.post(`${config.origin}_${suffix_name}[${option.page=="double"?"双页":"单页"}]${option.pageOrder?"":"[日漫]"}/${toTitle(title)}.${suffix_name}`, blob)
         } else {
-          await this.post(`${config.origin}_${suffix_name}/${toTitle(title)}/${toTitle(x.title)}.${suffix_name}`, blob)
+          await this.post(`${config.origin}_${suffix_name}[${option.page=="double"?"双页":"单页"}]${option.pageOrder?"":"[日漫]"}/${toTitle(title)}/${toTitle(x.title)}.${suffix_name}`, blob)
         }
       }
       if(option.downloadChapterAtrer) option.downloadChapterAtrer(x)
