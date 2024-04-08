@@ -69,11 +69,7 @@ export class ImageService {
     if (src.substring(0, 10) == "data:image") {
       return this.base64ToBlob(src)
     }
-    console.log(src);
-
     const blob = await this.DbController.getImage(src);
-    console.log(blob);
-
     return blob
   }
   base64ToBlob(base64Data) {
@@ -91,8 +87,6 @@ export class ImageService {
     });
   }
   async getImageBase64(src) {
-
-
     if (!src) return ""
     if (src.substring(0, 10) == "data:image") {
       return src

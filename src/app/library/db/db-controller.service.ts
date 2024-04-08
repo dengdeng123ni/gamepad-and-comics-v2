@@ -175,7 +175,6 @@ export class DbControllerService {
               if (url) {
                 return url
               } else {
-                console.log(123);
                 let resc = await this.DbEvent.Events[option.origin]["Pages"](chapter_id);
                 resc.forEach((x, i) => {
                   this.image_url[`${name}_page_${chapter_id}_${i}`] = x.src;
@@ -202,8 +201,6 @@ export class DbControllerService {
               if (url) {
                 return url
               } else {
-                console.log(123);
-
                 let res = await this.DbEvent.Events[option.origin]["Detail"](comics_id);
                 this.image_url[`${config.name}_comics_${res.id}`] = res.cover;
                 res.chapters.forEach(x => {
