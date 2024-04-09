@@ -49,7 +49,11 @@ export class WebFileService {
     const obj = this.paths.find(x => x.path == path)
     if (!obj) {
       const arr = path.split("/")
+
+
       const createDirHandle = async (dirHandle, path_arr, index) => {
+
+
         if ((path_arr.length - 1) == index) {
           for await (const it of dirHandle.values()) {
             if (it.name == path_arr[index]) {
@@ -101,7 +105,7 @@ export class WebFileService {
     if(!this.dirHandle)  await this.open();
 
     const toTitle = (title) => {
-      return title.replace(/[\r\n]/g, "").replace(/  +/g, ' ').trim()
+      return title.replace(/[\r\n]/g, "").replace(":", "").replace("|", "").replace(/  +/g, ' ').trim()
     }
     let { chapters, title, option: config } = await this.DbController.getDetail(comics_id)
     if (option?.chapters_ids?.length) chapters = chapters.filetr(x => option.chapters_ids.includes(x.id))

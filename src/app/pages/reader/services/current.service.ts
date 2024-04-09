@@ -109,7 +109,11 @@ export class CurrentService {
     this.data.is_init_free = false;
     this.data.chapter_id = chapter_id;
     this.data.comics_id = comic_id;
+console.log(123);
+
     const _res = await Promise.all([this.DbController.getPages(chapter_id), this.DbController.getDetail(comic_id), this._getChapterIndex(chapter_id), this._getWebDbComicsConfig(comic_id)])
+console.log(_res);
+
     if (_res[0] && _res[1]) {
 
     }
@@ -133,7 +137,6 @@ export class CurrentService {
     this.data.comics_info = res;
     this.init$.next(this.data)
     this.data.is_init_free = true;
-   console.log(this.data);
 
     setTimeout(() => {
       this._updateChapterRead(this.data.chapter_id)

@@ -35,7 +35,7 @@ export class IndexComponent {
     document.body.setAttribute("locked_region", "reader")
 
     // ReaderConfig.open();
-
+    // this.LoadingCover.open();
     let id$ = this.route.paramMap.pipe(map((params: ParamMap) => params));
     id$.subscribe(params => {
       if (window.location.pathname.split("/")[1] == "reader") {
@@ -47,6 +47,11 @@ export class IndexComponent {
       this.data.init();
       this.current._init(params.get('id').toString() as string, params.get('sid').toString() as string)
     })
+    // this.current.init$.subscribe(x=>{
+    //   setTimeout(()=>{
+    //     this.LoadingCover.close();
+    //   },3000)
+    // })
   }
 
   on($event: MouseEvent) {

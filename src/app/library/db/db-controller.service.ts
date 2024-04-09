@@ -73,12 +73,12 @@ export class DbControllerService {
     if (!option.origin) option.origin = this.AppData.origin;
     const config = this.DbEvent.Configs[option.origin]
     if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Detail"]) {
-      const is_wait = await this.waitForRepetition(id)
-      if (this.details[id] && is_wait) {
+      if (this.details[id]) {
         return JSON.parse(JSON.stringify(this.details[id]))
       } else {
         if (config.is_cache) {
           let res: any = await firstValueFrom(this.webDb.getByID('details', id))
+
           if (res) {
             this.details[id] = JSON.parse(JSON.stringify(res));
             res.option = { origin: option.origin, is_offprint: config.is_offprint }
@@ -104,7 +104,6 @@ export class DbControllerService {
         }
         res.option = { origin: option.origin, is_offprint: config.is_offprint };
         this.details[id] = JSON.parse(JSON.stringify(res));
-        this.updateWaitList(id)
         return res
       }
     } else {
@@ -120,8 +119,8 @@ export class DbControllerService {
     const config = this.DbEvent.Configs[option.origin]
 
     if (this.DbEvent.Events[option.origin] && this.DbEvent.Events[option.origin]["Pages"]) {
-      const is_wait = await this.waitForRepetition(id)
-      if (this.pages[id] && is_wait) {
+      // const is_wait = await this.waitForRepetition(id)
+      if (this.pages[id]) {
         return JSON.parse(JSON.stringify(this.pages[id]))
       } else {
         if (config.is_cache) {
@@ -147,7 +146,6 @@ export class DbControllerService {
           })
         }
         this.pages[id] = JSON.parse(JSON.stringify(res));
-        this.updateWaitList(id)
         return res
       }
     } else {
