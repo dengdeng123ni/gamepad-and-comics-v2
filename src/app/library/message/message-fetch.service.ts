@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
-
+declare let window: any;
 @Injectable({
   providedIn: 'root'
 })
 export class MessageFetchService {
   _data_proxy_response: any = {};
   constructor() {
+    window._gh_fetch = this.fetch;
+    window._gh_fetch_background =  this.fetch_background;
+    window._gh_get = this.get;
   }
 
-  async init(){
+  async init() {
     const res = await this.fetch_background("https://i.nhentai.net/galleries/2820190/7.jpg", {
       method: "GET",
       headers: {
@@ -18,8 +21,8 @@ export class MessageFetchService {
       },
       mode: "cors"
     });
-    const blob=await res.blob();
-    const base64=await this.blobToBase64(blob)
+    const blob = await res.blob();
+    const base64 = await this.blobToBase64(blob)
 
   }
   async blobToBase64(blob) {
@@ -34,7 +37,7 @@ export class MessageFetchService {
       }
     })
   }
-  async fetch(url: RequestInfo | URL, init: RequestInit): Promise<Response> {
+  fetch = async (url: RequestInfo | URL, init: RequestInit): Promise<Response> => {
     const req = new Request(url, init);
     let body = null;
     if (req.body) body = await this.readStreamToString(req.body)
@@ -91,7 +94,7 @@ export class MessageFetchService {
       }, 30000)
     })
   }
-  async fetch_background(url: RequestInfo | URL, init: RequestInit): Promise<Response> {
+  fetch_background = async (url: RequestInfo | URL, init: RequestInit): Promise<Response> => {
     const req = new Request(url, init);
     let body = null;
     if (req.body) body = await this.readStreamToString(req.body)
@@ -191,7 +194,7 @@ export class MessageFetchService {
       }, 30000)
     })
   }
-  async fetch_image(){
+  async fetch_image() {
   }
 
   async post(url: string, body: any): Promise<any> {
@@ -212,7 +215,7 @@ export class MessageFetchService {
       return null
     }
   }
-  async get_background(url: string): Promise<any> {
+  get_background = async (url: string): Promise<any> => {
     const res = await this.fetch_background((url), {
       method: "GET",
       headers: {
@@ -224,7 +227,7 @@ export class MessageFetchService {
     });
     return res
   }
-  async get(url: string): Promise<any> {
+  get = async (url: string): Promise<any> => {
     const res = await this.fetch(url, {
       method: "GET",
       headers: {

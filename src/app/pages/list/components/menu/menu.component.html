@@ -106,52 +106,18 @@
       </button> -->
     </mat-expansion-panel>
   </mat-accordion>
-  <mat-accordion>
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <button mat-button class="item" [attr.region]="'menu_item'">
-            <mat-icon class="icon">home</mat-icon>
-            <div class="name" ngc>
-              haoguoman
-            </div>
-          </button>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <button mat-button class="item item1" [attr.region]="'menu_item'" (click)="on3('haoguoman','history')">
-        <mat-icon class="icon">history</mat-icon>
-        <div class="name" ngc>
-          历史记录
-        </div>
-      </button>
-    </mat-expansion-panel>
-  </mat-accordion>
-  <mat-accordion>
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <button mat-button class="item" [attr.region]="'menu_item'">
-            <mat-icon class="icon">home</mat-icon>
-            <div class="name" ngc>
-              didamh
-            </div>
-          </button>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <button mat-button class="item item1" [attr.region]="'menu_item'" (click)="on3('didamh','history')">
-        <mat-icon class="icon">history</mat-icon>
-        <div class="name" ngc>
-          历史记录
-        </div>
-      </button>
-    </mat-expansion-panel>
-  </mat-accordion>
-
   <button style="margin-top: 4px;" mat-button class="item" [attr.select]="true" [attr.region]="'menu_item'"
   (click)="onLocalMenu('local_cache')">
   <mat-icon class="icon">cached</mat-icon>
   <div class="name" >
     缓存
+  </div>
+</button>
+<button style="margin-top: 4px;" mat-button class="item" [attr.select]="true" [attr.region]="'menu_item'"
+  (click)="cc()">
+  <mat-icon class="icon">cached</mat-icon>
+  <div class="name" >
+    设置
   </div>
 </button>
   <mat-divider style="margin: 8px 16px;"></mat-divider>

@@ -20,7 +20,7 @@ import { GamepadVioceComponent } from './library/gamepad/gamepad-vioce/gamepad-v
 
 const dbConfig: DBConfig = {
   name: 'db',
-  version: 17,
+  version: 18,
   objectStoresMeta: [
     {
       store: 'details',
@@ -122,6 +122,13 @@ const dbConfig: DBConfig = {
     },
     {
       store: 'image_info',
+      storeConfig: { keyPath: 'id', autoIncrement: false },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+      ]
+    },
+    {
+      store: 'script',
       storeConfig: { keyPath: 'id', autoIncrement: false },
       storeSchema: [
         { name: 'id', keypath: 'id', options: { unique: false } },

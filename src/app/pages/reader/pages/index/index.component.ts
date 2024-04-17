@@ -47,23 +47,42 @@ export class IndexComponent {
       this.data.init();
       this.current._init(params.get('id').toString() as string, params.get('sid').toString() as string)
     })
+
+
     // this.current.init$.subscribe(x=>{
     //   setTimeout(()=>{
-    //     this.LoadingCover.close();
+    //
     //   },3000)
     // })
   }
-
+  observe
   on($event: MouseEvent) {
     this.current.on$.next($event)
   }
   ngOnDestroy() {
     this.current.close();
   }
+  ngAfterViewInit(){
+this.getIsImage();
+  }
   close() {
 
   }
 
+  getIsImage(){
+    // setTimeout(()=>{
+    //   const nodes=document.querySelectorAll("#_reader_pages img")
+    //  if(nodes.length){
+    //   this.LoadingCover.close();
+
+    //  }else{
+    //   this.getIsImage();
+    //  }
+
+    // },30)
+    // console.log(nodes);
+
+  }
 
 
 }

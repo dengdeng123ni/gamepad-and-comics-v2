@@ -1,5 +1,5 @@
 import { Component, HostListener, Query } from '@angular/core';
-import { ContextMenuControllerService, DbControllerService, ImageService, MessageControllerService, MessageEventService, QueryService, SelectDataSourceService } from './library/public-api';
+import { ContextMenuControllerService, DbControllerService, ImageService, MessageControllerService, MessageEventService, PulgService, QueryService, SelectDataSourceService } from './library/public-api';
 import { GamepadControllerService } from './library/gamepad/gamepad-controller.service';
 import { GamepadLeftCircleToolbarService } from './library/event/gamepad-left-circle-toolbar/gamepad-left-circle-toolbar.service';
 import { GamepadEventService } from './library/gamepad/gamepad-event.service';
@@ -63,7 +63,8 @@ export class AppComponent {
     public query: QueryService,
     private contexts: ChildrenOutletContexts,
     public ccc: WebFileService,
-    public image: ImageService
+    public image: ImageService,
+    public pulg:PulgService
   ) {
     GamepadEvent.registerGlobalEvent({
       LEFT_ANALOG_PRESS: () => GamepadLeftCircleToolbar.isToggle()
@@ -78,10 +79,13 @@ export class AppComponent {
 
   }
 
-  init() {
-    this.getDataSource();
-    this.getPulgLoadingFree();
+  async init() {
+    await this.pulg.init();
 
+    setTimeout(()=>{
+       this.getPulgLoadingFree();
+    },50)
+    // this.getPulgLoadingFree();
   }
   getAnimationData() {
     return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'];

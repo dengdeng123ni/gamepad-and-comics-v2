@@ -4,7 +4,7 @@ import { Observable, map, startWith } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { UploadService } from './upload.service';
 import { TemporaryFileService } from './temporary-file.service';
-import { AppDataService, DbEventService } from 'src/app/library/public-api';
+import { AppDataService, DbEventService, PulgService } from 'src/app/library/public-api';
 import { LocalCachService } from './local-cach.service';
 import { MenuService } from './menu.service';
 declare const window: any;
@@ -32,12 +32,16 @@ export class MenuComponent {
     public DbEvent:DbEventService,
     public LocalCach: LocalCachService,
     public menu: MenuService,
+    public pulg:PulgService,
     private zone: NgZone
   ) {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => this._filter(value || '')),
     );
+  }
+  cc(){
+    this.pulg.openFile();
   }
   on(type: string) {
 
@@ -92,6 +96,7 @@ export class MenuComponent {
   }
   async openTemporaryFile() {
     const dirHandle = await (window as any).showDirectoryPicker({ mode: "read" });
+
     let files_arr: { id: number; blob: any; path: string; name: any; }[] = []
     let date = new Date().getTime();
     const handleDirectoryEntry = async (dirHandle: any, out: { [x: string]: {}; }, path: any) => {
